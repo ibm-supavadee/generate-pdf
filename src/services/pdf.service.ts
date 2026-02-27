@@ -2,13 +2,14 @@ import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
 import { dbHelvethaicaAisXV3 } from "../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../assets/fonts/db_helvethaica_ais_x_bd_v3";
+import path from "path";
 
 export async function generateStyledPlayboxPdf(data: any): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({
         size: "A4",
-        margin: 40,
+        margin: 10,
       });
 
       const buffers: Buffer[] = [];
@@ -22,8 +23,9 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
          CONFIG
       ============================= */
 
-      const GREEN = "#6BA539";
-      const BORDER = "#6BA539";
+      const GREEN = "#6D9C35";
+      const BORDER = "#6D9C35";
+      const GRAY = "#666666";
 
       doc.registerFont("regular", Buffer.from(dbHelvethaicaAisXV3, "base64"));
       doc.registerFont("bold", Buffer.from(dbHelvethaicaAisXBdV3, "base64"));
@@ -32,7 +34,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
-      const margin = 40;
+      const margin = 30;
       const contentWidth = pageWidth - margin * 2;
 
       let y = margin;
@@ -45,55 +47,151 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
       };
 
       /* =============================
-         HEADER
-      ============================= */
+        HEADER
+        ============================= */
 
-      doc.rect(0, y, pageWidth, 40).fill(GREEN);
+      const logoPath = path.resolve(
+        process.cwd(),
+        "src/assets/img/icons/png/AIS-Fibre3-FullColor-LightBG.png",
+      );
 
+      const headerHeight = 35; // ลดความสูง
+      const radius = 12;
+
+      // ===== กำหนดความกว้างแถบเขียว (75%) =====
+      const headerWidth = contentWidth * 0.75;
+      const headerX = margin;
+
+      // ===== วาดเฉพาะโค้งด้านบน =====
+      doc
+        .moveTo(headerX, y + headerHeight)
+        .lineTo(headerX, y + radius)
+        .quadraticCurveTo(headerX, y, headerX + radius, y)
+        .lineTo(headerX + headerWidth - radius, y)
+        .quadraticCurveTo(
+          headerX + headerWidth,
+          y,
+          headerX + headerWidth,
+          y + radius,
+        )
+        .lineTo(headerX + headerWidth, y + headerHeight)
+        .lineTo(headerX, y + headerHeight)
+        .closePath()
+        .fill(GREEN);
+
+      // ===== ข้อความกลางในแถบ =====
       doc
         .fillColor("white")
         .font("bold")
-        .fontSize(16)
-        .text("สรุปข้อมูลสมัครบริการ", 0, y + 12, { align: "center" });
+        .fontSize(18)
+        .text("สรุปข้อมูลสมัครบริการ", headerX, y + headerHeight / 2 - 8, {
+          width: headerWidth,
+          align: "center",
+        });
 
-      y += 60;
-      doc.fillColor("black").font("regular").fontSize(11);
+      // ===== โลโก้ริมขวาสุดหน้า =====
+      const logoWidth = 60; // ลดขนาด
+
+      doc.image(
+        logoPath,
+        pageWidth - margin - logoWidth,
+        y + headerHeight / 2 - 15, // ปรับ center นิดหน่อย
+        { width: logoWidth }, // ไม่ต้องกำหนด height
+      );
+
+      y += headerHeight + 5;
+
+      doc.fillColor(GRAY).font("regular").fontSize(11);
 
       /* =============================
          CUSTOMER INFO
       ============================= */
 
-      const sectionHeader = (title: string) => {
+      const sectionHeader = (
+        title: string,
+        options?: {
+          withDivider?: boolean;
+          fullWidth?: boolean;
+          width?: number;
+        },
+      ) => {
+        const { withDivider = false, fullWidth = false, width } = options || {};
+
         ensureSpace(40);
 
-        doc.rect(margin, y, contentWidth, 25).fill(GREEN);
-        doc
-          .fillColor("white")
-          .font("bold")
-          .text(title, margin + 10, y + 7);
+        const paddingX = 16;
+        const boxHeight = 32;
 
-        y += 35;
-        doc.fillColor("black").font("regular");
+        doc.font("bold").fontSize(16);
+
+        const textWidth = doc.widthOfString(title);
+        const textHeight = doc.currentLineHeight();
+
+        let boxWidth: number;
+
+        if (width) {
+          boxWidth = width;
+        } else if (fullWidth) {
+          boxWidth = contentWidth;
+        } else {
+          boxWidth = textWidth + paddingX * 2;
+        }
+
+        // วาดพื้นหลัง
+        doc.rect(margin, y, boxWidth, boxHeight).fill(GREEN);
+
+        // ===== FIX สำคัญ =====
+        doc.fillColor("white").font("bold");
+
+        if (fullWidth) {
+          // เขียนแบบ explicit position
+          doc.text(title, margin + paddingX, y + (boxHeight - textHeight) / 2);
+        } else {
+          doc.text(
+            title,
+            margin + (boxWidth - textWidth) / 2,
+            y + (boxHeight - textHeight) / 2,
+          );
+        }
+
+        if (withDivider) {
+          const dividerY = y + boxHeight + 0.5;
+          doc
+            .moveTo(margin, dividerY)
+            .lineTo(margin + contentWidth, dividerY)
+            .strokeColor(GREEN)
+            .lineWidth(1)
+            .stroke();
+        }
+
+        y += boxHeight;
+
+        doc.font("regular").fontSize(11).fillColor(GRAY);
       };
 
-      sectionHeader("ข้อมูลผู้สมัคร");
+      sectionHeader("ข้อมูลผู้สมัคร", { withDivider: true });
+
+      y += 10;
 
       const c = data.customerInfo;
 
-      const leftX = margin + 10;
-      const midX = margin + contentWidth / 2 + 10;
+      const leftLabelX = margin;
+      const leftValueX = margin + 110;
 
-      const rowHeight = 18;
+      const rightLabelX = margin + contentWidth / 2;
+      const rightValueX = rightLabelX + 120;
+
+      const rowSpacing = 18;
 
       const rows = [
         ["ประเภทบัตร", c.cardType, "เลขบัตรประชาชน", c.idCard],
         ["ชื่อ-นามสกุล", c.fullName, "เพศ", c.gender],
         ["วันเกิด", c.birthDate, "เบอร์โทร", c.mobileNo],
-        ["Email", c.email, "เวลาติดต่อกลับ", c.contactTime],
+        ["อีเมล", c.email, "เวลาที่สะดวกให้ติดต่อกลับ", c.contactTime],
         [
-          "วันติดตั้ง",
+          "วัน/เวลาติดตั้งที่ท่านเลือก",
           c.installDateTime,
-          "วันติดตั้งสำรอง",
+          "วัน/เวลาติดตั้งสำรอง",
           c.reserveInstallDateTime,
         ],
         [
@@ -105,133 +203,130 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         ["", "", "ที่อยู่จัดส่งบิล", c.billingAddress],
       ];
 
-      const boxStartY = y;
-
       rows.forEach((r) => {
-        ensureSpace(rowHeight);
+        ensureSpace(rowSpacing);
 
-        doc.font("bold").fillColor("black").text(r[0], leftX, y);
+        // LEFT
+        doc.font("bold").fillColor(GRAY).text(r[0], leftLabelX, y);
         doc
           .font("regular")
           .fillColor(GREEN)
-          .text(r[1] || "", leftX + 90, y, { width: 180 });
+          .text(r[1] || "", leftValueX, y, {
+            width: 160,
+          });
 
-        doc.font("bold").fillColor("black").text(r[2], midX, y);
+        // RIGHT
+        doc.font("bold").fillColor(GRAY).text(r[2], rightLabelX, y);
         doc
           .font("regular")
           .fillColor(GREEN)
-          .text(r[3] || "", midX + 90, y, { width: 180 });
+          .text(r[3] || "", rightValueX, y, {
+            width: 160,
+          });
 
-        y += rowHeight;
+        y += rowSpacing;
       });
 
-      doc
-        .rect(margin, boxStartY, contentWidth, y - boxStartY + 10)
-        .strokeColor(BORDER)
-        .stroke();
+      /* =============================
+        PACKAGE SECTION (TABLE STYLE)
+        ============================= */
 
       y += 25;
 
-      /* =============================
-   PACKAGE SECTION (FULL)
-============================= */
-
       sectionHeader("สรุปรายการแพ็กเกจที่เลือก");
 
-      ensureSpace(60);
+      const pkgStartY = y;
 
-      const packageBoxStartY = y;
-      const leftLabelWidth = 120;
-      const leftLabelX = margin + 10;
-      const rightContentX = margin + leftLabelWidth + 20;
+      const labelWidth = 100;
+      const contentX = margin + labelWidth + 10;
+      const contentWidthPkg = contentWidth - labelWidth - 20;
 
-      let contentY = y + 15;
+      const rowPadding = 12;
 
-      // ======================
-      // MAIN PACKAGE
-      // ======================
+      // helper สำหรับวาด 1 block (หลัก / เสริม)
+      const drawPackageRow = (label: string, items: any[]) => {
+        const rowStartY = y;
 
-      doc
-        .font("bold")
-        .fillColor("black")
-        .text("แพ็กเกจหลัก", leftLabelX, contentY);
+        // label ซ้าย (อยู่บรรทัดเดียวกับ value แรก)
+        doc
+          .font("bold")
+          .fillColor(GRAY)
+          .text(label, margin + 10, y + rowPadding);
 
-      let mainStartY = contentY;
+        let contentY = y + rowPadding;
 
-      data.packages?.forEach((pkg: any) => {
-        pkg.detail?.forEach((item: any) => {
-          ensureSpace(40);
-
+        items?.forEach((item: any, index: number) => {
           doc
             .font("bold")
             .fillColor(GREEN)
-            .text(item.text, rightContentX, contentY, {
-              width: contentWidth - leftLabelWidth - 40,
+            .text(item.text, contentX, contentY, {
+              width: contentWidthPkg,
             });
 
-          contentY = doc.y + 5;
+          contentY = doc.y + 4;
 
           if (item.description) {
             doc
               .font("regular")
               .fillColor(GREEN)
-              .text(item.description, rightContentX, contentY, {
-                width: contentWidth - leftLabelWidth - 40,
+              .text(item.description, contentX, contentY, {
+                width: contentWidthPkg,
               });
 
-            contentY = doc.y + 5;
+            contentY = doc.y + 4;
           }
         });
-      });
 
-      contentY += 15;
+        const rowHeight = contentY - rowStartY + rowPadding;
 
-      // ======================
-      // EXTENSION PACKAGE
-      // ======================
+        y = rowStartY + rowHeight;
 
+        return rowHeight;
+      };
+
+      // ===== แพ็กเกจหลัก =====
+      const mainHeight = drawPackageRow(
+        "แพ็กเกจหลัก",
+        data.packages?.flatMap((p: any) => p.detail) || [],
+      );
+
+      // เส้นคั่นกลาง
       doc
-        .font("bold")
-        .fillColor("black")
-        .text("แพ็กเกจเสริม", leftLabelX, contentY);
-
-      contentY += 5;
-
-      data.extensions?.forEach((ext: any) => {
-        ext.detail?.forEach((item: any) => {
-          ensureSpace(40);
-
-          doc
-            .font("bold")
-            .fillColor(GREEN)
-            .text(item.text, rightContentX, contentY, {
-              width: contentWidth - leftLabelWidth - 40,
-            });
-
-          contentY = doc.y + 5;
-        });
-      });
-
-      // ======================
-      // DRAW BORDER BOX
-      // ======================
-
-      const totalHeight = contentY - packageBoxStartY + 15;
-
-      doc
-        .rect(margin, packageBoxStartY, contentWidth, totalHeight)
+        .moveTo(margin, y)
+        .lineTo(margin + contentWidth, y)
         .strokeColor(BORDER)
-        .lineWidth(1.5)
+        .lineWidth(0.5)
         .stroke();
 
-      // move Y forward
-      y = packageBoxStartY + totalHeight + 30;
+      // ===== แพ็กเกจเสริม =====
+      const extensionHeight = drawPackageRow(
+        "แพ็กเกจเสริม",
+        data.extensions?.flatMap((e: any) => e.detail) || [],
+      );
+
+      // ===== กรอบรอบทั้งหมด =====
+      const borderWidth = 1;
+
+      doc
+        .rect(
+          margin + borderWidth / 2,
+          pkgStartY + borderWidth / 2,
+          contentWidth - borderWidth,
+          y - pkgStartY - borderWidth,
+        )
+        .strokeColor(BORDER)
+        .lineWidth(borderWidth)
+        .stroke();
+
+      y += 25;
 
       /* =============================
          EXPENSE TABLE
       ============================= */
 
-      sectionHeader("รายละเอียดค่าใช้จ่าย");
+      sectionHeader("รายละเอียดค่าใช้จ่าย", {
+        fullWidth: true,
+      });
 
       const col1Width = 150;
       const col3Width = 100;
@@ -274,7 +369,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         // วาดข้อความ
         doc
           .font("regular")
-          .fillColor("black")
+          .fillColor(GRAY)
           .text(leftText, col1X + 10, y + padding, {
             width: col1Width - 20,
           });
@@ -292,20 +387,30 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
           });
 
         // วาดกรอบ
+        const borderWidth = 1;
+        const half = borderWidth / 2;
+
+        doc.lineWidth(borderWidth).strokeColor(BORDER);
+
+        // กรอบนอก (offset เข้า 0.5)
         doc
-          .rect(col1X, rowStartY, contentWidth, rowHeight)
-          .strokeColor(BORDER)
-          .lineWidth(1)
+          .rect(
+            col1X + half,
+            rowStartY + half,
+            contentWidth - borderWidth,
+            rowHeight - borderWidth,
+          )
+          .stroke();
+
+        // เส้นแบ่งคอลัมน์
+        doc
+          .moveTo(col2X + half, rowStartY + half)
+          .lineTo(col2X + half, rowStartY + rowHeight - half)
           .stroke();
 
         doc
-          .moveTo(col2X, rowStartY)
-          .lineTo(col2X, rowStartY + rowHeight)
-          .stroke();
-
-        doc
-          .moveTo(col3X, rowStartY)
-          .lineTo(col3X, rowStartY + rowHeight)
+          .moveTo(col3X + half, rowStartY + half)
+          .lineTo(col3X + half, rowStartY + rowHeight - half)
           .stroke();
 
         y += rowHeight;
@@ -356,7 +461,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
          FOOTNOTE
       ============================= */
 
-      y += 20;
+      y += 5;
 
       const note = `*กรณียกเลิกบริการต้องส่งคืนอุปกรณ์ให้แก่ AWN ตามระยะเวลาและสถานที่ที่ AWN กำหนด หากไม่ส่งคืน ผู้ใช้บริการยินยอมชดใช้ค่าเสียหายตามมูลค่าอุปกรณ์
 *หากยกเลิกก่อนครบ 24 รอบบิล ยินดีชำระค่าติดตั้งคืนในอัตราที่ได้มีการหักลดลงตามสัดส่วนที่ได้ใช้บริการไปก่อนแล้วเว้นแต่กรณีที่เหตุแห่งการยกเลิกบริการเกิดขึ้นจากการให้บริการที่ไม่เป็นไปตาม โฆษณาหรือมาตรฐานการให้บริการที่ได้แจ้งไว้ หรือเกิดขึ้นจากความผิดของ AWN AWN จะไม่มีการเรียกเก็บค่าติดตั้งอีกแต่อย่างใ`;
@@ -371,7 +476,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         .fillColor("#666666")
         .text(note, margin, y, { width: contentWidth });
 
-      doc.fillColor("black").fontSize(11);
+      doc.fillColor(GRAY).fontSize(11);
 
       doc.end();
     } catch (err) {
