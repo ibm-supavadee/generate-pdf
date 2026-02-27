@@ -1,0 +1,51 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <base href="http://localhost:8080/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="cache-control"
+    content="no-cache,Cache-Control: no-store, must-revalidate, post-check=0, pre-check=0">
+  <meta http-equiv="expires" content="0">
+  <meta http-equiv="pragma" content="no-cache">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/eform.css">
+  <style>
+    .conditions-header {
+      text-align: center;
+      font-weight: bold;
+      font-size: 50px;
+      color: #808080;
+    }
+    .conditions-preface {}
+    .conditions-section {
+      font-weight: bold;
+      font-size: 50px;
+      color: #808080;
+    }
+    .conditions-article {
+      text-indent: 2.5em;
+      font-size: 50px;
+      color: #808080;
+    }
+    .conditions-article-sub1 {
+      text-indent: 5em;
+      font-size: 50px;
+      color: #808080;
+    }   
+    .conditions-title {
+      font-size: 50px;
+      color: #808080;
+    }
+  </style>
+</head>
+
+<body>
+  <app-e-application>
+    <section class="application-wrapper" theme="{{myTheme}}">
+      {{{content}}}
+    </section>
+  </app-e-application>
+
+
+</html>
