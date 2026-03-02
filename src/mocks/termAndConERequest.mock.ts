@@ -1,4 +1,5 @@
 export const termAndConERequestMock = `
+<style>.conditions-header{text-align:center;font-weight:bold;}.conditions-preface{}.conditions-section{font-weight:bold;}.conditions-article{text-indent:2.5em;}.conditions-article-sub1{text-indent:5em;}</style>
 <table>
     <tr><td class="conditions-header">ข้อตกลงและเงื่อนไขการให้บริการโทรคมนาคม และ/หรือโทรทัศน์แบบบอกรับสมาชิก</td></tr>
     <tr><td class="conditions-header">ระหว่างผู้ให้บริการกับผู้ใช้บริการ</td></tr>
