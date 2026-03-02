@@ -7,6 +7,10 @@ import path from "path";
 export async function generateStyledPlayboxPdf(data: any): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
+      /* =============================
+         DOCUMENT INIT
+      ============================= */
+
       const doc = new PDFDocument({
         size: "A4",
         margin: 10,
@@ -20,7 +24,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
       });
 
       /* =============================
-         CONFIG
+         STYLE CONFIG
       ============================= */
 
       const GREEN = "#6D9C35";
@@ -34,35 +38,49 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
+
       const margin = 30;
       const contentWidth = pageWidth - margin * 2;
 
       let y = margin;
 
-      const ensureSpace = (heightNeeded: number) => {
-        if (y + heightNeeded > pageHeight - margin) {
+      /* =============================
+         COMMON HELPERS
+      ============================= */
+
+      const ensureSpace = (height: number) => {
+        if (y + height > pageHeight - margin) {
           doc.addPage();
           y = margin;
         }
       };
 
+      const drawTopBorder = (x: number, width: number) => {
+        const half = 0.5;
+
+        doc
+          .lineWidth(1)
+          .strokeColor(BORDER)
+          .moveTo(x + half, y + half)
+          .lineTo(x + width - half, y + half)
+          .stroke();
+      };
+
       /* =============================
-        HEADER
-        ============================= */
+         HEADER
+      ============================= */
 
       const logoPath = path.resolve(
         process.cwd(),
         "src/assets/img/icons/png/AIS-Fibre3-FullColor-LightBG.png",
       );
 
-      const headerHeight = 35; // ลดความสูง
+      const headerHeight = 35;
       const radius = 12;
 
-      // ===== กำหนดความกว้างแถบเขียว (75%) =====
       const headerWidth = contentWidth * 0.75;
       const headerX = margin;
 
-      // ===== วาดเฉพาะโค้งด้านบน =====
       doc
         .moveTo(headerX, y + headerHeight)
         .lineTo(headerX, y + radius)
@@ -79,7 +97,6 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         .closePath()
         .fill(GREEN);
 
-      // ===== ข้อความกลางในแถบ =====
       doc
         .fillColor("white")
         .font("bold")
@@ -89,14 +106,13 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
           align: "center",
         });
 
-      // ===== โลโก้ริมขวาสุดหน้า =====
-      const logoWidth = 60; // ลดขนาด
+      const logoWidth = 60;
 
       doc.image(
         logoPath,
         pageWidth - margin - logoWidth,
-        y + headerHeight / 2 - 15, // ปรับ center นิดหน่อย
-        { width: logoWidth }, // ไม่ต้องกำหนด height
+        y + headerHeight / 2 - 15,
+        { width: logoWidth },
       );
 
       y += headerHeight + 5;
@@ -104,7 +120,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
       doc.fillColor(GRAY).font("regular").fontSize(11);
 
       /* =============================
-         CUSTOMER INFO
+         SECTION HEADER
       ============================= */
 
       const sectionHeader = (
@@ -129,22 +145,15 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
         let boxWidth: number;
 
-        if (width) {
-          boxWidth = width;
-        } else if (fullWidth) {
-          boxWidth = contentWidth;
-        } else {
-          boxWidth = textWidth + paddingX * 2;
-        }
+        if (width) boxWidth = width;
+        else if (fullWidth) boxWidth = contentWidth;
+        else boxWidth = textWidth + paddingX * 2;
 
-        // วาดพื้นหลัง
         doc.rect(margin, y, boxWidth, boxHeight).fill(GREEN);
 
-        // ===== FIX สำคัญ =====
         doc.fillColor("white").font("bold");
 
         if (fullWidth) {
-          // เขียนแบบ explicit position
           doc.text(title, margin + paddingX, y + (boxHeight - textHeight) / 2);
         } else {
           doc.text(
@@ -156,6 +165,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
         if (withDivider) {
           const dividerY = y + boxHeight + 0.5;
+
           doc
             .moveTo(margin, dividerY)
             .lineTo(margin + contentWidth, dividerY)
@@ -168,6 +178,10 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
         doc.font("regular").fontSize(11).fillColor(GRAY);
       };
+
+      /* =============================
+         CUSTOMER INFO
+      ============================= */
 
       sectionHeader("ข้อมูลผู้สมัคร", { withDivider: true });
 
@@ -206,30 +220,24 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
       rows.forEach((r) => {
         ensureSpace(rowSpacing);
 
-        // LEFT
         doc.font("bold").fillColor(GRAY).text(r[0], leftLabelX, y);
         doc
           .font("regular")
           .fillColor(GREEN)
-          .text(r[1] || "", leftValueX, y, {
-            width: 160,
-          });
+          .text(r[1] || "", leftValueX, y, { width: 160 });
 
-        // RIGHT
         doc.font("bold").fillColor(GRAY).text(r[2], rightLabelX, y);
         doc
           .font("regular")
           .fillColor(GREEN)
-          .text(r[3] || "", rightValueX, y, {
-            width: 160,
-          });
+          .text(r[3] || "", rightValueX, y, { width: 160 });
 
         y += rowSpacing;
       });
 
       /* =============================
-        PACKAGE SECTION (TABLE STYLE)
-        ============================= */
+         PACKAGE SECTION
+      ============================= */
 
       y += 25;
 
@@ -243,11 +251,9 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
       const rowPadding = 12;
 
-      // helper สำหรับวาด 1 block (หลัก / เสริม)
       const drawPackageRow = (label: string, items: any[]) => {
         const rowStartY = y;
 
-        // label ซ้าย (อยู่บรรทัดเดียวกับ value แรก)
         doc
           .font("bold")
           .fillColor(GRAY)
@@ -255,7 +261,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
         let contentY = y + rowPadding;
 
-        items?.forEach((item: any, index: number) => {
+        items?.forEach((item: any) => {
           doc
             .font("bold")
             .fillColor(GREEN)
@@ -278,19 +284,16 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         });
 
         const rowHeight = contentY - rowStartY + rowPadding;
-
         y = rowStartY + rowHeight;
 
         return rowHeight;
       };
 
-      // ===== แพ็กเกจหลัก =====
-      const mainHeight = drawPackageRow(
+      drawPackageRow(
         "แพ็กเกจหลัก",
         data.packages?.flatMap((p: any) => p.detail) || [],
       );
 
-      // เส้นคั่นกลาง
       doc
         .moveTo(margin, y)
         .lineTo(margin + contentWidth, y)
@@ -298,24 +301,20 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         .lineWidth(0.5)
         .stroke();
 
-      // ===== แพ็กเกจเสริม =====
-      const extensionHeight = drawPackageRow(
+      drawPackageRow(
         "แพ็กเกจเสริม",
         data.extensions?.flatMap((e: any) => e.detail) || [],
       );
 
-      // ===== กรอบรอบทั้งหมด =====
-      const borderWidth = 1;
-
       doc
         .rect(
-          margin + borderWidth / 2,
-          pkgStartY + borderWidth / 2,
-          contentWidth - borderWidth,
-          y - pkgStartY - borderWidth,
+          margin + 0.5,
+          pkgStartY + 0.5,
+          contentWidth - 1,
+          y - pkgStartY - 1,
         )
         .strokeColor(BORDER)
-        .lineWidth(borderWidth)
+        .lineWidth(1)
         .stroke();
 
       y += 25;
@@ -324,9 +323,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
          EXPENSE TABLE
       ============================= */
 
-      sectionHeader("รายละเอียดค่าใช้จ่าย", {
-        fullWidth: true,
-      });
+      sectionHeader("รายละเอียดค่าใช้จ่าย", { fullWidth: true });
 
       const col1Width = 150;
       const col3Width = 100;
@@ -336,14 +333,18 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
       const col2X = col1X + col1Width;
       const col3X = col2X + col2Width;
 
-      const drawExpenseRow = (
-        leftText: string,
-        middleText: string,
-        rightText: string,
-      ) => {
+      type ExpenseItem = {
+        text: string;
+        price: string;
+      };
+
+      const drawExpenseGroup = (title: string, items: ExpenseItem[]) => {
         const padding = 10;
 
-        const leftHeight = doc.heightOfString(leftText, {
+        const middleText = items.map((i) => i.text).join("\n");
+        const rightText = items.map((i) => i.price).join("\n");
+
+        const leftHeight = doc.heightOfString(title, {
           width: col1Width - 20,
         });
 
@@ -358,36 +359,28 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         const contentHeight = Math.max(leftHeight, middleHeight, rightHeight);
         const rowHeight = contentHeight + padding * 2;
 
-        // ถ้าไม่พอหน้า → ขึ้นหน้าใหม่ก่อนวาด
         if (y + rowHeight > pageHeight - margin) {
           doc.addPage();
           y = margin;
-
-          const borderWidth = 1;
-          const half = borderWidth / 2;
-
-          doc.lineWidth(borderWidth).strokeColor(BORDER);
-
-          // วาด top border หน้าใหม่
-          doc
-            .moveTo(col1X + half, y + half)
-            .lineTo(col1X + contentWidth - half, y + half)
-            .stroke();
+          drawTopBorder(col1X, contentWidth);
         }
 
         const rowStartY = y;
 
-        // วาดข้อความ
         doc
           .font("regular")
           .fillColor(GRAY)
-          .text(leftText, col1X + 10, y + padding, {
+          .text(title, col1X + 10, y + padding, {
             width: col1Width - 20,
           });
 
-        doc.text(middleText, col2X + 10, y + padding, {
-          width: col2Width - 20,
-        });
+        doc
+          .font("regular")
+          .fillColor(GRAY)
+          .text(middleText, col2X + 10, y + padding, {
+            width: col2Width - 20,
+            lineGap: 0,
+          });
 
         doc
           .font("bold")
@@ -395,32 +388,26 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
           .text(rightText, col3X + 10, y + padding, {
             width: col3Width - 20,
             align: "right",
+            lineGap: 0,
           });
 
-        // วาดกรอบ
-        const borderWidth = 1;
-        const half = borderWidth / 2;
+        const half = 0.5;
 
-        doc.lineWidth(borderWidth).strokeColor(BORDER);
+        doc.lineWidth(1).strokeColor(BORDER);
 
-        // เส้นซ้าย
         doc
           .moveTo(col1X + half, rowStartY)
           .lineTo(col1X + half, rowStartY + rowHeight)
           .stroke();
-
-        // เส้นแบ่ง column
         doc
           .moveTo(col2X + half, rowStartY)
           .lineTo(col2X + half, rowStartY + rowHeight)
           .stroke();
-
         doc
           .moveTo(col3X + half, rowStartY)
           .lineTo(col3X + half, rowStartY + rowHeight)
           .stroke();
 
-        // เส้นขวา
         doc
           .moveTo(col1X + contentWidth - half, rowStartY)
           .lineTo(col1X + contentWidth - half, rowStartY + rowHeight)
@@ -434,70 +421,58 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         y += rowHeight;
       };
 
-      // แยกฟังก์ชันการวาดออกมาเพื่อเรียกซ้ำ
-      const renderRow = (l: string, m: string, r: string, height: number) => {
-        const startY = y;
-        doc
-          .rect(col1X, startY, contentWidth, height)
-          .strokeColor(BORDER)
-          .stroke();
+      /* =============================
+         EXPENSE DATA
+      ============================= */
 
-        y += height;
-      };
+      drawExpenseGroup("ค่าใช้จ่ายที่ต้องชำระ:", [
+        { text: "ค่าแรกเข้า", price: "1,869.16 บาท" },
+        {
+          text: "รวมรายการที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+          price: "1,869.16 บาท",
+        },
+      ]);
 
-      drawExpenseRow(
-        "ค่าใช้จ่ายที่ต้องชำระ:",
-        "ค่าแรกเข้า\nรวมรายการที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
-        "1,869.16 บาท\n1,869.16 บาท",
-      );
+      drawExpenseGroup("ค่าเดินสายที่ต้องชำระในวันติดตั้ง (ถ้ามี)", [
+        {
+          text: "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง",
+          price: "-",
+        },
+      ]);
 
-      drawExpenseRow(
-        "ค่าเดินสายที่ต้องชำระในวันติดตั้ง (ถ้ามี)",
-        "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง",
-        "-",
-      );
+      drawExpenseGroup("ค่าติดตั้งและอุปกรณ์", [
+        {
+          text: "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)",
+          price: "4,800.00 บาท",
+        },
+        {
+          text: "ส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล",
+          price: "-4,800.00 บาท",
+        },
+        {
+          text: "รับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
+          price: "0.00 บาท",
+        },
+      ]);
 
-      drawExpenseRow(
-        "ค่าติดตั้งและอุปกรณ์",
-        "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)\nส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
-        "4,800.00 บาท\n4,800.00 บาท\n0.00 บาท",
-      );
+      drawExpenseGroup("ค่าบริการรายเดือน", [
+        {
+          text: "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
+          price: "599.00 บาท",
+        },
+        {
+          text: "รวมรายการที่ต้องชำระต่อเดือน (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+          price: "599.00 บาท",
+        },
+      ]);
 
-      drawExpenseRow(
-        "ค่าบริการรายเดือน",
-        "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)\nรวมรายการที่ต้องชำระต่อเดือน (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
-        "599.00 บาท\n599.00 บาท",
-      );
-
-      drawExpenseRow(
-        "ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)",
-        "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)\nส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)\nส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
-        "19.32 บาท\n618.32 บาท",
-      );
-
-      //   drawExpenseRow(
-      //     "ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)",
-      //     "คิดเฉลี่ย 19.32 บาท ต่อ 1 วัน\nรวมยอดโดยประมาณที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
-      //     "19.32 บาท\n618.32 บาท",
-      //   );
-
-      //   drawExpenseRow(
-      //     "ค่าติดตั้งและอุปกรณ์",
-      //     "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)",
-      //     "4,800.00 บาท",
-      //   );
-
-      //   drawExpenseRow(
-      //     "-",
-      //     "ส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
-      //     "- 4,800.00 บาท",
-      //   );
-
-      //   drawExpenseRow(
-      //     "-",
-      //     "รับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
-      //     "0.00 บาท",
-      //   );
+      drawExpenseGroup("ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)", [
+        { text: "คิดเฉลี่ย 19.32 บาท ต่อ 1 วัน", price: "19.32 บาท" },
+        {
+          text: "รวมยอดโดยประมาณที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+          price: "618.32 บาท",
+        },
+      ]);
 
       /* =============================
          FOOTNOTE
