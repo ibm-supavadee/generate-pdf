@@ -1,4 +1,4 @@
-const termAndConERequestMock = `
+export const termAndConERequestMock = `
 <table>
     <tr><td class="conditions-header">ข้อตกลงและเงื่อนไขการให้บริการโทรคมนาคม และ/หรือโทรทัศน์แบบบอกรับสมาชิก</td></tr>
     <tr><td class="conditions-header">ระหว่างผู้ให้บริการกับผู้ใช้บริการ</td></tr>
