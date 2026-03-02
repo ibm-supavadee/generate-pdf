@@ -1,4 +1,5 @@
 import type PDFDocument from "pdfkit";
+import { PDF_COLORS } from "./constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -6,9 +7,6 @@ type Params = {
   margin: number;
   contentWidth: number;
   data: any;
-  green: string;
-  gray: string;
-  border: string;
 };
 
 export function drawPackages({
@@ -17,9 +15,6 @@ export function drawPackages({
   margin,
   contentWidth,
   data,
-  green,
-  gray,
-  border,
 }: Params): number {
   const pkgStartY = y;
 
@@ -34,22 +29,25 @@ export function drawPackages({
 
     doc
       .font("bold")
-      .fillColor(gray)
+      .fillColor(PDF_COLORS.GRAY)
       .text(label, margin + 10, y + rowPadding);
 
     let contentY = y + rowPadding;
 
     items?.forEach((item: any) => {
-      doc.font("bold").fillColor(green).text(item.text, contentX, contentY, {
-        width: contentWidthPkg,
-      });
+      doc
+        .font("bold")
+        .fillColor(PDF_COLORS.GREEN)
+        .text(item.text, contentX, contentY, {
+          width: contentWidthPkg,
+        });
 
       contentY = doc.y + 4;
 
       if (item.description) {
         doc
           .font("regular")
-          .fillColor(green)
+          .fillColor(PDF_COLORS.GREEN)
           .text(item.description, contentX, contentY, {
             width: contentWidthPkg,
           });
@@ -73,7 +71,7 @@ export function drawPackages({
   doc
     .moveTo(margin, y)
     .lineTo(margin + contentWidth, y)
-    .strokeColor(border)
+    .strokeColor(PDF_COLORS.BORDER)
     .lineWidth(0.5)
     .stroke();
 
@@ -84,7 +82,7 @@ export function drawPackages({
 
   doc
     .rect(margin + 0.5, pkgStartY + 0.5, contentWidth - 1, y - pkgStartY - 1)
-    .strokeColor(border)
+    .strokeColor(PDF_COLORS.BORDER)
     .lineWidth(1)
     .stroke();
 

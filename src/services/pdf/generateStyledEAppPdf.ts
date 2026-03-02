@@ -15,10 +15,6 @@ import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_b
 import { termAndConERequestMock } from "../../mocks/termAndConERequest.mock";
 
 export async function generateStyledEAppPdf(data: any): Promise<string> {
-  const GREEN = "#6D9C35";
-  const BORDER = "#6D9C35";
-  const GRAY = "#666666";
-
   return new Promise((resolve, reject) => {
     try {
       /* -------------------------
@@ -76,7 +72,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         y,
         margin,
         pageWidth,
-        green: GREEN,
       });
 
       /* -------------------------
@@ -90,8 +85,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         contentWidth,
         title: "ข้อมูลผู้สมัคร",
         ensureSpace,
-        green: GREEN,
-        gray: GRAY,
         options: { withDivider: true },
       });
 
@@ -102,8 +95,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         contentWidth,
         data,
         ensureSpace,
-        green: GREEN,
-        gray: GRAY,
       });
 
       y += 25;
@@ -119,8 +110,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         contentWidth,
         title: "สรุปรายการแพ็กเกจที่เลือก",
         ensureSpace,
-        green: GREEN,
-        gray: GRAY,
         options: { withDivider: true },
       });
 
@@ -130,9 +119,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         data,
-        green: GREEN,
-        gray: GRAY,
-        border: BORDER,
       });
 
       /* -------------------------
@@ -146,8 +132,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         contentWidth,
         title: "รายละเอียดค่าใช้จ่าย",
         ensureSpace,
-        green: GREEN,
-        gray: GRAY,
         options: { fullWidth: true },
       });
 
@@ -157,9 +141,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         pageHeight,
-        green: GREEN,
-        gray: GRAY,
-        border: BORDER,
       });
 
       /* -------------------------
@@ -172,7 +153,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         ensureSpace,
-        gray: GRAY,
       });
 
       /* -------------------------
@@ -186,7 +166,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         y: margin,
         margin,
         pageWidth,
-        green: GREEN,
         title: "ข้อตกลงและเงื่อนไขบริการ",
       });
 

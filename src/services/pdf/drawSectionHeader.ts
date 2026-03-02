@@ -1,4 +1,5 @@
 import type PDFDocument from "pdfkit";
+import { PDF_COLORS } from "./constants";
 
 type Options = {
   withDivider?: boolean;
@@ -13,8 +14,6 @@ type Params = {
   contentWidth: number;
   title: string;
   ensureSpace: (height: number) => void;
-  green: string;
-  gray: string;
   options?: Options;
 };
 
@@ -25,8 +24,6 @@ export function drawSectionHeader({
   contentWidth,
   title,
   ensureSpace,
-  green,
-  gray,
   options,
 }: Params): number {
   const { withDivider = false, fullWidth = false, width } = options || {};
@@ -47,7 +44,7 @@ export function drawSectionHeader({
   else if (fullWidth) boxWidth = contentWidth;
   else boxWidth = textWidth + paddingX * 2;
 
-  doc.rect(margin, y, boxWidth, boxHeight).fill(green);
+  doc.rect(margin, y, boxWidth, boxHeight).fill(PDF_COLORS.GREEN);
 
   doc.fillColor("white").font("bold");
 
@@ -67,14 +64,14 @@ export function drawSectionHeader({
     doc
       .moveTo(margin, dividerY)
       .lineTo(margin + contentWidth, dividerY)
-      .strokeColor(green)
+      .strokeColor(PDF_COLORS.GREEN)
       .lineWidth(1)
       .stroke();
   }
 
   y += boxHeight;
 
-  doc.font("regular").fontSize(11).fillColor(gray);
+  doc.font("regular").fontSize(11).fillColor(PDF_COLORS.GRAY);
 
   return y;
 }

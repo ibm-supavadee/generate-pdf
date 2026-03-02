@@ -1,4 +1,5 @@
 import type PDFDocument from "pdfkit";
+import { PDF_COLORS } from "./constants";
 
 type ExpenseItem = {
   text: string;
@@ -11,9 +12,6 @@ type Params = {
   margin: number;
   contentWidth: number;
   pageHeight: number;
-  green: string;
-  gray: string;
-  border: string;
 };
 
 export function drawExpenseTable({
@@ -22,9 +20,6 @@ export function drawExpenseTable({
   margin,
   contentWidth,
   pageHeight,
-  green,
-  gray,
-  border,
 }: Params): number {
   const col1Width = 150;
   const col3Width = 100;
@@ -39,7 +34,7 @@ export function drawExpenseTable({
 
     doc
       .lineWidth(1)
-      .strokeColor(border)
+      .strokeColor(PDF_COLORS.BORDER)
       .moveTo(x + half, y + half)
       .lineTo(x + width - half, y + half)
       .stroke();
@@ -76,14 +71,14 @@ export function drawExpenseTable({
 
     doc
       .font("regular")
-      .fillColor(gray)
+      .fillColor(PDF_COLORS.GRAY)
       .text(title, col1X + 10, y + padding, {
         width: col1Width - 20,
       });
 
     doc
       .font("regular")
-      .fillColor(gray)
+      .fillColor(PDF_COLORS.GRAY)
       .text(middleText, col2X + 10, y + padding, {
         width: col2Width - 20,
         lineGap: 0,
@@ -91,7 +86,7 @@ export function drawExpenseTable({
 
     doc
       .font("bold")
-      .fillColor(green)
+      .fillColor(PDF_COLORS.GREEN)
       .text(rightText, col3X + 10, y + padding, {
         width: col3Width - 20,
         align: "right",
@@ -100,7 +95,7 @@ export function drawExpenseTable({
 
     const half = 0.5;
 
-    doc.lineWidth(1).strokeColor(border);
+    doc.lineWidth(1).strokeColor(PDF_COLORS.BORDER);
 
     doc
       .moveTo(col1X + half, rowStartY)

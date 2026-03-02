@@ -1,4 +1,5 @@
 import type PDFDocument from "pdfkit";
+import { PDF_COLORS } from "./constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -7,8 +8,6 @@ type Params = {
   contentWidth: number;
   data: any;
   ensureSpace: (height: number) => void;
-  green: string;
-  gray: string;
 };
 
 export function drawCustomerInfo({
@@ -18,8 +17,6 @@ export function drawCustomerInfo({
   contentWidth,
   data,
   ensureSpace,
-  green,
-  gray,
 }: Params): number {
   y += 10;
 
@@ -51,18 +48,18 @@ export function drawCustomerInfo({
   rows.forEach((r) => {
     ensureSpace(rowSpacing);
 
-    doc.font("bold").fillColor(gray).text(r[0], leftLabelX, y);
+    doc.font("bold").fillColor(PDF_COLORS.GRAY).text(r[0], leftLabelX, y);
 
     doc
       .font("regular")
-      .fillColor(green)
+      .fillColor(PDF_COLORS.GREEN)
       .text(r[1] || "", leftValueX, y, { width: 160 });
 
-    doc.font("bold").fillColor(gray).text(r[2], rightLabelX, y);
+    doc.font("bold").fillColor(PDF_COLORS.GRAY).text(r[2], rightLabelX, y);
 
     doc
       .font("regular")
-      .fillColor(green)
+      .fillColor(PDF_COLORS.GREEN)
       .text(r[3] || "", rightValueX, y, { width: 160 });
 
     y += rowSpacing;

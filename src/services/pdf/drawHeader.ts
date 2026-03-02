@@ -1,19 +1,18 @@
 import path from "path";
 import type PDFDocument from "pdfkit";
+import { PDF_COLORS } from "./constants";
 
 export function drawHeader({
   doc,
   y,
   margin,
   pageWidth,
-  green,
   title = "สรุปข้อมูลสมัครบริการ",
 }: {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   pageWidth: number;
-  green: string;
   title?: string;
 }) {
   const headerHeight = 35;
@@ -41,10 +40,10 @@ export function drawHeader({
     .lineTo(headerX + headerWidth, y + headerHeight)
     .lineTo(headerX, y + headerHeight)
     .closePath()
-    .fill(green);
+    .fill(PDF_COLORS.GREEN);
 
   doc
-    .fillColor("white")
+    .fillColor(PDF_COLORS.WHITE)
     .font("bold")
     .fontSize(18)
     .text(title, headerX, y + headerHeight / 2 - 8, {

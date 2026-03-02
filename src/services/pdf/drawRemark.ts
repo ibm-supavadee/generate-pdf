@@ -1,10 +1,11 @@
+import { PDF_COLORS } from "./constants";
+
 type Params = {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   contentWidth: number;
   ensureSpace: (height: number) => void;
-  gray: string;
 };
 
 export function drawRemark({
@@ -13,7 +14,6 @@ export function drawRemark({
   margin,
   contentWidth,
   ensureSpace,
-  gray,
 }: Params): number {
   y += 5;
 
@@ -30,7 +30,7 @@ export function drawRemark({
 
   y = doc.y;
 
-  doc.fillColor(gray).fontSize(11);
+  doc.fillColor(PDF_COLORS.GRAY).fontSize(11);
 
   return y;
 }
