@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { generateStyledPlayboxPdf } from '../services/pdf.service';
+import { Request, Response } from "express";
+import { generateStyledEAppPdf } from "../services/pdf/generateStyledEAppPdf";
 
 export const createPdf = async (req: Request, res: Response) => {
   try {
     const data = req.body;
 
-    const base64Pdf = await generateStyledPlayboxPdf(data);
+    const base64Pdf = await generateStyledEAppPdf(data);
 
     res.json({
       success: true,
@@ -15,7 +15,7 @@ export const createPdf = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to generate PDF',
+      message: "Failed to generate PDF",
     });
   }
 };
