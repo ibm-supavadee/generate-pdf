@@ -362,6 +362,17 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
         if (y + rowHeight > pageHeight - margin) {
           doc.addPage();
           y = margin;
+
+          const borderWidth = 1;
+          const half = borderWidth / 2;
+
+          doc.lineWidth(borderWidth).strokeColor(BORDER);
+
+          // วาด top border หน้าใหม่
+          doc
+            .moveTo(col1X + half, y + half)
+            .lineTo(col1X + contentWidth - half, y + half)
+            .stroke();
         }
 
         const rowStartY = y;
@@ -392,25 +403,32 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
         doc.lineWidth(borderWidth).strokeColor(BORDER);
 
-        // กรอบนอก (offset เข้า 0.5)
+        // เส้นซ้าย
         doc
-          .rect(
-            col1X + half,
-            rowStartY + half,
-            contentWidth - borderWidth,
-            rowHeight - borderWidth,
-          )
+          .moveTo(col1X + half, rowStartY)
+          .lineTo(col1X + half, rowStartY + rowHeight)
           .stroke();
 
-        // เส้นแบ่งคอลัมน์
+        // เส้นแบ่ง column
         doc
-          .moveTo(col2X + half, rowStartY + half)
-          .lineTo(col2X + half, rowStartY + rowHeight - half)
+          .moveTo(col2X + half, rowStartY)
+          .lineTo(col2X + half, rowStartY + rowHeight)
           .stroke();
 
         doc
-          .moveTo(col3X + half, rowStartY + half)
-          .lineTo(col3X + half, rowStartY + rowHeight - half)
+          .moveTo(col3X + half, rowStartY)
+          .lineTo(col3X + half, rowStartY + rowHeight)
+          .stroke();
+
+        // เส้นขวา
+        doc
+          .moveTo(col1X + contentWidth - half, rowStartY)
+          .lineTo(col1X + contentWidth - half, rowStartY + rowHeight)
+          .stroke();
+
+        doc
+          .moveTo(col1X + half, rowStartY + rowHeight - half)
+          .lineTo(col1X + contentWidth - half, rowStartY + rowHeight - half)
           .stroke();
 
         y += rowHeight;
@@ -423,7 +441,7 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
           .rect(col1X, startY, contentWidth, height)
           .strokeColor(BORDER)
           .stroke();
-        // ... ใส่โค้ดวาด Text และเส้นแบ่งคอลัมน์เหมือนเดิม ...
+
         y += height;
       };
 
@@ -453,9 +471,33 @@ export async function generateStyledPlayboxPdf(data: any): Promise<string> {
 
       drawExpenseRow(
         "ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)",
-        "คิดเฉลี่ย 19.32 บาท ต่อ 1 วัน\nรวมยอดโดยประมาณที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+        "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)\nส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)\nส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
         "19.32 บาท\n618.32 บาท",
       );
+
+      //   drawExpenseRow(
+      //     "ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)",
+      //     "คิดเฉลี่ย 19.32 บาท ต่อ 1 วัน\nรวมยอดโดยประมาณที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+      //     "19.32 บาท\n618.32 บาท",
+      //   );
+
+      //   drawExpenseRow(
+      //     "ค่าติดตั้งและอุปกรณ์",
+      //     "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)",
+      //     "4,800.00 บาท",
+      //   );
+
+      //   drawExpenseRow(
+      //     "-",
+      //     "ส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล\nรับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
+      //     "- 4,800.00 บาท",
+      //   );
+
+      //   drawExpenseRow(
+      //     "-",
+      //     "รับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
+      //     "0.00 บาท",
+      //   );
 
       /* =============================
          FOOTNOTE
