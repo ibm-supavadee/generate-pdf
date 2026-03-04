@@ -1,4 +1,3 @@
-import type PDFDocument from "pdfkit";
 import { PDF_COLORS } from "./constants";
 
 type Params = {

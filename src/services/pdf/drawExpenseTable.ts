@@ -1,9 +1,10 @@
-import type PDFDocument from "pdfkit";
 import { PDF_COLORS } from "./constants";
 
 type ExpenseItem = {
   text: string;
+  subText?: string;
   price: string;
+  bold?: boolean;
 };
 
 type Params = {
@@ -43,19 +44,21 @@ export function drawExpenseTable({
   const drawExpenseGroup = (title: string, items: ExpenseItem[]) => {
     const padding = 10;
 
-    const middleText = items.map((i) => i.text).join("\n");
-    const rightText = items.map((i) => i.price).join("\n");
-
     const leftHeight = doc.heightOfString(title, {
       width: col1Width - 20,
     });
 
-    const middleHeight = doc.heightOfString(middleText, {
-      width: col2Width - 20,
-    });
+    let middleHeight = 0;
+    let rightHeight = 0;
 
-    const rightHeight = doc.heightOfString(rightText, {
-      width: col3Width - 20,
+    items.forEach((item) => {
+      middleHeight += doc.heightOfString(item.text, {
+        width: col2Width - 20,
+      });
+
+      rightHeight += doc.heightOfString(item.price || "", {
+        width: col3Width - 20,
+      });
     });
 
     const contentHeight = Math.max(leftHeight, middleHeight, rightHeight);
@@ -69,29 +72,58 @@ export function drawExpenseTable({
 
     const rowStartY = y;
 
+    /* Left Column */
+
     doc
       .font("regular")
       .fillColor(PDF_COLORS.GRAY)
       .text(title, col1X + 10, y + padding, {
         width: col1Width - 20,
       });
+    let rowY = y + padding;
 
-    doc
-      .font("regular")
-      .fillColor(PDF_COLORS.GRAY)
-      .text(middleText, col2X + 10, y + padding, {
+    items.forEach((item) => {
+      const middleHeight = doc.heightOfString(item.text, {
         width: col2Width - 20,
-        lineGap: 0,
       });
 
-    doc
-      .font("bold")
-      .fillColor(PDF_COLORS.GREEN)
-      .text(rightText, col3X + 10, y + padding, {
+      const rightHeight = doc.heightOfString(item.price || "", {
         width: col3Width - 20,
-        align: "right",
-        lineGap: 0,
       });
+
+      const rowHeight = Math.max(middleHeight, rightHeight);
+
+      const textX = col2X + 10;
+
+      doc
+        .font(item.bold ? "bold" : "regular")
+        .fillColor(PDF_COLORS.GRAY)
+        .text(item.text, textX, rowY, {
+          width: col2Width - 20,
+          continued: !!item.subText,
+        });
+
+      if (item.subText) {
+        doc
+          .font("regular")
+          .fillColor(PDF_COLORS.GRAY)
+          .text(item.subText, {
+            width: col2Width - 20,
+          });
+      }
+
+      if (item.price) {
+        doc
+          .font(item.bold ? "bold" : "regular")
+          .fillColor(PDF_COLORS.GREEN)
+          .text(item.price, col3X + 10, rowY, {
+            width: col3Width - 20,
+            align: "right",
+          });
+      }
+
+      rowY += rowHeight;
+    });
 
     const half = 0.5;
 
@@ -132,8 +164,10 @@ export function drawExpenseTable({
   drawExpenseGroup("ค่าใช้จ่ายที่ต้องชำระ:", [
     { text: "ค่าแรกเข้า", price: "1,869.16 บาท" },
     {
-      text: "รวมรายการที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+      text: "รวมรายการที่ต้องชำระต่อเดือน",
+      subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
       price: "1,869.16 บาท",
+      bold: true,
     },
   ]);
 
@@ -154,8 +188,18 @@ export function drawExpenseTable({
       price: "-4,800.00 บาท",
     },
     {
-      text: "รับสิทธิ์ยืมอุปกรณ์ ดังนี้\n• FTTH – Router มูลค่า 2,500 บาท",
+      text: "รับสิทธิ์ยืมอุปกรณ์ ดังนี้",
+      price: "",
+    },
+    {
+      text: "   • FTTH – Router มูลค่า 2,500 บาท",
+      price: "",
+    },
+    {
+      text: "รวมรายการที่ต้องชำระต่อเดือน",
+      subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
       price: "0.00 บาท",
+      bold: true,
     },
   ]);
 
@@ -165,16 +209,20 @@ export function drawExpenseTable({
       price: "599.00 บาท",
     },
     {
-      text: "รวมรายการที่ต้องชำระต่อเดือน (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+      text: "รวมรายการที่ต้องชำระต่อเดือน",
+      subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
       price: "599.00 บาท",
+      bold: true,
     },
   ]);
 
   drawExpenseGroup("ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)", [
     { text: "คิดเฉลี่ย 19.32 บาท ต่อ 1 วัน", price: "19.32 บาท" },
     {
-      text: "รวมยอดโดยประมาณที่ต้องชำระ (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+      text: "รวมยอดโดยประมาณที่ต้องชำระ",
+      subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
       price: "618.32 บาท",
+      bold: true,
     },
   ]);
 

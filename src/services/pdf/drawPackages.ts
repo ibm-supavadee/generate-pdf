@@ -1,4 +1,3 @@
-import type PDFDocument from "pdfkit";
 import { PDF_COLORS } from "./constants";
 
 type Params = {
@@ -36,7 +35,7 @@ export function drawPackages({
 
     items?.forEach((item: any) => {
       doc
-        .font("bold")
+        .font("regular")
         .fillColor(PDF_COLORS.GREEN)
         .text(item.text, contentX, contentY, {
           width: contentWidthPkg,
@@ -86,7 +85,7 @@ export function drawPackages({
     .lineWidth(1)
     .stroke();
 
-  y += 25;
+  y += 3;
 
   return y;
 }

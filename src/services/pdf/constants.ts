@@ -3,4 +3,6 @@ export const PDF_COLORS = {
   BORDER: "#6D9C35",
   GRAY: "#666666",
   WHITE: "#FFFFFF",
+  GRAY_LIGHT: "#808080",
+  LINK: "#0b66d6",
 };

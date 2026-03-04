@@ -1,5 +1,4 @@
 import path from "path";
-import type PDFDocument from "pdfkit";
 import { PDF_COLORS } from "./constants";
 
 export function drawHeader({
@@ -7,16 +6,16 @@ export function drawHeader({
   y,
   margin,
   pageWidth,
-  title = "สรุปข้อมูลสมัครบริการ",
+  title,
 }: {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   pageWidth: number;
-  title?: string;
+  title: string;
 }) {
-  const headerHeight = 35;
-  const radius = 12;
+  const headerHeight = 30;
+  const radius = 8;
 
   const headerWidth = (pageWidth - margin * 2) * 0.75;
   const headerX = margin;
@@ -25,6 +24,10 @@ export function drawHeader({
     process.cwd(),
     "src/assets/img/icons/png/AIS-Fibre3-FullColor-LightBG.png",
   );
+
+  /* -------------------------
+     HEADER BOX
+  ------------------------- */
 
   doc
     .moveTo(headerX, y + headerHeight)
@@ -42,16 +45,26 @@ export function drawHeader({
     .closePath()
     .fill(PDF_COLORS.GREEN);
 
-  doc
-    .fillColor(PDF_COLORS.WHITE)
-    .font("bold")
-    .fontSize(18)
-    .text(title, headerX, y + headerHeight / 2 - 8, {
-      width: headerWidth,
-      align: "center",
-    });
+  /* -------------------------
+     TITLE (CENTER)
+  ------------------------- */
 
-  const logoWidth = 60;
+  doc.font("regular").fontSize(18);
+
+  const textHeight = doc.currentLineHeight();
+
+  const textY = y + (headerHeight - textHeight) / 2;
+
+  doc.fillColor(PDF_COLORS.WHITE).text(title, headerX, textY, {
+    width: headerWidth,
+    align: "center",
+  });
+
+  /* -------------------------
+     LOGO
+  ------------------------- */
+
+  const logoWidth = 65;
 
   doc.image(
     logoPath,
@@ -60,5 +73,5 @@ export function drawHeader({
     { width: logoWidth },
   );
 
-  return y + headerHeight + 5;
+  return y + headerHeight + 3;
 }

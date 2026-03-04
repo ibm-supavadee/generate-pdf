@@ -51,7 +51,7 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
 
-      const margin = 30;
+      const margin = 20;
       const contentWidth = pageWidth - margin * 2;
 
       let y = margin;
@@ -64,19 +64,20 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
       };
 
       /* -------------------------
-         HEADER
-      ------------------------- */
+           HEADER
+        ------------------------- */
 
       y = drawHeader({
         doc,
         y,
         margin,
         pageWidth,
+        title: "สรุปข้อมูลสมัครบริการ",
       });
 
       /* -------------------------
-         CUSTOMER INFO
-      ------------------------- */
+           CUSTOMER INFO
+        ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -84,7 +85,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         title: "ข้อมูลผู้สมัคร",
-        ensureSpace,
         options: { withDivider: true },
       });
 
@@ -97,11 +97,11 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         ensureSpace,
       });
 
-      y += 25;
+      y += 20;
 
       /* -------------------------
-         PACKAGES
-      ------------------------- */
+           PACKAGES
+        ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -109,7 +109,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         title: "สรุปรายการแพ็กเกจที่เลือก",
-        ensureSpace,
         options: { withDivider: true },
       });
 
@@ -122,8 +121,8 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
       });
 
       /* -------------------------
-         EXPENSE TABLE
-      ------------------------- */
+           EXPENSE TABLE
+        ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -131,7 +130,6 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         title: "รายละเอียดค่าใช้จ่าย",
-        ensureSpace,
         options: { fullWidth: true },
       });
 
@@ -144,8 +142,8 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
       });
 
       /* -------------------------
-         REMARK
-      ------------------------- */
+           REMARK
+        ------------------------- */
 
       y = drawRemark({
         doc,
@@ -173,8 +171,15 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         pageWidth,
         pageHeight,
-        ensureSpace,
         startY: y,
+        drawHeader: (startY) =>
+          drawHeader({
+            doc,
+            y: startY,
+            margin,
+            pageWidth,
+            title: "ข้อตกลงและเงื่อนไขบริการ",
+          }),
       });
 
       doc.end();
