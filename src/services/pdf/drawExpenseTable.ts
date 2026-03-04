@@ -13,6 +13,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   pageHeight: number;
+  drawPageHeader: () => number;
 };
 
 export function drawExpenseTable({
@@ -21,6 +22,7 @@ export function drawExpenseTable({
   margin,
   contentWidth,
   pageHeight,
+  drawPageHeader,
 }: Params): number {
   const col1Width = 150;
   const col3Width = 100;
@@ -66,7 +68,10 @@ export function drawExpenseTable({
 
     if (y + rowHeight > pageHeight - margin) {
       doc.addPage();
-      y = margin;
+
+      // draw header + section header ใหม่
+      y = drawPageHeader();
+
       drawTopBorder(col1X, contentWidth);
     }
 
@@ -174,7 +179,7 @@ export function drawExpenseTable({
   drawExpenseGroup("ค่าเดินสายที่ต้องชำระในวันติดตั้ง (ถ้ามี)", [
     {
       text: "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง",
-      price: "-",
+      price: "",
     },
   ]);
 
@@ -225,6 +230,31 @@ export function drawExpenseTable({
       bold: true,
     },
   ]);
+
+  // drawExpenseGroup("ค่าติดตั้งและอุปกรณ์", [
+  //   {
+  //     text: "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WiFi router)",
+  //     price: "4,800.00 บาท",
+  //   },
+  //   {
+  //     text: "ส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 24 รอบบิล",
+  //     price: "-4,800.00 บาท",
+  //   },
+  //   {
+  //     text: "รับสิทธิ์ยืมอุปกรณ์ ดังนี้",
+  //     price: "",
+  //   },
+  //   {
+  //     text: "   • FTTH – Router มูลค่า 2,500 บาท",
+  //     price: "",
+  //   },
+  //   {
+  //     text: "รวมรายการที่ต้องชำระต่อเดือน",
+  //     subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
+  //     price: "0.00 บาท",
+  //     bold: true,
+  //   },
+  // ]);
 
   return y;
 }

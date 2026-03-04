@@ -139,6 +139,28 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         pageHeight,
+        drawPageHeader: () => {
+          let newY = margin;
+
+          newY = drawHeader({
+            doc,
+            y: newY,
+            margin,
+            pageWidth,
+            title: "สรุปข้อมูลสมัครบริการ",
+          });
+
+          newY = drawSectionHeader({
+            doc,
+            y: newY,
+            margin,
+            contentWidth,
+            title: "รายละเอียดค่าใช้จ่าย",
+            options: { withDivider: true },
+          });
+
+          return newY;
+        },
       });
 
       /* -------------------------
