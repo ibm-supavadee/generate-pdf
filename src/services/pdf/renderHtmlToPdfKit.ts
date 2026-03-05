@@ -12,7 +12,7 @@ export function renderHtmlToPdfKit(
   },
 ) {
   const { margin, pageWidth, pageHeight } = options;
-  const LINK = "#0b66d6";
+  const LINK = "#0000EE";
   const HEADER_SPACING = 10;
   const BULLET_WIDTH = 6;
   const NUMBER_WIDTH = 14;
@@ -65,8 +65,10 @@ export function renderHtmlToPdfKit(
       spacing?: number;
     } = {},
   ) => {
-    const plainText = rawBlock.replace(/<[^>]+>/g, "").trim();
-
+    const plainText = rawBlock
+      .replace(/<a[^>]*>([\s\S]*?)<\/a>/gi, "$1") // ✅ keep anchor display text
+      .replace(/<[^>]+>/g, "")
+      .trim();
     // กำหนดระยะที่ข้อความจะเริ่ม (ชิดซ้ายสุด + ระยะเยื้องของชั้นนั้น)
     // สำหรับชั้นแรก (Top-level) hangingIndent จะเท่ากับระยะที่เผื่อไว้ให้ตัวเลขพอดี
     const xPos = margin + hangingIndent + 2;
@@ -96,34 +98,65 @@ export function renderHtmlToPdfKit(
       });
     }
 
-    const parts = rawBlock.split(/(<(?:b|strong)>.*?<\/(?:b|strong)>)/gi);
-    doc.text("", xPos, y, { continued: true, indent: firstLineIndent });
+    const parts = rawBlock.split(
+      /(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>|<a[\s\S]*?<\/a>)/gi,
+    );
 
+    let currentX = xPos;
     parts.forEach((part, index) => {
       if (!part) return;
+
+      const isFirst = index === 0;
       const isLast = index === parts.length - 1;
+
       let textSegment = part;
       let isBold = baseBold;
+      let partLink: string | undefined;
 
-      if (part.match(/<(?:b|strong)>(.*?)<\/(?:b|strong)>/i)) {
+      if (part.match(/<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>/i)) {
         isBold = true;
         textSegment = part.replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "");
+      } else if (part.match(/<a[\s\S]*?<\/a>/i)) {
+        const hrefMatch = part.match(/href="([^"]+)"/);
+        partLink = hrefMatch?.[1];
+        textSegment = part.replace(/<[^>]+>/g, "").trim();
       } else {
         textSegment = part.replace(/<[^>]+>/g, "");
       }
 
-      if (!textSegment && !isLast) return;
+      if (!textSegment.trim() && !isLast) return;
+
+      const isLink = !!(partLink || link);
+      const textY = isFirst ? y : y; // y คงที่ตลอด line เดียวกัน
 
       doc
         .font(isBold ? "bold" : "regular")
-        .fillColor(link ? LINK : PDF_COLORS?.GRAY || "#333333")
-        .text(textSegment, {
-          width: availableWidth,
-          align,
-          link,
-          underline: !!link,
-          continued: !isLast,
-        });
+        .fillColor(isLink ? LINK : PDF_COLORS?.GRAY || "#333333")
+        .text(
+          textSegment,
+          isFirst ? xPos : undefined,
+          isFirst ? y : undefined,
+          {
+            width: availableWidth,
+            align,
+            link: partLink ?? link,
+            underline: false,
+            indent: firstLineIndent,
+            continued: !isLast,
+          },
+        );
+
+      if (isLink && textSegment.trim()) {
+        const textWidth = doc.widthOfString(textSegment);
+        doc
+          .moveTo(currentX, y + doc.currentLineHeight() - 1)
+          .lineTo(currentX + textWidth, y + doc.currentLineHeight() - 1)
+          .strokeColor(LINK)
+          .lineWidth(0.5)
+          .stroke();
+      }
+
+      currentX += doc.widthOfString(textSegment);
     });
 
     y = doc.y + spacing;

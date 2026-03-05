@@ -192,7 +192,7 @@ export const termAndConERequestMock = `
     <tr><td>
         <div class="conditions-header">ข้อตกลงและเงื่อนไขบริการ Microsoft 365 Family</div>
         <div class="conditions-article">บริการ Microsoft 365 Family หมายถึง บริการโปรแกรมคอมพิวเตอร์ (Application) ต่าง ๆ จากไมโครซอฟท์ (Microsoft) ที่เป็นรูปแบบการให้บริการบนระบบคลาวด์ (Cloud Service) อาทิเช่น Microsoft Office (Word, Excel, PowerPoint, OneNote), Outlook (Mail, Calendar), OneDrive, Clipchamp, Microsoft Defender, Microsoft Family Safety, หรือ Skype เป็นต้น ซึ่งสามารถใช้งานได้ด้วยการเปิดใช้งานออนไลน์ผ่านระบบอินเทอร์เน็ต โดยผ่านเว็บเบราว์เซอร์ (Web Browser) เมื่อใช้บนเครื่องคอมพิวเตอร์ และผ่านโปรแกรมคอมพิวเตอร์สำหรับโทรศัพท์เคลื่อนที่ (Mobile Application) เมื่อใช้บน Tablet หรือ Smartphone ทั้งระบบปฏิบัติการทางคอมพิวเตอร์ (Operating System) iOS และ Android</div>
-        <div class="conditions-section"><br>ขอบเขตการให้บริการ</div>
+        <div class="conditions-section"><br><b>ขอบเขตการให้บริการ</b></div>
         <div class="conditions-article-ol">
             <ol>
                 <li>ผู้ใช้บริการรับทราบและยอมรับว่าในการให้บริการ Microsoft 365 Family ตามข้อตกลงและเงื่อนไขนี้ บริษัทฯ เป็นเพียงผู้ทำหน้าที่จัดหาและ/หรือเป็นช่องทางรับสมัครใช้ Microsoft 365 Family ให้แก่ผู้ใช้บริการเท่านั้น บริษัทฯ ไม่ต้องรับผิดชอบความเสียหายใด ๆ อันมีสาเหตุมาจากกรณีดังที่ระบุไว้ท้ายนี้ทั้งสิ้น
