@@ -14,6 +14,8 @@ export function renderHtmlToPdfKit(
   const { margin, pageWidth, pageHeight } = options;
   const LINK = "#0b66d6";
   const HEADER_SPACING = 10;
+  const BULLET_WIDTH = 6;
+  const NUMBER_WIDTH = 14;
   let y = options.startY;
   const contentWidth = pageWidth - margin * 2;
 
@@ -67,7 +69,7 @@ export function renderHtmlToPdfKit(
 
     // กำหนดระยะที่ข้อความจะเริ่ม (ชิดซ้ายสุด + ระยะเยื้องของชั้นนั้น)
     // สำหรับชั้นแรก (Top-level) hangingIndent จะเท่ากับระยะที่เผื่อไว้ให้ตัวเลขพอดี
-    const xPos = margin + hangingIndent;
+    const xPos = margin + hangingIndent + 2;
     const availableWidth = contentWidth - hangingIndent;
 
     const height = doc.heightOfString(plainText, {
@@ -81,12 +83,15 @@ export function renderHtmlToPdfKit(
       .fontSize(fontSize)
       .fillColor(link ? LINK : PDF_COLORS?.GRAY || "#333333");
 
-    // วาด Bullet/Number ให้ชิดซ้ายของพื้นที่เยื้องในชั้นนั้นๆ
     if (bullet) {
-      // วาดเริ่มที่ขอบในของชั้นนั้น (เช่น ชั้นแรกเริ่มที่ margin)
-      const bulletX = margin + (hangingIndent > 14 ? hangingIndent - 14 : 0);
+      const isNumber = /^\d+\./.test(bullet);
+      const width = isNumber ? NUMBER_WIDTH : BULLET_WIDTH;
+
+      const bulletX =
+        margin + (hangingIndent > width ? hangingIndent - width : 0);
+
       doc.font("regular").text(bullet, bulletX, y, {
-        width: 14, // พื้นที่สำหรับเลขข้อ
+        width,
         align: "left",
       });
     }
@@ -109,13 +114,16 @@ export function renderHtmlToPdfKit(
 
       if (!textSegment && !isLast) return;
 
-      doc.font(isBold ? "bold" : "regular").text(textSegment, {
-        width: availableWidth,
-        align,
-        link,
-        underline: !!link,
-        continued: !isLast,
-      });
+      doc
+        .font(isBold ? "bold" : "regular")
+        .fillColor(link ? LINK : PDF_COLORS?.GRAY || "#333333")
+        .text(textSegment, {
+          width: availableWidth,
+          align,
+          link,
+          underline: !!link,
+          continued: !isLast,
+        });
     });
 
     y = doc.y + spacing;
@@ -187,7 +195,13 @@ export function renderHtmlToPdfKit(
         spacing: 1,
       });
     } else if (block.includes("conditions-section")) {
-      drawText(block, { fontSize: 12, baseBold: true, spacing: 4 });
+      const isRemark = block.includes("หมายเหตุ");
+
+      if (isRemark) {
+        y += 10; // padding ก่อน remark
+      }
+
+      drawText(block, { fontSize: 12, baseBold: true, spacing: 3 });
     } else if (block.includes("conditions-article-sub1")) {
       drawText(block, { firstLineIndent: 55 });
     } else if (block.includes("conditions-article")) {
