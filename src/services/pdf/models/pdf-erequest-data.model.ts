@@ -6,9 +6,9 @@ export class PdfERequestData {
   mainPackages: Section = new Section();
   extensions: Section = new Section();
   entrySection: SectionWithPrice = new SectionWithPrice();
-  cableSection: Section = new Section();
+  cableSection?: Section = new Section();
   installationSection: SectionWithPrice = new SectionWithPrice();
-  equipmentSection: Section = new Section();
+  equipmentSection?: Section = new Section();
   monthlySection: SectionWithPrice = new SectionWithPrice();
   averageSection: SectionWithPrice = new SectionWithPrice();
   termsAndConditions: string = "";
