@@ -6,3 +6,5 @@ export const PDF_COLORS = {
   GRAY_LIGHT: "#808080",
   LINK: "#0000EE",
 };
+
+export const FONT_SIZE = 11;

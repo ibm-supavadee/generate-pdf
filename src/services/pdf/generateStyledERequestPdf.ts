@@ -13,6 +13,8 @@ import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_b
 
 import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { renderExpenseTable } from "./helpers/renderExpenseTable";
+import { renderTcExisting } from "./helpers/renderTCexisting";
+import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
@@ -209,6 +211,23 @@ export async function generateStyledERequestPdf(
       //     }),
       // });
 
+      y = renderTcExisting({
+        doc,
+        html: termAndConERequestExistingMock,
+        y,
+        margin,
+        pageWidth,
+        pageHeight,
+        drawHeader: (startY) =>
+          drawHeader({
+            doc,
+            y: startY,
+            margin,
+            pageWidth,
+            title: "ข้อตกลงและเงื่อนไขบริการ",
+          }),
+      });
+      
       /* -------------------------
         PAGE NUMBER
       ------------------------- */
