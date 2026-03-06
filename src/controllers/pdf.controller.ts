@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { generateStyledERequestPdf } from "../services/pdf/helpers/generateStyledERequestPdf";
+import { generateStyledERequestPdf } from "../services/pdf/generateStyledERequestPdf";
 
 export const createPdf = async (req: Request, res: Response) => {
   try {

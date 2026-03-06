@@ -1,18 +1,18 @@
 import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
 
-import { drawHeader } from "./drawHeader";
-import { drawSectionHeader } from "./drawSectionHeader";
-import { drawCustomerInfo } from "./drawCustomerInfo";
-import { drawPackages } from "./drawPackages";
-import { drawExpenseTable } from "./drawExpenseTable";
-import { drawRemark } from "./drawRemark";
-import { renderHtmlToPdfKit } from "./renderHtmlToPdfKit";
+import { drawHeader } from "./helpers/drawHeader";
+import { drawSectionHeader } from "./helpers/drawSectionHeader";
+import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
+import { drawPackages } from "./helpers/drawPackages";
+import { drawExpenseTable } from "./helpers/drawExpenseTable";
+import { drawRemark } from "./helpers/drawRemark";
+import { renderHtmlToPdfKit } from "./helpers/renderHtmlToPdfKit";
 
-import { dbHelvethaicaAisXV3 } from "../../../assets/fonts/db_helvethaica_ais_x_v3";
-import { dbHelvethaicaAisXBdV3 } from "../../../assets/fonts/db_helvethaica_ais_x_bd_v3";
+import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
+import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
-import { PdfERequestData } from "../models/pdf-erequest-data.model";
+import { PdfERequestData } from "./models/pdf-erequest-data.model";
 
 export async function generateStyledERequestPdf(data: PdfERequestData): Promise<string> {
   return new Promise((resolve, reject) => {

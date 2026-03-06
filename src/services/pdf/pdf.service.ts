@@ -1,4 +1,4 @@
-import { generateStyledERequestPdf } from "./helpers/generateStyledERequestPdf";
+import { generateStyledERequestPdf } from "./generateStyledERequestPdf";
 
 export class PdfService {
   async generateEApplicationPdf(data: any) {
