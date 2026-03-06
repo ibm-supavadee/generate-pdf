@@ -1,9 +1,7 @@
 import { generateStyledERequestPdf } from "./generateStyledERequestPdf";
 
 export class PdfService {
-  async generateEApplicationPdf(data: any) {
+  static async generateERequestPdf(data: any) {
     return generateStyledERequestPdf(data);
   }
 }
-
-export const pdfService = new PdfService();

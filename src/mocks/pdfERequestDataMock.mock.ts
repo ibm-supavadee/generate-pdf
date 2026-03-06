@@ -45,6 +45,9 @@ export const pdfERequestDataMock: PdfERequestData = {
       isDiscount: true,
     }
   ],
+  cableSection: [
+    "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง"
+  ],
   installationSection: [
     {
       text: "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับส่งสัญญาณ (WiFi router)",

@@ -6,6 +6,7 @@ export class PdfERequestData {
   mainPackages: String[] = [];
   extensions: String[] = [];
   entrySection: Detail[] = [];
+  cableSection: String[] = [];
   installationSection: Detail[] = [];
   equipmentSection: String[] = [];
   monthlySection: Detail[] = [];

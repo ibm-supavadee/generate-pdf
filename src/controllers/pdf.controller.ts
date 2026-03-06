@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { generateStyledERequestPdf } from "../services/pdf/generateStyledERequestPdf";
+import { PdfService } from "../services/pdf/pdf.service";
 
 export const createPdf = async (req: Request, res: Response) => {
   try {
     const data = req.body;
 
-    const base64Pdf = await generateStyledERequestPdf(data);
+    const base64Pdf = await PdfService.generateERequestPdf(data);
 
     res.json({
       success: true,
