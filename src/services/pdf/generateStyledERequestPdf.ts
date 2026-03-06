@@ -13,12 +13,17 @@ import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_b
 
 import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { renderExpenseTable } from "./helpers/renderExpenseTable";
-import { renderTcExisting } from "./helpers/renderTCexisting";
+import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
+import { renderTcExisting } from "./helpers/renderTcExisting";
 import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
 ): Promise<string> {
+
+  const label =  (data.lang === "EN")? E_REQUEST_LABEL_EN : E_REQUEST_LABEL_TH;
+
   return new Promise((resolve, reject) => {
     try {
       /* -------------------------
@@ -124,6 +129,7 @@ export async function generateStyledERequestPdf(
         margin,
         contentWidth,
         data,
+        label,
       });
 
       /* -------------------------
@@ -146,6 +152,7 @@ export async function generateStyledERequestPdf(
         contentWidth,
         pageHeight,
         data,
+        label,
         drawPageHeader: () => {
           let newY = margin;
 

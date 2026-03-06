@@ -8,6 +8,7 @@ export const createERequestPdf = async (req: Request, res: Response) => {
     const data = req.body as PdfERequestData;
     data.termsAndConditions = termAndConERequestExistingMock;
 
+    // console.log("Received data for PDF generation:", data);
     const base64Pdf = await PdfService.generateERequestPdf(data);
 
     res.json({

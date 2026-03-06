@@ -1,5 +1,7 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
-import { PDF_COLORS } from "../pdf.constants";
+import { PDF_COLORS } from "../constants/pdf.constants";
+import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
+import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
 
 type ExpenseRow = {
   text: string;
@@ -15,6 +17,7 @@ type Params = {
   contentWidth: number;
   pageHeight: number;
   data: PdfERequestData;
+  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
   drawPageHeader: () => number;
 };
 
@@ -25,8 +28,11 @@ export function renderExpenseTable({
   contentWidth,
   pageHeight,
   data,
+  label,
   drawPageHeader,
 }: Params): number {
+
+  
   const col1Width = 150;
   const col3Width = 100;
   const col2Width = contentWidth - col1Width - col3Width;
@@ -239,36 +245,36 @@ export function renderExpenseTable({
   ----------------------------- */
 
   renderSection(
-    data.entrySection.title,
-    mapPriceRows(data.entrySection.details, { showSubText: true }),
+    label.ENTRY_SECTION_TITLE,
+    mapPriceRows(data.entrySection, { showSubText: true }),
   );
 
-  if (data.cableSection?.details?.length) {
+  if (data.cableSection?.length) {
     renderSection(
-      data.cableSection.title,
-      mapTextRows(data.cableSection.details),
+      label.CABLE_SECTION_TITLE,
+      mapTextRows(data.cableSection),
     );
   }
 
   renderSection(
-    data.installationSection.title,
+    label.INSTALLATION_SECTION_TITLE,
     mapInstallationRows(
-      data.installationSection.details,
-      data.equipmentSection?.details ?? [],
+      data.installationSection,
+      data.equipmentSection ?? [],
     ),
   );
 
   renderSection(
-    data.monthlySection.title,
-    mapPriceRows(data.monthlySection.details, {
+    label.MONTHLY_SECTION_TITLE,
+    mapPriceRows(data.monthlySection, {
       showSubText: true,
       totalLabel: "รวมรายการที่ต้องชำระต่อเดือน",
     }),
   );
 
   renderSection(
-    "ค่าบริการเฉลี่ย 1 วัน\n(เรียกเก็บในบิลแรกเท่านั้น)",
-    mapPriceRows(data.averageSection.details, {
+    label.AVERAGE_SECTION_TITLE.replace("{{n}}", '1'),
+    mapPriceRows(data.averageSection, {
       showSubText: true,
       totalLabel: "รวมยอดโดยประมาณที่ต้องชำระ",
     }),

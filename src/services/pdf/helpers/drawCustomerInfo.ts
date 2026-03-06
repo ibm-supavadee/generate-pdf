@@ -1,5 +1,5 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
-import { PDF_COLORS } from "../pdf.constants";
+import { PDF_COLORS } from "../constants/pdf.constants";
 
 type CustomerType = "new" | "existing";
 

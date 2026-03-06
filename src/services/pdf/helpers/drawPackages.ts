@@ -1,5 +1,7 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
-import { PDF_COLORS } from "../pdf.constants";
+import { PDF_COLORS } from "../constants/pdf.constants";
+import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -7,6 +9,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   data: PdfERequestData;
+  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
 };
 
 export function drawPackages({
@@ -15,7 +18,9 @@ export function drawPackages({
   margin,
   contentWidth,
   data,
+  label,
 }: Params): number {
+
   const pkgStartY = y;
 
   const labelWidth = 100;
@@ -53,8 +58,8 @@ export function drawPackages({
   };
 
   drawPackageRow(
-    data.mainPackages?.title || "แพ็กเกจหลัก",
-    data.mainPackages?.details || [],
+    label.MAIN_PACKAGE,
+    data.mainPackages || [],
   );
 
   doc
@@ -65,8 +70,8 @@ export function drawPackages({
     .stroke();
 
   drawPackageRow(
-    data.extensions?.title || "แพ็กเกจเสริม",
-    data.extensions?.details || [],
+    label.EXTENSIONS,
+    data.extensions || [],
   );
 
   doc
