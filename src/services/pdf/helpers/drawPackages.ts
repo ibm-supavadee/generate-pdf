@@ -1,3 +1,4 @@
+import { PdfERequestData } from "../models/pdf-erequest-data.model";
 import { PDF_COLORS } from "../pdf.constants";
 
 type Params = {
@@ -5,7 +6,7 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  data: any;
+  data: PdfERequestData;
 };
 
 export function drawPackages({
@@ -21,9 +22,9 @@ export function drawPackages({
   const contentX = margin + labelWidth + 10;
   const contentWidthPkg = contentWidth - labelWidth - 20;
 
-  const rowPadding = 12;
+  const rowPadding = 8;
 
-  const drawPackageRow = (label: string, items: any[]) => {
+  const drawPackageRow = (label: string, items: string[]) => {
     const rowStartY = y;
 
     doc
@@ -33,26 +34,15 @@ export function drawPackages({
 
     let contentY = y + rowPadding;
 
-    items?.forEach((item: any) => {
+    items?.forEach((item) => {
       doc
         .font("regular")
         .fillColor(PDF_COLORS.GREEN)
-        .text(item.text, contentX, contentY, {
+        .text(item, contentX, contentY, {
           width: contentWidthPkg,
         });
 
-      contentY = doc.y + 4;
-
-      if (item.description) {
-        doc
-          .font("regular")
-          .fillColor(PDF_COLORS.GREEN)
-          .text(item.description, contentX, contentY, {
-            width: contentWidthPkg,
-          });
-
-        contentY = doc.y + 4;
-      }
+      contentY = doc.y + 2;
     });
 
     const rowHeight = contentY - rowStartY + rowPadding;
@@ -63,8 +53,8 @@ export function drawPackages({
   };
 
   drawPackageRow(
-    "แพ็กเกจหลัก",
-    data.packages?.flatMap((p: any) => p.detail) || [],
+    data.mainPackages?.title || "แพ็กเกจหลัก",
+    data.mainPackages?.details || [],
   );
 
   doc
@@ -75,8 +65,8 @@ export function drawPackages({
     .stroke();
 
   drawPackageRow(
-    "แพ็กเกจเสริม",
-    data.extensions?.flatMap((e: any) => e.detail) || [],
+    data.extensions?.title || "แพ็กเกจเสริม",
+    data.extensions?.details || [],
   );
 
   doc

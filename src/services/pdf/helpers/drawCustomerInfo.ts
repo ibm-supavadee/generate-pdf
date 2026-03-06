@@ -1,3 +1,4 @@
+import { PdfERequestData } from "../models/pdf-erequest-data.model";
 import { PDF_COLORS } from "../pdf.constants";
 
 type CustomerType = "new" | "existing";
@@ -8,7 +9,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   type: CustomerType;
-  data: any;
+  data: PdfERequestData;
   ensureSpace: (height: number) => void;
 };
 
@@ -38,7 +39,7 @@ export function drawCustomerInfo({
       ? [
           [
             "ชื่อ-นามสกุล",
-            customerInfo.fullName,
+            customerInfo.name,
             "หมายเลขที่ใช้ในการติดต่อ",
             customerInfo.mobileNo,
           ],
@@ -58,7 +59,7 @@ export function drawCustomerInfo({
             "เลขบัตรประชาชน",
             customerInfo.idCard,
           ],
-          ["ชื่อ-นามสกุล", customerInfo.fullName, "เพศ", customerInfo.gender],
+          ["ชื่อ-นามสกุล", customerInfo.name, "เพศ", customerInfo.gender],
           [
             "วันเกิด",
             customerInfo.birthDate,
@@ -75,7 +76,7 @@ export function drawCustomerInfo({
             "วัน/เวลาติดตั้งที่ท่านเลือก",
             customerInfo.installDateTime,
             "วัน/เวลาติดตั้งสำรอง",
-            customerInfo.reserveInstallDateTime,
+            customerInfo.backUpInstallDateTime,
           ],
           [
             "สถานที่ติดตั้ง",

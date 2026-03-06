@@ -5,7 +5,6 @@ import { drawHeader } from "./helpers/drawHeader";
 import { drawSectionHeader } from "./helpers/drawSectionHeader";
 import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
 import { drawPackages } from "./helpers/drawPackages";
-import { drawExpenseTable } from "./helpers/drawExpenseTable";
 import { drawRemark } from "./helpers/drawRemark";
 import { renderHtmlToPdfKit } from "./helpers/renderHtmlToPdfKit";
 
@@ -13,8 +12,11 @@ import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3"
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
 import { PdfERequestData } from "./models/pdf-erequest-data.model";
+import { renderExpenseTable } from "./helpers/renderExpenseTable";
 
-export async function generateStyledERequestPdf(data: PdfERequestData): Promise<string> {
+export async function generateStyledERequestPdf(
+  data: PdfERequestData,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       /* -------------------------
@@ -135,12 +137,13 @@ export async function generateStyledERequestPdf(data: PdfERequestData): Promise<
         options: { fullWidth: true },
       });
 
-      y = drawExpenseTable({
+      y = renderExpenseTable({
         doc,
         y,
         margin,
         contentWidth,
         pageHeight,
+        data,
         drawPageHeader: () => {
           let newY = margin;
 
@@ -191,20 +194,20 @@ export async function generateStyledERequestPdf(data: PdfERequestData): Promise<
         title: "ข้อตกลงและเงื่อนไขบริการ",
       });
 
-      renderHtmlToPdfKit(doc, data.termsAndConditions, {
-        margin,
-        pageWidth,
-        pageHeight,
-        startY: y,
-        drawHeader: (startY) =>
-          drawHeader({
-            doc,
-            y: startY,
-            margin,
-            pageWidth,
-            title: "ข้อตกลงและเงื่อนไขบริการ",
-          }),
-      });
+      // renderHtmlToPdfKit(doc, data.termsAndConditions, {
+      //   margin,
+      //   pageWidth,
+      //   pageHeight,
+      //   startY: y,
+      //   drawHeader: (startY) =>
+      //     drawHeader({
+      //       doc,
+      //       y: startY,
+      //       margin,
+      //       pageWidth,
+      //       title: "ข้อตกลงและเงื่อนไขบริการ",
+      //     }),
+      // });
 
       /* -------------------------
         PAGE NUMBER
