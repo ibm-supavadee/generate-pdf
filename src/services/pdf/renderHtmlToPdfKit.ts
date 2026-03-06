@@ -12,7 +12,6 @@ export function renderHtmlToPdfKit(
   },
 ) {
   const { margin, pageWidth, pageHeight } = options;
-  const LINK = "#0000EE";
   const HEADER_SPACING = 10;
   const BULLET_WIDTH = 6;
   const NUMBER_WIDTH = 14;
@@ -43,13 +42,45 @@ export function renderHtmlToPdfKit(
   let listStack: { type: "ul" | "ol"; index: number; styleNone: boolean }[] =
     [];
 
+  // Parse a raw HTML block into segments: { text, bold, link? }
+  type Segment = { text: string; bold: boolean; link?: string };
+
+  const parseSegments = (rawBlock: string): Segment[] => {
+    const segments: Segment[] = [];
+    // Split on bold tags and anchor tags
+    const parts = rawBlock.split(
+      /(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>|<a[\s\S]*?<\/a>)/gi,
+    );
+
+    for (const part of parts) {
+      if (!part) continue;
+
+      if (part.match(/<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>/i)) {
+        const text = part
+          .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
+          .replace(/<[^>]+>/g, "");
+        if (text) segments.push({ text, bold: true });
+      } else if (part.match(/<a[\s\S]*?<\/a>/i)) {
+        const hrefMatch = part.match(/href="([^"]+)"/);
+        const link = hrefMatch?.[1];
+        const text = part.replace(/<[^>]+>/g, "").trim();
+        if (text) segments.push({ text, bold: false, link });
+      } else {
+        const text = part.replace(/<[^>]+>/g, "");
+        if (text) segments.push({ text, bold: false });
+      }
+    }
+
+    return segments;
+  };
+
   const drawText = (
     rawBlock: string,
     {
       fontSize = 11,
       baseBold = false,
       firstLineIndent = 0,
-      hangingIndent = 0, // ระยะเยื้องรวมของ List ชั้นนั้นๆ
+      hangingIndent = 0,
       bullet,
       link,
       align = "left",
@@ -66,14 +97,14 @@ export function renderHtmlToPdfKit(
     } = {},
   ) => {
     const plainText = rawBlock
-      .replace(/<a[^>]*>([\s\S]*?)<\/a>/gi, "$1") // ✅ keep anchor display text
+      .replace(/<a[^>]*>([\s\S]*?)<\/a>/gi, "$1")
       .replace(/<[^>]+>/g, "")
       .trim();
-    // กำหนดระยะที่ข้อความจะเริ่ม (ชิดซ้ายสุด + ระยะเยื้องของชั้นนั้น)
-    // สำหรับชั้นแรก (Top-level) hangingIndent จะเท่ากับระยะที่เผื่อไว้ให้ตัวเลขพอดี
+
     const xPos = margin + hangingIndent + 2;
     const availableWidth = contentWidth - hangingIndent;
 
+    // Measure height using the plain text
     const height = doc.heightOfString(plainText, {
       width: availableWidth,
       indent: firstLineIndent,
@@ -81,82 +112,76 @@ export function renderHtmlToPdfKit(
 
     ensureSpace(height + spacing);
 
-    doc
-      .fontSize(fontSize)
-      .fillColor(link ? LINK : PDF_COLORS?.GRAY || "#333333");
-
+    // Draw bullet/number if needed
     if (bullet) {
       const isNumber = /^\d+\./.test(bullet);
       const width = isNumber ? NUMBER_WIDTH : BULLET_WIDTH;
-
       const bulletX =
         margin + (hangingIndent > width ? hangingIndent - width : 0);
 
-      doc.font("regular").text(bullet, bulletX, y, {
-        width,
-        align: "left",
-      });
+      doc
+        .fontSize(fontSize)
+        .font("regular")
+        .fillColor(PDF_COLORS?.GRAY || "#333333")
+        .text(bullet, bulletX, y, {
+          width,
+          align: "left",
+        });
+
+      // After bullet text(), doc.y may have advanced — reset y to where we started
+      // We'll manage y manually
     }
 
-    const parts = rawBlock.split(
-      /(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>|<a[\s\S]*?<\/a>)/gi,
+    // Parse segments
+    const segments = parseSegments(rawBlock);
+
+    // Filter out empty segments
+    const nonEmpty = segments.filter(
+      (s) => s.text.trim() !== "" || s.text.includes(" "),
     );
 
-    let currentX = xPos;
-    parts.forEach((part, index) => {
-      if (!part) return;
+    if (nonEmpty.length === 0) {
+      y += spacing;
+      return;
+    }
 
-      const isFirst = index === 0;
-      const isLast = index === parts.length - 1;
+    // Render all segments inline
+    // Only the first segment gets explicit x, y coordinates
+    // All intermediate segments use continued: true
+    // The last segment uses continued: false to finalize the line
+    nonEmpty.forEach((seg, i) => {
+      const isFirst = i === 0;
+      const isLast = i === nonEmpty.length - 1;
 
-      let textSegment = part;
-      let isBold = baseBold;
-      let partLink: string | undefined;
-
-      if (part.match(/<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>/i)) {
-        isBold = true;
-        textSegment = part.replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "");
-      } else if (part.match(/<a[\s\S]*?<\/a>/i)) {
-        const hrefMatch = part.match(/href="([^"]+)"/);
-        partLink = hrefMatch?.[1];
-        textSegment = part.replace(/<[^>]+>/g, "").trim();
-      } else {
-        textSegment = part.replace(/<[^>]+>/g, "");
-      }
-
-      if (!textSegment.trim() && !isLast) return;
-
-      const isLink = !!(partLink || link);
-      const textY = isFirst ? y : y; // y คงที่ตลอด line เดียวกัน
+      const isBold = baseBold || seg.bold;
+      const segLink = seg.link ?? link;
+      const isLink = !!segLink;
 
       doc
+        .fontSize(fontSize)
         .font(isBold ? "bold" : "regular")
-        .fillColor(isLink ? LINK : PDF_COLORS?.GRAY || "#333333")
-        .text(
-          textSegment,
-          isFirst ? xPos : undefined,
-          isFirst ? y : undefined,
-          {
-            width: availableWidth,
-            align,
-            link: partLink ?? link,
-            underline: false,
-            indent: firstLineIndent,
-            continued: !isLast,
-          },
-        );
+        .fillColor(isLink ? PDF_COLORS.LINK : PDF_COLORS?.GRAY || "#333333");
 
-      if (isLink && textSegment.trim()) {
-        const textWidth = doc.widthOfString(textSegment);
-        doc
-          .moveTo(currentX, y + doc.currentLineHeight() - 1)
-          .lineTo(currentX + textWidth, y + doc.currentLineHeight() - 1)
-          .strokeColor(LINK)
-          .lineWidth(0.5)
-          .stroke();
+      if (isFirst) {
+        doc.text(seg.text, xPos, y, {
+          width: availableWidth,
+          align,
+          link: segLink,
+          underline: isLink,
+          indent: firstLineIndent,
+          continued: !isLast,
+          lineBreak: true,
+        });
+      } else {
+        doc.text(seg.text, {
+          width: availableWidth,
+          align,
+          link: segLink,
+          underline: isLink,
+          continued: !isLast,
+          lineBreak: true,
+        });
       }
-
-      currentX += doc.widthOfString(textSegment);
     });
 
     y = doc.y + spacing;
@@ -231,7 +256,7 @@ export function renderHtmlToPdfKit(
       const isRemark = block.includes("หมายเหตุ");
 
       if (isRemark) {
-        y += 10; // padding ก่อน remark
+        y += 10;
       }
 
       drawText(block, { fontSize: 12, baseBold: true, spacing: 3 });

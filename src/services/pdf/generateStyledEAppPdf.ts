@@ -94,7 +94,7 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         margin,
         contentWidth,
         data,
-        type: "existing",
+        type: "new",
         ensureSpace,
       });
 
