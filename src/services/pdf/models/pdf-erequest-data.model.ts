@@ -10,6 +10,7 @@ export class PdfERequestData {
   equipmentSection: String[] = [];
   monthlySection: Detail[] = [];
   averageSection: Detail[] = [];
+  termsAndConditions: String = "";
 }
 
 export class CustomerInfo {

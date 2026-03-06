@@ -1,4 +1,5 @@
 import { PdfERequestData } from "../services/pdf/models/pdf-erequest-data.model";
+import { termAndConERequestExistingMock } from "./termAndConERequestExisting.mock";
 
 export const pdfERequestDataMock: PdfERequestData = {
   customerType: "EXISTING",
@@ -79,4 +80,5 @@ export const pdfERequestDataMock: PdfERequestData = {
       isDiscount: false,
     },
   ],
+  termsAndConditions: termAndConERequestExistingMock
 };
