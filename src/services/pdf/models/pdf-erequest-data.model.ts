@@ -3,15 +3,15 @@ export class PdfERequestData {
   lang: "TH" | "EN" = "TH";
   productOwner: "FBB" | "3BB" = "FBB";
   customerInfo: CustomerInfo = new CustomerInfo();
-  mainPackages: String[] = [];
-  extensions: String[] = [];
-  entrySection: Detail[] = [];
-  cableSection: String[] = [];
-  installationSection: Detail[] = [];
-  equipmentSection: String[] = [];
-  monthlySection: Detail[] = [];
-  averageSection: Detail[] = [];
-  termsAndConditions: String = "";
+  mainPackages: Section = new Section();
+  extensions: Section = new Section();
+  entrySection: SectionWithPrice = new SectionWithPrice();
+  cableSection: Section = new Section();
+  installationSection: SectionWithPrice = new SectionWithPrice();
+  equipmentSection: Section = new Section();
+  monthlySection: SectionWithPrice = new SectionWithPrice();
+  averageSection: SectionWithPrice = new SectionWithPrice();
+  termsAndConditions: string = "";
 }
 
 export class CustomerInfo {
@@ -30,6 +30,16 @@ export class CustomerInfo {
   installLocation: string = "";
   billingAddress: string = "";
   invoiceChannel: string = "";
+}
+
+export class SectionWithPrice {
+  title: string = "";
+  details: Detail[] = [];
+}
+
+export class Section {
+  title: string = "";
+  details: string[] = [];
 }
 
 export class Detail {
