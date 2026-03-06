@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { createPdf } from '../controllers/pdf.controller';
+import { createERequestPdf } from '../controllers/pdf.controller';
 
 const router = Router();
 
-router.post('/generate-playbox-pdf', createPdf);
+router.post('/generate-erequest-pdf', createERequestPdf);
 
 export default router;
