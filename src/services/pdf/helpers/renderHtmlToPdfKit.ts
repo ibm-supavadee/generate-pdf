@@ -1,8 +1,8 @@
-import { PDF_COLORS } from "./constants";
+import { PDF_COLORS } from "../pdf.constants";
 
 export function renderHtmlToPdfKit(
   doc: PDFKit.PDFDocument,
-  html: string,
+  html: String,
   options: {
     margin: number;
     pageWidth: number;

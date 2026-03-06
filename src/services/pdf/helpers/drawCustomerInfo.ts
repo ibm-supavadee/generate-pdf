@@ -1,4 +1,4 @@
-import { PDF_COLORS } from "./constants";
+import { PDF_COLORS } from "../pdf.constants";
 
 type CustomerType = "new" | "existing";
 

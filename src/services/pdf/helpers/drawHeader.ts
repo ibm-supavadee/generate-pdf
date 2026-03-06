@@ -1,5 +1,5 @@
 import path from "path";
-import { PDF_COLORS } from "./constants";
+import { PDF_COLORS } from "../pdf.constants";
 
 export function drawHeader({
   doc,

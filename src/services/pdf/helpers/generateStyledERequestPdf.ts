@@ -9,12 +9,12 @@ import { drawExpenseTable } from "./drawExpenseTable";
 import { drawRemark } from "./drawRemark";
 import { renderHtmlToPdfKit } from "./renderHtmlToPdfKit";
 
-import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
-import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
+import { dbHelvethaicaAisXV3 } from "../../../assets/fonts/db_helvethaica_ais_x_v3";
+import { dbHelvethaicaAisXBdV3 } from "../../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
-import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
+import { PdfERequestData } from "../models/pdf-erequest-data.model";
 
-export async function generateStyledEAppPdf(data: any): Promise<string> {
+export async function generateStyledERequestPdf(data: PdfERequestData): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       /* -------------------------
@@ -191,7 +191,7 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         title: "ข้อตกลงและเงื่อนไขบริการ",
       });
 
-      renderHtmlToPdfKit(doc, termAndConERequestNewRegisterMock, {
+      renderHtmlToPdfKit(doc, data.termsAndConditions, {
         margin,
         pageWidth,
         pageHeight,
