@@ -12,7 +12,7 @@ import { renderHtmlToPdfKit } from "./renderHtmlToPdfKit";
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
-import { termAndConERequestMock } from "../../mocks/termAndConERequest.mock";
+import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
 
 export async function generateStyledEAppPdf(data: any): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -191,7 +191,7 @@ export async function generateStyledEAppPdf(data: any): Promise<string> {
         title: "ข้อตกลงและเงื่อนไขบริการ",
       });
 
-      renderHtmlToPdfKit(doc, termAndConERequestMock, {
+      renderHtmlToPdfKit(doc, termAndConERequestNewRegisterMock, {
         margin,
         pageWidth,
         pageHeight,

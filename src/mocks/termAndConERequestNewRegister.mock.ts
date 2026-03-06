@@ -1,4 +1,4 @@
-export const termAndConERequestMock = `
+export const termAndConERequestNewRegisterMock = `
 <style>.conditions-header{text-align:center;font-weight:bold;}.conditions-preface{}.conditions-section{font-weight:bold;}.conditions-article{text-indent:2.5em;}.conditions-article-sub1{text-indent:5em;}</style>
 <table>
     <tr><td class="conditions-header">ข้อตกลงและเงื่อนไขการให้บริการโทรคมนาคม และ/หรือโทรทัศน์แบบบอกรับสมาชิก</td></tr>
