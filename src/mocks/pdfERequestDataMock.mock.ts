@@ -9,7 +9,6 @@ export const pdfERequestDataMock: PdfERequestData = {
     registerType: "บัตรประชาชน",
     name: "ทดสอบ นิวคนนึง",
     repName: "",
-    gender: "หญิง",
     mobileNo: "0633432145",
     email: "-",
     installDateTime: "2 ก.พ. 2569 09:00–12:00",

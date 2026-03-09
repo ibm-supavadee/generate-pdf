@@ -18,7 +18,6 @@ export class CustomerInfo {
   registerType: string = "";
   name: string = "";
   repName: string = "";
-  gender: string = "";
   mobileNo: string = "";
   email: string = "";
   installDateTime: string = "";
