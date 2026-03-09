@@ -7,15 +7,11 @@ export const pdfERequestDataMock: PdfERequestData = {
   productOwner: "FBB",
   customerInfo: {
     registerType: "บัตรประชาชน",
-    cardType: "บัตรประชาชน",
-    idCard: "1802034581530",
     name: "ทดสอบ นิวคนนึง",
     repName: "",
     gender: "หญิง",
-    birthDate: "1 ม.ค. 2525",
     mobileNo: "0633432145",
     email: "-",
-    contactTime: "08:00 - 17:00 น.",
     installDateTime: "2 ก.พ. 2569 09:00–12:00",
     alternativeInstallDate: "-",
     installAddress:

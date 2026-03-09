@@ -16,15 +16,11 @@ export class PdfERequestData {
 
 export class CustomerInfo {
   registerType: string = "";
-  cardType: string = "";
-  idCard: string = "";
   name: string = "";
   repName: string = "";
   gender: string = "";
-  birthDate: string = ""; // Format: D MMM YYYY
   mobileNo: string = "";
   email: string = "";
-  contactTime: string = "";
   installDateTime: string = "";
   alternativeInstallDate: string = "";
   installAddress: string = "";
