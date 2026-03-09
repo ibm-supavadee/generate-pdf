@@ -33,7 +33,7 @@ export function drawCustomerInfo({
   const customerInfo = data.customerInfo;
 
   const leftLabelX = margin;
-  const leftValueX = margin + 110;
+  const leftValueX = margin + 130;
 
   const rightLabelX = margin + contentWidth / 2;
   const rightValueX = rightLabelX + 120;
@@ -58,7 +58,7 @@ export function drawCustomerInfo({
           [label.CUSTOMER_INFO.INSTALLATION_DATE, customerInfo.installDateTime],
           [
             label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-            customerInfo.installLocation,
+            customerInfo.installAddress,
           ],
         ]
       : [
@@ -78,11 +78,11 @@ export function drawCustomerInfo({
             label.CUSTOMER_INFO.INSTALLATION_DATE,
             customerInfo.installDateTime,
             label.CUSTOMER_INFO.ALTERNATIVE_INSTALLATION_DATE,
-            customerInfo.backUpInstallDateTime,
+            customerInfo.alternativeInstallDate,
           ],
           [
             label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-            customerInfo.installLocation,
+            customerInfo.installAddress,
             label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
             customerInfo.billingAddress,
           ],

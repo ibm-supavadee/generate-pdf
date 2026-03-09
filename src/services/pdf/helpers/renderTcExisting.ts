@@ -1,4 +1,4 @@
-import { PDF_COLORS } from "../constants/pdf.constants";
+import { FONT_SIZE, PDF_COLORS } from "../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -79,7 +79,7 @@ export function renderTcExisting({
   const drawText = (
     rawBlock: string,
     {
-      fontSize = 11,
+      fontSize = FONT_SIZE,
       baseBold = false,
       firstLineIndent = 0,
       hangingIndent = 0,

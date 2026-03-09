@@ -19,7 +19,7 @@ import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
 import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
 import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
-import { CUSTOMER_TYPE } from "./constants/pdf.constants";
+import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
@@ -50,7 +50,7 @@ export async function generateStyledERequestPdf(
       doc.registerFont("regular", Buffer.from(dbHelvethaicaAisXV3, "base64"));
       doc.registerFont("bold", Buffer.from(dbHelvethaicaAisXBdV3, "base64"));
 
-      doc.font("regular").fontSize(11);
+      doc.font("regular").fontSize(FONT_SIZE);
 
       /* -------------------------
          PAGE CONFIG

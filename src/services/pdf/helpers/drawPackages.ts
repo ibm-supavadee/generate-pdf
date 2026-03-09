@@ -65,7 +65,7 @@ export function drawPackages({
     .lineWidth(0.5)
     .stroke();
 
-  drawPackageRow(label.ON_TOP_PACKAGE, data.extensions || []);
+  drawPackageRow(label.ON_TOP_PACKAGE, data.onTopPackages || []);
 
   doc
     .rect(margin + 0.5, pkgStartY + 0.5, contentWidth - 1, y - pkgStartY - 1)

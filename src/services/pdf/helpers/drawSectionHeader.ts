@@ -1,4 +1,4 @@
-import { PDF_COLORS } from "../constants/pdf.constants";
+import { FONT_SIZE, PDF_COLORS } from "../constants/pdf.constants";
 
 type Options = {
   withDivider?: boolean;
@@ -66,7 +66,7 @@ export function drawSectionHeader({
 
   y += boxHeight;
 
-  doc.font("regular").fontSize(11).fillColor(PDF_COLORS.GRAY);
+  doc.font("regular").fontSize(FONT_SIZE).fillColor(PDF_COLORS.GRAY);
 
   return y;
 }

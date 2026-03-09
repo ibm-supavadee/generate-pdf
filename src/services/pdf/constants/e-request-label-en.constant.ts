@@ -2,7 +2,7 @@ export const E_REQUEST_LABEL_EN = {
   MAIN_PACKAGE: "Main Package",
   ON_TOP_PACKAGE: "On-Top Package",
   ENTRY_SECTION_TITLE: "Payable Fees",
-  CABLE_SECTION_TITLE: "Wiring Fee (if applicable)",
+  WIRING_SECTION_TITLE: "Wiring Fee (if applicable)",
   INSTALLATION_SECTION_TITLE: "Installation and Equipment Fee",
   EQUIPTMENT_SECTION_TITLE: "Eligible equipment for borrowing*",
   MONTHLY_SECTION_TITLE: "Monthly Fee",

@@ -126,7 +126,7 @@ export function renderExpenseTable({
 
     rows.push({
       text: label.SUMMARY_OF_CHARGES,
-      subText: label.PRICE_EXCLUDE_VAT, // ✅ แสดงเสมอ
+      subText: label.PRICE_EXCLUDE_VAT,
       price: `${formatPrice(total)} ${label.THB}`,
       bold: true,
     });
@@ -248,8 +248,8 @@ export function renderExpenseTable({
   );
 
   if (data.customerType === CUSTOMER_TYPE.NEW) {
-    if (data.cableSection?.length) {
-      renderSection(label.CABLE_SECTION_TITLE, mapTextRows(data.cableSection));
+    if (data.wireSection?.length) {
+      renderSection(label.WIRING_SECTION_TITLE, mapTextRows(data.wireSection));
     }
   }
 

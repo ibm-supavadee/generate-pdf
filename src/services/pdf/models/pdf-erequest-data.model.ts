@@ -4,9 +4,9 @@ export class PdfERequestData {
   productOwner: "FBB" | "3BB" = "FBB";
   customerInfo: CustomerInfo = new CustomerInfo();
   mainPackages: string[] = [];
-  extensions: string[] = [];
+  onTopPackages: string[] = [];
   entrySection: Detail[] = [];
-  cableSection?: string[] = [];
+  wireSection?: string[] = [];
   installationSection: Detail[] = [];
   equipmentSection?: string[] = [];
   monthlySection: Detail[] = [];
@@ -26,8 +26,8 @@ export class CustomerInfo {
   email: string = "";
   contactTime: string = "";
   installDateTime: string = "";
-  backUpInstallDateTime: string = "";
-  installLocation: string = "";
+  alternativeInstallDate: string = "";
+  installAddress: string = "";
   billingAddress: string = "";
   invoiceChannel: string = "";
 }

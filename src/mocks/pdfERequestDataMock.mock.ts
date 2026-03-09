@@ -17,8 +17,8 @@ export const pdfERequestDataMock: PdfERequestData = {
     email: "-",
     contactTime: "08:00 - 17:00 น.",
     installDateTime: "2 ก.พ. 2569 09:00–12:00",
-    backUpInstallDateTime: "-",
-    installLocation:
+    alternativeInstallDate: "-",
+    installAddress:
       "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
     billingAddress:
       "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
@@ -28,7 +28,7 @@ export const pdfERequestDataMock: PdfERequestData = {
     "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
     "ส่วนลดค่าติดตั้งอินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WIFI Router) มูลค่า 4,800.00 บาท",
   ],
-  extensions: [
+  onTopPackages: [
     "HBO Add-on แพ็กเกจเสริมความบันเทิงระดับพรีเมียม รับชมภาพยนตร์และซีรีส์ดังจาก HBO Originals แบบเต็มอิ่ม ความคมชัดระดับ HD/4K พร้อมเสียงคุณภาพสูง รองรับการรับชมผ่าน Smart TV, มือถือ และแท็บเล็ต สามารถรับชมย้อนหลังและเลือกเสียงพากย์หรือคำบรรยายได้ตามต้องการ",
     "ฟรี! AIS Playbox มูลค่า 1,490 บาท",
     "ส่วนลดค่าบริการรายเดือน 50% นาน 6 เดือน (เฉพาะแพ็กเกจ BROADBAND24)",
@@ -45,7 +45,7 @@ export const pdfERequestDataMock: PdfERequestData = {
       isDiscount: true,
     },
   ],
-  cableSection: [
+  wireSection: [
     "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง",
   ],
   installationSection: [
