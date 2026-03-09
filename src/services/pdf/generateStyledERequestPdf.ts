@@ -7,29 +7,26 @@ import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
 import { drawPackages } from "./helpers/drawPackages";
 import { drawRemark } from "./helpers/drawRemark";
 import { renderHtmlToPdfKit } from "./helpers/renderHtmlToPdfKit";
+import { renderExpenseTable } from "./helpers/renderExpenseTable";
+import { renderTcExisting } from "./helpers/renderTcExisting";
 
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
 import { PdfERequestData } from "./models/pdf-erequest-data.model";
-import { renderExpenseTable } from "./helpers/renderExpenseTable";
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
-import { renderTcExisting } from "./helpers/renderTcExisting";
+
 import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
+import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
 ): Promise<string> {
-
-  const label =  (data.lang === "EN")? E_REQUEST_LABEL_EN : E_REQUEST_LABEL_TH;
+  const label = data.lang === "EN" ? E_REQUEST_LABEL_EN : E_REQUEST_LABEL_TH;
 
   return new Promise((resolve, reject) => {
     try {
-      /* -------------------------
-         INIT DOCUMENT
-      ------------------------- */
-
       const doc = new PDFDocument({
         size: "A4",
         margin: 10,
@@ -73,21 +70,33 @@ export async function generateStyledERequestPdf(
         }
       };
 
-      /* -------------------------
-           HEADER
-        ------------------------- */
+      const drawMainHeader = (startY: number) =>
+        drawHeader({
+          doc,
+          y: startY,
+          margin,
+          pageWidth,
+          title: "สรุปข้อมูลสมัครบริการ",
+        });
 
-      y = drawHeader({
-        doc,
-        y,
-        margin,
-        pageWidth,
-        title: "สรุปข้อมูลสมัครบริการ",
-      });
+      const drawTermsHeader = (startY: number) =>
+        drawHeader({
+          doc,
+          y: startY,
+          margin,
+          pageWidth,
+          title: "ข้อตกลงและเงื่อนไขบริการ",
+        });
 
       /* -------------------------
-           CUSTOMER INFO
-        ------------------------- */
+         HEADER
+      ------------------------- */
+
+      y = drawMainHeader(y);
+
+      /* -------------------------
+         CUSTOMER INFO
+      ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -104,15 +113,15 @@ export async function generateStyledERequestPdf(
         margin,
         contentWidth,
         data,
-        type: "new",
+        type: data.customerType,
         ensureSpace,
       });
 
       y += 20;
 
       /* -------------------------
-           PACKAGES
-        ------------------------- */
+         PACKAGES
+      ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -133,8 +142,8 @@ export async function generateStyledERequestPdf(
       });
 
       /* -------------------------
-           EXPENSE TABLE
-        ------------------------- */
+         EXPENSE TABLE
+      ------------------------- */
 
       y = drawSectionHeader({
         doc,
@@ -156,13 +165,7 @@ export async function generateStyledERequestPdf(
         drawPageHeader: () => {
           let newY = margin;
 
-          newY = drawHeader({
-            doc,
-            y: newY,
-            margin,
-            pageWidth,
-            title: "สรุปข้อมูลสมัครบริการ",
-          });
+          newY = drawMainHeader(newY);
 
           newY = drawSectionHeader({
             doc,
@@ -178,8 +181,8 @@ export async function generateStyledERequestPdf(
       });
 
       /* -------------------------
-           REMARK
-        ------------------------- */
+         REMARK
+      ------------------------- */
 
       y = drawRemark({
         doc,
@@ -195,48 +198,35 @@ export async function generateStyledERequestPdf(
 
       doc.addPage();
 
-      y = drawHeader({
-        doc,
-        y: margin,
-        margin,
-        pageWidth,
-        title: "ข้อตกลงและเงื่อนไขบริการ",
-      });
+      y = drawTermsHeader(margin);
 
-      // renderHtmlToPdfKit(doc, data.termsAndConditions, {
-      //   margin,
-      //   pageWidth,
-      //   pageHeight,
-      //   startY: y,
-      //   drawHeader: (startY) =>
-      //     drawHeader({
-      //       doc,
-      //       y: startY,
-      //       margin,
-      //       pageWidth,
-      //       title: "ข้อตกลงและเงื่อนไขบริการ",
-      //     }),
-      // });
+      const termsHtml =
+        data.customerType === "EXISTING"
+          ? termAndConERequestExistingMock
+          : termAndConERequestNewRegisterMock;
 
-      y = renderTcExisting({
-        doc,
-        html: termAndConERequestExistingMock,
-        y,
-        margin,
-        pageWidth,
-        pageHeight,
-        drawHeader: (startY) =>
-          drawHeader({
-            doc,
-            y: startY,
-            margin,
-            pageWidth,
-            title: "ข้อตกลงและเงื่อนไขบริการ",
-          }),
-      });
-      
+      if (data.customerType === "EXISTING") {
+        y = renderTcExisting({
+          doc,
+          html: termsHtml,
+          y,
+          margin,
+          pageWidth,
+          pageHeight,
+          drawHeader: drawTermsHeader,
+        });
+      } else {
+        renderHtmlToPdfKit(doc, termsHtml, {
+          margin,
+          pageWidth,
+          pageHeight,
+          startY: y,
+          drawHeader: drawTermsHeader,
+        });
+      }
+
       /* -------------------------
-        PAGE NUMBER
+         PAGE NUMBER
       ------------------------- */
 
       const range = doc.bufferedPageRange();

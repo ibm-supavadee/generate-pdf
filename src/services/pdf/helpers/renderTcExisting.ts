@@ -28,7 +28,9 @@ export function renderTcExisting({
   const HEADER_SPACING = 10;
   const BULLET_WIDTH = 6;
   const NUMBER_WIDTH = 14;
+  const PADDING = 10;
 
+  const HALF_PAGE_HEIGHT = (pageHeight - margin * 2) / 2;
   const contentWidth = pageWidth - margin * 2;
 
   /* ---------- page break ---------- */
@@ -57,27 +59,15 @@ export function renderTcExisting({
           .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
           .replace(/<[^>]+>/g, "");
 
-        segments.push({
-          text,
-          bold: true,
-        });
+        segments.push({ text, bold: true });
       } else if (/<a/.test(part)) {
         const link = part.match(/href="([^"]+)"/)?.[1];
-
         const text = part.replace(/<[^>]+>/g, "");
 
-        segments.push({
-          text,
-          bold: false,
-          link,
-        });
+        segments.push({ text, bold: false, link });
       } else {
         const text = part.replace(/<[^>]+>/g, "");
-
-        segments.push({
-          text,
-          bold: false,
-        });
+        segments.push({ text, bold: false });
       }
     }
 
@@ -94,7 +84,6 @@ export function renderTcExisting({
       firstLineIndent = 0,
       hangingIndent = 0,
       bullet,
-      link,
       align = "left",
       spacing = 2,
     }: {
@@ -103,7 +92,6 @@ export function renderTcExisting({
       firstLineIndent?: number;
       hangingIndent?: number;
       bullet?: string;
-      link?: string;
       align?: "left" | "center" | "right";
       spacing?: number;
     } = {},
@@ -114,7 +102,6 @@ export function renderTcExisting({
       .trim();
 
     const xPos = margin + hangingIndent + 2;
-
     const availableWidth = contentWidth - hangingIndent;
 
     const height = doc.heightOfString(plainText, {
@@ -125,11 +112,10 @@ export function renderTcExisting({
 
     const startY = y;
 
-    /* draw bullet / number */
+    /* bullet */
 
     if (bullet) {
       const isNumber = /^\d+\./.test(bullet);
-
       const width = isNumber ? NUMBER_WIDTH : BULLET_WIDTH;
 
       const bulletX =
@@ -139,31 +125,19 @@ export function renderTcExisting({
         .font("regular")
         .fontSize(fontSize)
         .fillColor(PDF_COLORS.GRAY)
-        .text(bullet, bulletX, startY, {
-          width,
-        });
+        .text(bullet, bulletX, startY, { width });
 
       y = startY;
     }
 
     const segments = parseSegments(rawBlock);
 
-    const nonEmpty = segments.filter(
-      (s) => s.text.trim() !== "" || s.text.includes(" "),
-    );
-
-    if (nonEmpty.length === 0) {
-      y += spacing;
-      return;
-    }
-
-    nonEmpty.forEach((seg, i) => {
+    segments.forEach((seg, i) => {
       const isFirst = i === 0;
-      const isLast = i === nonEmpty.length - 1;
+      const isLast = i === segments.length - 1;
 
       const isBold = baseBold || seg.bold;
-      const segLink = seg.link;
-      const isLink = !!segLink;
+      const isLink = !!seg.link;
 
       doc
         .fontSize(fontSize)
@@ -174,7 +148,7 @@ export function renderTcExisting({
         doc.text(seg.text, xPos, y, {
           width: availableWidth,
           align,
-          link: segLink,
+          link: seg.link,
           underline: isLink,
           indent: firstLineIndent,
           continued: !isLast,
@@ -183,7 +157,7 @@ export function renderTcExisting({
         doc.text(seg.text, {
           width: availableWidth,
           align,
-          link: segLink,
+          link: seg.link,
           underline: isLink,
           continued: !isLast,
         });
@@ -211,8 +185,15 @@ export function renderTcExisting({
   /* ---------- list state ---------- */
 
   let listStack: { type: "ol" | "ul"; index: number }[] = [];
-
   let lastIndent = 0;
+  let lastWasCenter = false;
+
+  /* ---------- special sections ---------- */
+
+  const isSpecialSection = (block: string) => {
+    const text = block.replace(/<[^>]+>/g, "").trim();
+    return text === "หมายเหตุ :" || text === "ขอบเขตการให้บริการ";
+  };
 
   /* ---------- parser ---------- */
 
@@ -232,33 +213,24 @@ export function renderTcExisting({
       continue;
     }
 
-    /* detect link */
+    const isSpecial = isSpecialSection(block);
 
     const link = block.match(/href="([^"]+)"/)?.[1];
-
-    /* detect bold */
-
     const isBold = /<(b|strong)>/i.test(block);
 
-    /* detect indent from &nbsp; */
-
     const nbspCount = (block.match(/&nbsp;/g) || []).length;
-
     const extraIndent = nbspCount * 8;
-
-    /* remove nbsp from text */
 
     const cleanedBlock = block.replace(/&nbsp;/g, "");
 
     const currentList = listStack[listStack.length - 1];
 
-    const isNoBullet = /list-style-type\s*:\s*none/i.test(block);
-
     /* ---------- list item ---------- */
 
     if (block.includes("<li")) {
-      const hangingIndent = listStack.length * 16;
+      lastWasCenter = false;
 
+      const hangingIndent = listStack.length * 16;
       lastIndent = hangingIndent;
 
       const isNoBullet = /list-style-type\s*:\s*none/i.test(block);
@@ -268,7 +240,6 @@ export function renderTcExisting({
           bullet: isNoBullet ? undefined : `${currentList.index}.`,
           hangingIndent,
           firstLineIndent: extraIndent,
-          link,
           baseBold: isBold,
         });
 
@@ -278,7 +249,6 @@ export function renderTcExisting({
           bullet: isNoBullet ? undefined : "•",
           hangingIndent,
           firstLineIndent: extraIndent,
-          link,
           baseBold: isBold,
         });
       }
@@ -289,10 +259,11 @@ export function renderTcExisting({
     /* ---------- continuation inside list ---------- */
 
     if (listStack.length > 0) {
+      lastWasCenter = false;
+
       drawText(cleanedBlock, {
         hangingIndent: lastIndent,
         firstLineIndent: extraIndent,
-        link,
         baseBold: isBold,
       });
 
@@ -302,20 +273,51 @@ export function renderTcExisting({
     /* ---------- center title ---------- */
 
     if (block.includes("<center>")) {
+      const remainingHeight = pageHeight - margin - y;
+      let pageBreak = false;
+
+      if (remainingHeight < HALF_PAGE_HEIGHT) {
+        doc.addPage();
+        y = drawHeader(margin) + HEADER_SPACING;
+        pageBreak = true;
+      }
+
+      if (!lastWasCenter && !pageBreak) {
+        y += PADDING;
+      }
+
       drawText(cleanedBlock, {
         align: "center",
         fontSize: 12,
         baseBold: true,
       });
 
+      lastWasCenter = true;
+      continue;
+    }
+
+    /* ---------- special section ---------- */
+
+    if (isSpecial) {
+      lastWasCenter = false;
+
+      y += PADDING;
+
+      drawText(cleanedBlock, {
+        firstLineIndent: extraIndent,
+        baseBold: true,
+      });
+
+      y += PADDING;
       continue;
     }
 
     /* ---------- normal text ---------- */
 
+    lastWasCenter = false;
+
     drawText(cleanedBlock, {
       firstLineIndent: extraIndent,
-      link,
       baseBold: isBold,
     });
   }

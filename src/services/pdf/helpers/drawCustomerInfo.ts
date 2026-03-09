@@ -1,14 +1,12 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
 import { PDF_COLORS } from "../constants/pdf.constants";
 
-type CustomerType = "new" | "existing";
-
 type Params = {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   contentWidth: number;
-  type: CustomerType;
+  type: "NEW" | "EXISTING";
   data: PdfERequestData;
   ensureSpace: (height: number) => void;
 };
@@ -35,7 +33,7 @@ export function drawCustomerInfo({
   const rowSpacing = 18;
 
   const rows =
-    type === "existing"
+    type === "EXISTING"
       ? [
           [
             "ชื่อ-นามสกุล",

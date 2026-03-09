@@ -31,8 +31,6 @@ export function renderExpenseTable({
   label,
   drawPageHeader,
 }: Params): number {
-
-  
   const col1Width = 150;
   const col3Width = 100;
   const col2Width = contentWidth - col1Width - col3Width;
@@ -249,19 +247,15 @@ export function renderExpenseTable({
     mapPriceRows(data.entrySection, { showSubText: true }),
   );
 
-  if (data.cableSection?.length) {
-    renderSection(
-      label.CABLE_SECTION_TITLE,
-      mapTextRows(data.cableSection),
-    );
+  if (data.customerType === "NEW") {
+    if (data.cableSection?.length) {
+      renderSection(label.CABLE_SECTION_TITLE, mapTextRows(data.cableSection));
+    }
   }
 
   renderSection(
     label.INSTALLATION_SECTION_TITLE,
-    mapInstallationRows(
-      data.installationSection,
-      data.equipmentSection ?? [],
-    ),
+    mapInstallationRows(data.installationSection, data.equipmentSection ?? []),
   );
 
   renderSection(
@@ -273,7 +267,7 @@ export function renderExpenseTable({
   );
 
   renderSection(
-    label.AVERAGE_SECTION_TITLE.replace("{{n}}", '1'),
+    label.AVERAGE_SECTION_TITLE.replace("{{n}}", "1"),
     mapPriceRows(data.averageSection, {
       showSubText: true,
       totalLabel: "รวมยอดโดยประมาณที่ต้องชำระ",
