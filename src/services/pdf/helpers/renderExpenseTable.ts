@@ -267,8 +267,8 @@ export function renderExpenseTable({
   );
 
   renderSection(
-    label.AVERAGE_SECTION_TITLE.replace("{{n}}", "1"),
-    mapPriceRows(data.averageSection, {
+    label.AVERAGE_SECTION_TITLE.replace("{{n}}", data.averageSection.days.toString()),
+    mapPriceRows(data.averageSection.details, {
       showSubText: true,
       totalLabel: label.ESTIMATE_TOTAL_CHARGE,
     }),

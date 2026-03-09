@@ -76,12 +76,15 @@ export const pdfERequestDataMock: PdfERequestData = {
       isDiscount: true,
     },
   ],
-  averageSection: [
-    {
-      text: "คิดเฉลี่ย 123.91 บาทต่อ 1 วัน",
-      price: 123.91,
-      isDiscount: false,
-    },
-  ],
+  averageSection: {
+    days: 1,
+    details: [
+      {
+        text: "คิดเฉลี่ย 123.91 บาทต่อ 1 วัน",
+        price: 123.91,
+        isDiscount: false,
+      },
+    ],
+  },
   termsAndConditions: termAndConERequestExistingMock,
 };

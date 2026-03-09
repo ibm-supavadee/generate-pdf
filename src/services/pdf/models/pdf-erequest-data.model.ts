@@ -10,7 +10,7 @@ export class PdfERequestData {
   installationSection: Detail[] = [];
   equipmentSection?: string[] = [];
   monthlySection: Detail[] = [];
-  averageSection: Detail[] = [];
+  averageSection: AverageSection = new AverageSection();
   termsAndConditions: string = "";
 }
 
@@ -30,6 +30,11 @@ export class CustomerInfo {
   installAddress: string = "";
   billingAddress: string = "";
   invoiceChannel: string = "";
+}
+
+export class AverageSection {
+  days: number = 0;
+  details: Detail[] = [];
 }
 
 export class Detail {
