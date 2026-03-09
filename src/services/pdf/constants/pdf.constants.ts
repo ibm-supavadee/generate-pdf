@@ -9,7 +9,7 @@ export const PDF_COLORS = {
 
 export const CUSTOMER_TYPE = {
   EXISTING: "EXISTING",
-  NEW: "NEW",
+  NEW_REGISTER: "NEW_REGISTER",
 };
 
 export const FONT_SIZE = 11;

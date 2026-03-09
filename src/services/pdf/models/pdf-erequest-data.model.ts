@@ -1,5 +1,5 @@
 export class PdfERequestData {
-  customerType: "NEW" | "EXISTING" = "NEW";
+  customerType: "NEW_REGISTER" | "EXISTING" = "NEW_REGISTER";
   lang: "TH" | "EN" = "TH";
   productOwner: "FBB" | "3BB" = "FBB";
   customerInfo: CustomerInfo = new CustomerInfo();
