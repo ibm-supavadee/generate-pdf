@@ -202,10 +202,7 @@ export async function generateStyledERequestPdf(
 
       y = drawTermsHeader(margin);
 
-      const termsHtml =
-        data.customerType === CUSTOMER_TYPE.EXISTING
-          ? termAndConERequestExistingMock
-          : termAndConERequestNewRegisterMock;
+      const termsHtml = data.termsAndConditions;
 
       if (data.customerType === CUSTOMER_TYPE.EXISTING) {
         y = renderTcExisting({
