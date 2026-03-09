@@ -1,11 +1,33 @@
 export const E_REQUEST_LABEL_EN = {
-    MAIN_PACKAGE: 'Main Package',
-    EXTENSIONS: 'On-Top Package',
-    ENTRY_SECTION_TITLE: 'Payable Fee',
-    CABLE_SECTION_TITLE: 'Wiring Fee (if applicable)',
-    INSTALLATION_SECTION_TITLE: 'Installation and Equipment Fee',
-    EQUIPTMENT_SECTION_TITLE: 'Eligible equipment for borrowing*',
-    MONTHLY_SECTION_TITLE: 'Monthly Fee',
-    AVERAGE_SECTION_TITLE: 'Average service charge for {{n}} days (charged on the first bill only)',
-    
-}
+  MAIN_PACKAGE: "Main Package",
+  ON_TOP_PACKAGE: "On-Top Package",
+  ENTRY_SECTION_TITLE: "Payable Fees",
+  CABLE_SECTION_TITLE: "Wiring Fee (if applicable)",
+  INSTALLATION_SECTION_TITLE: "Installation and Equipment Fee",
+  EQUIPTMENT_SECTION_TITLE: "Eligible equipment for borrowing*",
+  MONTHLY_SECTION_TITLE: "Monthly Fee",
+  AVERAGE_SECTION_TITLE:
+    "Average service charge for {{n}} days (charged on the first bill only)",
+  CUSTOMER_INFO: {
+    NAME: "Firstname - Lastname​",
+    EMAIL: "Email",
+    INSTALLATION_DATE: "Installation Date/Time",
+    ADDRESS_EQUIPMENT_INSTALLATION: "Address for Equipment Installation​",
+    MOBILE_NO: "Mobile No.",
+    ALTERNATIVE_INSTALLATION_DATE: "Alternative Installation Date/Time",
+    BILLING_CHANNEL: "Billing Channel",
+    DOCUMENT_DELIVERY_ADDRESS: "Document Delivery Address",
+  },
+  SUMMARY_SELECTED_PACKAGE: "Summary of Selected Package",
+  DETAIL_CHARGES: "Detail of Charges",
+  DATA_OF_SUBSCRIBER: "Data of Subscriber",
+  TERMS_AND_CONDITIONS_OF_SERVICE: "Terms and Conditions of Service",
+  REMARKS: `​*If the service is terminated, the Subscriber shall return borrowed equipment to AWN within the period and at the location specified by AWN. Failure to return the equipment shall render the Subscriber liable for compensation equivalent to the value of the equipment, subject  to the Terms and Conditions of Service.
+*If the Subscriber terminates the service prior to the expiry of the service period, the Subscriber agrees to pay the installation fee, proportionately reduced to reflect the period of service already used; provided, however, that this shall not apply where the termination results from the service not being provided in accordance with the advertised terms or stated service standards, or from any fault of AWN, in accordance with the Terms and Conditions of Service.​`,
+  ESTIMATE_TOTAL_CHARGE: "Estimated total charges​",
+  PRICE_EXCLUDE_VAT: " (Price excludes VAT)",
+  MONTHLY_SUMMARY_OF_CHARGES: "Monthly summary of charges",
+  SUMMARY_OF_CHARGES: "Summary of charges",
+  THB: "THB",
+  ENTITLED_TO_BORROW_EQUIPMENT: "Entitled to borrow the following equipment",
+};

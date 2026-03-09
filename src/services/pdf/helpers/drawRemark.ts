@@ -1,3 +1,5 @@
+import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
 import { PDF_COLORS } from "../constants/pdf.constants";
 
 type Params = {
@@ -5,6 +7,7 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
+  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
   ensureSpace: (height: number) => void;
 };
 
@@ -13,20 +16,16 @@ export function drawRemark({
   y,
   margin,
   contentWidth,
+  label,
   ensureSpace,
 }: Params): number {
   const topSpacing = 15;
-
-  const note = `*กรณียกเลิกบริการต้องส่งคืนอุปกรณ์ให้แก่ AWN ตามระยะเวลาและสถานที่ที่ AWN กำหนด หากไม่ส่งคืน ผู้ใช้บริการยินยอมชดใช้ค่าเสียหายตามมูลค่าอุปกรณ์
-*หากยกเลิกก่อนครบ 24 รอบบิล ยินดีชำระค่าติดตั้งคืนในอัตราที่ได้มีการหักลดลงตามสัดส่วนที่ได้ใช้บริการไปก่อนแล้วเว้นแต่กรณีที่เหตุแห่งการยกเลิกบริการเกิดขึ้นจากการให้บริการที่ไม่เป็นไปตาม โฆษณาหรือมาตรฐานการให้บริการที่ได้แจ้งไว้ หรือเกิดขึ้นจากความผิดของ AWN AWN จะไม่มีการเรียกเก็บค่าติดตั้งอีกแต่อย่างใ`;
-
-  const noteHeight = doc.heightOfString(note, {
+  const remarkHeight = doc.heightOfString(label.REMARKS, {
     width: contentWidth,
   });
 
-  ensureSpace(noteHeight + topSpacing);
+  ensureSpace(remarkHeight + topSpacing);
 
-  // 👇 สำคัญมาก ถ้ามี addPage จะได้ตำแหน่งใหม่
   y = doc.y;
 
   y += topSpacing;
@@ -35,7 +34,7 @@ export function drawRemark({
     .font("regular")
     .fontSize(9)
     .fillColor(PDF_COLORS.GRAY)
-    .text(note, margin, y, {
+    .text(label.REMARKS, margin, y, {
       width: contentWidth,
       lineGap: 2,
     });

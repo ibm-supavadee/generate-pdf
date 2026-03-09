@@ -20,7 +20,6 @@ export function drawPackages({
   data,
   label,
 }: Params): number {
-
   const pkgStartY = y;
 
   const labelWidth = 100;
@@ -57,10 +56,7 @@ export function drawPackages({
     return rowHeight;
   };
 
-  drawPackageRow(
-    label.MAIN_PACKAGE,
-    data.mainPackages || [],
-  );
+  drawPackageRow(label.MAIN_PACKAGE, data.mainPackages || []);
 
   doc
     .moveTo(margin, y)
@@ -69,10 +65,7 @@ export function drawPackages({
     .lineWidth(0.5)
     .stroke();
 
-  drawPackageRow(
-    label.EXTENSIONS,
-    data.extensions || [],
-  );
+  drawPackageRow(label.ON_TOP_PACKAGE, data.extensions || []);
 
   doc
     .rect(margin + 0.5, pkgStartY + 0.5, contentWidth - 1, y - pkgStartY - 1)

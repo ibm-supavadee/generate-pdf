@@ -1,26 +1,34 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
-import { PDF_COLORS } from "../constants/pdf.constants";
+import {
+  CUSTOMER_TYPE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../constants/pdf.constants";
+import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
+import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
 
 type Params = {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   contentWidth: number;
-  type: "NEW" | "EXISTING";
   data: PdfERequestData;
+  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
   ensureSpace: (height: number) => void;
 };
+
+type Row = [string, string?, string?, string?];
 
 export function drawCustomerInfo({
   doc,
   y,
   margin,
   contentWidth,
-  type,
   data,
+  label,
   ensureSpace,
 }: Params): number {
-  y += 10;
+  y += HEADER_SPACING;
 
   const customerInfo = data.customerInfo;
 
@@ -32,75 +40,75 @@ export function drawCustomerInfo({
 
   const rowSpacing = 18;
 
-  const rows =
-    type === "EXISTING"
+  const rows: Row[] =
+    data.customerType === CUSTOMER_TYPE.EXISTING
       ? [
           [
-            "ชื่อ-นามสกุล",
+            label.CUSTOMER_INFO.NAME,
             customerInfo.name,
-            "หมายเลขที่ใช้ในการติดต่อ",
+            label.CUSTOMER_INFO.MOBILE_NO,
             customerInfo.mobileNo,
           ],
           [
-            "อีเมล",
+            label.CUSTOMER_INFO.EMAIL,
             customerInfo.email,
-            "ที่อยู่จัดส่งบิล",
+            label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
             customerInfo.billingAddress,
           ],
-          ["วัน/เวลาติดตั้งที่ท่านเลือก", customerInfo.installDateTime, "", ""],
-          ["สถานที่ติดตั้ง", customerInfo.installLocation, "", ""],
+          [label.CUSTOMER_INFO.INSTALLATION_DATE, customerInfo.installDateTime],
+          [
+            label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
+            customerInfo.installLocation,
+          ],
         ]
       : [
           [
-            "ประเภทบัตร",
-            customerInfo.cardType,
-            "เลขบัตรประชาชน",
-            customerInfo.idCard,
-          ],
-          ["ชื่อ-นามสกุล", customerInfo.name, "เพศ", customerInfo.gender],
-          [
-            "วันเกิด",
-            customerInfo.birthDate,
-            "เบอร์โทร",
+            label.CUSTOMER_INFO.NAME,
+            customerInfo.name,
+            label.CUSTOMER_INFO.MOBILE_NO,
             customerInfo.mobileNo,
           ],
           [
-            "อีเมล",
+            label.CUSTOMER_INFO.EMAIL,
             customerInfo.email,
-            "เวลาที่สะดวกให้ติดต่อกลับ",
-            customerInfo.contactTime,
+            label.CUSTOMER_INFO.BILLING_CHANNEL,
+            customerInfo.invoiceChannel,
           ],
           [
-            "วัน/เวลาติดตั้งที่ท่านเลือก",
+            label.CUSTOMER_INFO.INSTALLATION_DATE,
             customerInfo.installDateTime,
-            "วัน/เวลาติดตั้งสำรอง",
+            label.CUSTOMER_INFO.ALTERNATIVE_INSTALLATION_DATE,
             customerInfo.backUpInstallDateTime,
           ],
           [
-            "สถานที่ติดตั้ง",
+            label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
             customerInfo.installLocation,
-            "ช่องทางรับบิล",
-            customerInfo.invoiceChannel,
+            label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
+            customerInfo.billingAddress,
           ],
-          ["", "", "ที่อยู่จัดส่งบิล", customerInfo.billingAddress],
         ];
 
-  rows.forEach((r) => {
+  const drawField = (
+    label: string | undefined,
+    value: string | undefined,
+    labelX: number,
+    valueX: number,
+  ) => {
+    if (!label) return;
+
+    doc.font("bold").fillColor(PDF_COLORS.GRAY).text(label, labelX, y);
+
+    doc
+      .font("regular")
+      .fillColor(PDF_COLORS.GREEN)
+      .text(value || "", valueX, y, { width: 160 });
+  };
+
+  rows.forEach(([lLabel, lValue, rLabel, rValue]) => {
     ensureSpace(rowSpacing);
 
-    doc.font("bold").fillColor(PDF_COLORS.GRAY).text(r[0], leftLabelX, y);
-
-    doc
-      .font("regular")
-      .fillColor(PDF_COLORS.GREEN)
-      .text(r[1] || "", leftValueX, y, { width: 160 });
-
-    doc.font("bold").fillColor(PDF_COLORS.GRAY).text(r[2], rightLabelX, y);
-
-    doc
-      .font("regular")
-      .fillColor(PDF_COLORS.GREEN)
-      .text(r[3] || "", rightValueX, y, { width: 160 });
+    drawField(lLabel, lValue, leftLabelX, leftValueX);
+    drawField(rLabel, rValue, rightLabelX, rightValueX);
 
     y += rowSpacing;
   });

@@ -6,7 +6,7 @@ import { drawSectionHeader } from "./helpers/drawSectionHeader";
 import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
 import { drawPackages } from "./helpers/drawPackages";
 import { drawRemark } from "./helpers/drawRemark";
-import { renderHtmlToPdfKit } from "./helpers/renderHtmlToPdfKit";
+import { renderHtmlToPdfKit } from "./helpers/renderTcNew";
 import { renderExpenseTable } from "./helpers/renderExpenseTable";
 import { renderTcExisting } from "./helpers/renderTcExisting";
 
@@ -19,6 +19,7 @@ import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
 import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
 import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
+import { CUSTOMER_TYPE } from "./constants/pdf.constants";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
@@ -76,7 +77,7 @@ export async function generateStyledERequestPdf(
           y: startY,
           margin,
           pageWidth,
-          title: "สรุปข้อมูลสมัครบริการ",
+          title: label.SUMMARY_SELECTED_PACKAGE,
         });
 
       const drawTermsHeader = (startY: number) =>
@@ -85,7 +86,7 @@ export async function generateStyledERequestPdf(
           y: startY,
           margin,
           pageWidth,
-          title: "ข้อตกลงและเงื่อนไขบริการ",
+          title: label.TERMS_AND_CONDITIONS_OF_SERVICE,
         });
 
       /* -------------------------
@@ -103,7 +104,7 @@ export async function generateStyledERequestPdf(
         y,
         margin,
         contentWidth,
-        title: "ข้อมูลผู้สมัคร",
+        title: label.DATA_OF_SUBSCRIBER,
         options: { withDivider: true },
       });
 
@@ -113,7 +114,7 @@ export async function generateStyledERequestPdf(
         margin,
         contentWidth,
         data,
-        type: data.customerType,
+        label,
         ensureSpace,
       });
 
@@ -128,7 +129,7 @@ export async function generateStyledERequestPdf(
         y,
         margin,
         contentWidth,
-        title: "สรุปรายการแพ็กเกจที่เลือก",
+        title: label.SUMMARY_SELECTED_PACKAGE,
         options: { withDivider: true },
       });
 
@@ -150,7 +151,7 @@ export async function generateStyledERequestPdf(
         y,
         margin,
         contentWidth,
-        title: "รายละเอียดค่าใช้จ่าย",
+        title: label.DETAIL_CHARGES,
         options: { fullWidth: true },
       });
 
@@ -172,7 +173,7 @@ export async function generateStyledERequestPdf(
             y: newY,
             margin,
             contentWidth,
-            title: "รายละเอียดค่าใช้จ่าย",
+            title: label.DETAIL_CHARGES,
             options: { withDivider: true },
           });
 
@@ -189,6 +190,7 @@ export async function generateStyledERequestPdf(
         y,
         margin,
         contentWidth,
+        label,
         ensureSpace,
       });
 
@@ -201,11 +203,11 @@ export async function generateStyledERequestPdf(
       y = drawTermsHeader(margin);
 
       const termsHtml =
-        data.customerType === "EXISTING"
+        data.customerType === CUSTOMER_TYPE.EXISTING
           ? termAndConERequestExistingMock
           : termAndConERequestNewRegisterMock;
 
-      if (data.customerType === "EXISTING") {
+      if (data.customerType === CUSTOMER_TYPE.EXISTING) {
         y = renderTcExisting({
           doc,
           html: termsHtml,

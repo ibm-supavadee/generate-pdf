@@ -1,5 +1,9 @@
 import { PdfERequestData } from "../models/pdf-erequest-data.model";
-import { PDF_COLORS } from "../constants/pdf.constants";
+import {
+  CUSTOMER_TYPE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../constants/pdf.constants";
 import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
 import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
 
@@ -39,13 +43,14 @@ export function renderExpenseTable({
   const col2X = col1X + col1Width;
   const col3X = col2X + col2Width;
 
-  const padding = 10;
-
   const formatPrice = (price: number) =>
     price.toLocaleString("th-TH", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+  const formatPriceText = (value: number) =>
+    `${value < 0 ? "-" : ""}${formatPrice(Math.abs(value))} ${label.THB}`;
 
   const drawTopBorder = () => {
     const half = 0.5;
@@ -69,25 +74,25 @@ export function renderExpenseTable({
     items: { text: string; price: number; isDiscount?: boolean }[],
     opts?: { showSubText?: boolean; totalLabel?: string },
   ): ExpenseRow[] => {
-    const showSubText = opts?.showSubText;
-    const totalLabel = opts?.totalLabel ?? "รวมรายการที่ต้องชำระ";
+    const totalLabel = opts?.totalLabel ?? label.SUMMARY_OF_CHARGES;
 
     let total = 0;
 
     const rows: ExpenseRow[] = items.map((item) => {
       const value = item.isDiscount ? -item.price : item.price;
+
       total += value;
 
       return {
         text: item.text,
-        price: `${value < 0 ? "-" : ""}${formatPrice(Math.abs(item.price))} บาท`,
+        price: formatPriceText(value),
       };
     });
 
     rows.push({
       text: totalLabel,
-      subText: showSubText ? " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)" : undefined,
-      price: `${formatPrice(total)} บาท`,
+      subText: label.PRICE_EXCLUDE_VAT,
+      price: `${formatPrice(total)} ${label.THB}`,
       bold: true,
     });
 
@@ -102,16 +107,17 @@ export function renderExpenseTable({
 
     const rows: ExpenseRow[] = install.map((item) => {
       const value = item.isDiscount ? -item.price : item.price;
+
       total += value;
 
       return {
         text: item.text,
-        price: `${value < 0 ? "-" : ""}${formatPrice(Math.abs(item.price))} บาท`,
+        price: formatPriceText(value),
       };
     });
 
     if (equipment?.length) {
-      rows.push({ text: "รับสิทธิ์ยืมอุปกรณ์ ดังนี้" });
+      rows.push({ text: label.ENTITLED_TO_BORROW_EQUIPMENT });
 
       equipment.forEach((eq) => {
         rows.push({ text: `   • ${eq}` });
@@ -119,9 +125,9 @@ export function renderExpenseTable({
     }
 
     rows.push({
-      text: "รวมรายการที่ต้องชำระ",
-      subText: " (ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม)",
-      price: `${formatPrice(total)} บาท`,
+      text: label.SUMMARY_OF_CHARGES,
+      subText: label.PRICE_EXCLUDE_VAT, // ✅ แสดงเสมอ
+      price: `${formatPrice(total)} ${label.THB}`,
       bold: true,
     });
 
@@ -149,7 +155,7 @@ export function renderExpenseTable({
     });
 
     const contentHeight = Math.max(leftHeight, middleHeight, rightHeight);
-    const rowHeight = contentHeight + padding * 2;
+    const rowHeight = contentHeight + HEADER_SPACING * 2;
 
     if (y + rowHeight > pageHeight - margin) {
       doc.addPage();
@@ -159,16 +165,14 @@ export function renderExpenseTable({
 
     const rowStartY = y;
 
-    /* left column */
-
     doc
       .font("regular")
       .fillColor(PDF_COLORS.GRAY)
-      .text(title, col1X + 10, y + padding, {
+      .text(title, col1X + 10, y + HEADER_SPACING, {
         width: col1Width - 20,
       });
 
-    let rowY = y + padding;
+    let rowY = y + HEADER_SPACING;
 
     rows.forEach((row) => {
       const textHeight = doc.heightOfString(row.text, {
@@ -214,22 +218,18 @@ export function renderExpenseTable({
       .moveTo(col1X + half, rowStartY)
       .lineTo(col1X + half, rowStartY + rowHeight)
       .stroke();
-
     doc
       .moveTo(col2X + half, rowStartY)
       .lineTo(col2X + half, rowStartY + rowHeight)
       .stroke();
-
     doc
       .moveTo(col3X + half, rowStartY)
       .lineTo(col3X + half, rowStartY + rowHeight)
       .stroke();
-
     doc
       .moveTo(col1X + contentWidth - half, rowStartY)
       .lineTo(col1X + contentWidth - half, rowStartY + rowHeight)
       .stroke();
-
     doc
       .moveTo(col1X + half, rowStartY + rowHeight - half)
       .lineTo(col1X + contentWidth - half, rowStartY + rowHeight - half)
@@ -247,7 +247,7 @@ export function renderExpenseTable({
     mapPriceRows(data.entrySection, { showSubText: true }),
   );
 
-  if (data.customerType === "NEW") {
+  if (data.customerType === CUSTOMER_TYPE.NEW) {
     if (data.cableSection?.length) {
       renderSection(label.CABLE_SECTION_TITLE, mapTextRows(data.cableSection));
     }
@@ -262,7 +262,7 @@ export function renderExpenseTable({
     label.MONTHLY_SECTION_TITLE,
     mapPriceRows(data.monthlySection, {
       showSubText: true,
-      totalLabel: "รวมรายการที่ต้องชำระต่อเดือน",
+      totalLabel: label.MONTHLY_SUMMARY_OF_CHARGES,
     }),
   );
 
@@ -270,7 +270,7 @@ export function renderExpenseTable({
     label.AVERAGE_SECTION_TITLE.replace("{{n}}", "1"),
     mapPriceRows(data.averageSection, {
       showSubText: true,
-      totalLabel: "รวมยอดโดยประมาณที่ต้องชำระ",
+      totalLabel: label.ESTIMATE_TOTAL_CHARGE,
     }),
   );
 
