@@ -247,7 +247,7 @@ export function renderExpenseTable({
     mapPriceRows(data.entrySection, { showSubText: true }),
   );
 
-  if (data.customerType === CUSTOMER_TYPE.NEW) {
+  if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
     if (data.wireSection?.length) {
       renderSection(label.WIRING_SECTION_TITLE, mapTextRows(data.wireSection));
     }
@@ -267,7 +267,10 @@ export function renderExpenseTable({
   );
 
   renderSection(
-    label.AVERAGE_SECTION_TITLE.replace("{{n}}", data.averageSection.days.toString()),
+    label.AVERAGE_SECTION_TITLE.replace(
+      "{{n}}",
+      data.averageSection.days.toString(),
+    ),
     mapPriceRows(data.averageSection.details, {
       showSubText: true,
       totalLabel: label.ESTIMATE_TOTAL_CHARGE,

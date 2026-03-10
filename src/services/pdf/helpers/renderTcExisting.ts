@@ -261,8 +261,10 @@ export function renderTcExisting({
     if (listStack.length > 0) {
       lastWasCenter = false;
 
+      const currentIndent = listStack.length * 16;
+
       drawText(cleanedBlock, {
-        hangingIndent: lastIndent,
+        hangingIndent: currentIndent,
         firstLineIndent: extraIndent,
         baseBold: isBold,
       });
