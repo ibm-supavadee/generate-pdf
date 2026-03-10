@@ -28,7 +28,7 @@ export function drawPackages({
 
   const rowPadding = 8;
 
-  const drawPackageRow = (label: string, items: string[]) => {
+  const drawPackageRow = (label: string, items?: string[]) => {
     const rowStartY = y;
 
     doc
@@ -38,10 +38,12 @@ export function drawPackages({
 
     let contentY = y + rowPadding;
 
-    items?.forEach((item) => {
+    const displayItems = items && items.length ? items : ["-"];
+
+    displayItems.forEach((item) => {
       doc
         .font("regular")
-        .fillColor(PDF_COLORS.GREEN)
+        .fillColor(items && items.length ? PDF_COLORS.GREEN : PDF_COLORS.GRAY)
         .text(item, contentX, contentY, {
           width: contentWidthPkg,
         });
