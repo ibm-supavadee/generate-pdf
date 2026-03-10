@@ -10,6 +10,8 @@ export const E_REQUEST_LABEL_EN = {
     "Average service charge for {{n}} days (charged on the first bill only)",
   CUSTOMER_INFO: {
     NAME: "Firstname - Lastname​",
+    CORPORATE_NAME: "Company Name",
+    GOVERNMENT_AGENCY_NAME: "Government Agency Name",
     EMAIL: "Email",
     INSTALLATION_DATE: "Installation Date/Time",
     ADDRESS_EQUIPMENT_INSTALLATION: "Address for Equipment Installation​",

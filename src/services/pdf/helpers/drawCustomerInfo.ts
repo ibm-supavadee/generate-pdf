@@ -3,6 +3,7 @@ import {
   CUSTOMER_TYPE,
   HEADER_SPACING,
   PDF_COLORS,
+  REGISTER_TYPE,
 } from "../constants/pdf.constants";
 import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
 import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
@@ -40,11 +41,33 @@ export function drawCustomerInfo({
 
   const rowSpacing = 18;
 
+  /* -----------------------------
+     GET NAME TITLE
+  ----------------------------- */
+
+  const getNameTitle = () => {
+    switch (customerInfo.registerType) {
+      case REGISTER_TYPE.CORPORATE:
+        return label.CUSTOMER_INFO.CORPORATE_NAME;
+
+      case REGISTER_TYPE.GOVERNMENT_AGENCY:
+        return label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME;
+
+      default:
+        return label.CUSTOMER_INFO.NAME;
+    }
+  };
+
+  const nameTitle = getNameTitle();
+
+  /* -----------------------------
+     BUILD ROWS
+  ----------------------------- */
   const rows: Row[] =
     data.customerType === CUSTOMER_TYPE.EXISTING
       ? [
           [
-            label.CUSTOMER_INFO.NAME,
+            nameTitle,
             customerInfo.name,
             label.CUSTOMER_INFO.MOBILE_NO,
             customerInfo.mobileNo,
@@ -63,7 +86,7 @@ export function drawCustomerInfo({
         ]
       : [
           [
-            label.CUSTOMER_INFO.NAME,
+            nameTitle,
             customerInfo.name,
             label.CUSTOMER_INFO.MOBILE_NO,
             customerInfo.mobileNo,
@@ -88,6 +111,9 @@ export function drawCustomerInfo({
           ],
         ];
 
+  /* -----------------------------
+     DRAW FIELD
+  ----------------------------- */
   const drawField = (
     label: string | undefined,
     value: string | undefined,

@@ -14,3 +14,11 @@ export const CUSTOMER_TYPE = {
 
 export const FONT_SIZE = 11;
 export const HEADER_SPACING = 10;
+
+export enum REGISTER_TYPE {
+  ID_CARD = "ID_CARD", // บัตรประชาชน
+  PASSPORT = "PASSPORT", // หนังสือเดินทาง
+  IMMIGRATION = "IMMIGRATION", // บัตรประจำตัวคนซึ่งไม่มีสัญชาติไทย
+  CORPORATE = "CORPORATE", // นิติบุคคล
+  GOVERNMENT_AGENCY = "GOVERNMENT_AGENCY", // หน่วยงานราชการ
+}

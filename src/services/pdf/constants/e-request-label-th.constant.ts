@@ -10,6 +10,8 @@ export const E_REQUEST_LABEL_TH = {
     "ค่าบริการเฉลี่ย {{n}} วัน (เรียกเก็บในบิลแรกเท่านั้น)",
   CUSTOMER_INFO: {
     NAME: "ชื่อ - นามสกุล",
+    CORPORATE_NAME: "ชื่อบริษัท",
+    GOVERNMENT_AGENCY_NAME: "ชื่อหน่วยงาน",
     EMAIL: "อีเมล",
     INSTALLATION_DATE: "วัน/เวลาติดตั้งที่ท่านเลือก",
     ADDRESS_EQUIPMENT_INSTALLATION: "สถานที่ติดตั้ง",
