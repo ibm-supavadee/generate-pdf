@@ -1,6 +1,6 @@
 import { FONT_SIZE, PDF_COLORS } from "../constants/pdf.constants";
 
-export function renderHtmlToPdfKit(
+export function renderTcNew(
   doc: PDFKit.PDFDocument,
   html: string,
   options: {
@@ -241,7 +241,11 @@ export function renderHtmlToPdfKit(
 
     /* HEADER */
     if (block.includes("conditions-header")) {
-      if (block.includes("ข้อตกลง")) {
+      if (
+        block.includes("ข้อตกลง") ||
+        block.includes("Terms and Conditions for") ||
+        block.includes("Terms for Collect,")
+      ) {
         const remainingHeight = pageHeight - margin - y;
 
         if (remainingHeight < HALF_PAGE) {

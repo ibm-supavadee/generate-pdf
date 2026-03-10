@@ -192,7 +192,12 @@ export function renderTcExisting({
 
   const isSpecialSection = (block: string) => {
     const text = block.replace(/<[^>]+>/g, "").trim();
-    return text === "หมายเหตุ :" || text === "ขอบเขตการให้บริการ";
+    return (
+      text === "หมายเหตุ :" ||
+      text === "ขอบเขตการให้บริการ" ||
+      text === "Remark :" ||
+      text === "Scope of service"
+    );
   };
 
   /* ---------- parser ---------- */
@@ -215,7 +220,6 @@ export function renderTcExisting({
 
     const isSpecial = isSpecialSection(block);
 
-    const link = block.match(/href="([^"]+)"/)?.[1];
     const isBold = /<(b|strong)>/i.test(block);
 
     const nbspCount = (block.match(/&nbsp;/g) || []).length;

@@ -1,4 +1,4 @@
-export const termAndConERequestNewRegisterMock = `
+export const termAndConERequestNewRegisterENMock = `
 <style>.conditions-header{text-align:center;font-weight:bold;}.conditions-preface{}.conditions-section{font-weight:bold;}.conditions-article{text-indent:2.5em;}.conditions-article-sub1{text-indent:5em;}</style>
 <table><tr><td class="conditions-header">Terms and Conditions of Telecommunications and Subscription Broadcasting Service </td></tr>
 <tr><td class="conditions-header">Between Service Provider and Subscriber </td></tr>
@@ -199,7 +199,7 @@ export const termAndConERequestNewRegisterMock = `
             <li>Subscriber agrees and acknowledges that, in providing Microsoft 365 Family in accordance with these Terms and Conditions, AWN is only as a channel for Microsoft 365 Family subscription to Subscriber, and AWN is not responsible for any damage caused by the following events.
                 <ul style="list-style: none">
                     <li>(1) Operating system of the Subscriber or any other system beyond AWN's control.</li>
-                    <li>(2)	Software Application or any device which Subscriber prepares and uses for connecting with Microsoft 365 Family Service in accordance with these terms and conditions.</li>
+                    <li>(2) Software Application or any device which Subscriber prepares and uses for connecting with Microsoft 365 Family Service in accordance with these terms and conditions.</li>
                     <li>(3) Force majeure or actions of other persons which are beyond AWN's control and responsibilities according to these terms and conditions.</li>
                 </ul>
             </li>

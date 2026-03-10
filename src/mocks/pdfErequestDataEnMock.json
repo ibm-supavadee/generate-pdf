@@ -1,0 +1,81 @@
+{
+  "customerType": "NEW_REGISTER",
+  "lang": "EN",
+  "productOwner": "FBB",
+  "customerInfo": {
+    "registerType": "National ID Card",
+    "name": "Test New Customer",
+    "repName": "",
+    "mobileNo": "0633432145",
+    "email": "-",
+    "contactTime": "08:00 - 17:00",
+    "installDateTime": "2 Feb 2026 09:00–12:00",
+    "alternativeInstallDate": "-",
+    "billingAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
+    "installAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
+    "invoiceChannel": "Bill notification via SMS + view bill via My AIS"
+  },
+  "mainPackages": [
+    "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
+    "Internet installation fee discount including WiFi Router worth 4,800.00 THB"
+  ],
+  "onTopPackages": [
+    "HBO Add-on premium entertainment package. Enjoy blockbuster movies and HBO Original series in HD/4K quality with high-quality sound. Supports Smart TV, mobile, and tablet viewing with replay options and selectable audio/subtitles.",
+    "Free! AIS Playbox worth 1,490 THB",
+    "50% monthly fee discount for 6 months (for BROADBAND24 package only)"
+  ],
+  "entrySection": [
+    {
+      "text": "Initial service fee",
+      "price": 747.66,
+      "isDiscount": false
+    },
+    {
+      "text": "Initial service fee discount",
+      "price": 747.66,
+      "isDiscount": true
+    }
+  ],
+  "wireSection": [
+    "If the wiring distance exceeds the specified length (telephone cable 10 meters), an additional charge of 20 THB per meter will apply. Payment must be made to the installer on the installation date."
+  ],
+  "installationSection": [
+    {
+      "text": "Internet installation fee including WiFi router",
+      "price": 4800,
+      "isDiscount": false
+    },
+    {
+      "text": "Installation fee discount when agreeing to use the service for at least 12 billing cycles",
+      "price": 4800,
+      "isDiscount": true
+    }
+  ],
+  "equipmentSection": [
+    "AIS PLAYBOX valued at 2,000 THB or 2,490 THB per unit (depending on the agreed package conditions)",
+    "FTTH – Router valued at 2,500 THB"
+  ],
+  "monthlySection": [
+    {
+      "text": "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
+      "price": 360,
+      "isDiscount": false
+    },
+    {
+      "text": "50% monthly service fee discount for 6 months (for BROADBAND24 package only)",
+      "price": 230,
+      "isDiscount": true
+    }
+  ],
+  "averageSection": {
+    "days": 1,
+    "details": [
+      {
+        "text": "Average cost 123.91 THB per day",
+        "price": 123.91,
+        "isDiscount": false
+      }
+    ]
+  },
+  "termsAndConditions": ""
+}

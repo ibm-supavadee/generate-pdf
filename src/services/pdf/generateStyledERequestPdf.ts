@@ -6,7 +6,7 @@ import { drawSectionHeader } from "./helpers/drawSectionHeader";
 import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
 import { drawPackages } from "./helpers/drawPackages";
 import { drawRemark } from "./helpers/drawRemark";
-import { renderHtmlToPdfKit } from "./helpers/renderTcNew";
+import { renderTcNew } from "./helpers/renderTcNew";
 import { renderExpenseTable } from "./helpers/renderExpenseTable";
 import { renderTcExisting } from "./helpers/renderTcExisting";
 
@@ -17,8 +17,6 @@ import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
-import { termAndConERequestExistingMock } from "../../mocks/termAndConERequestExisting.mock";
-import { termAndConERequestNewRegisterMock } from "../../mocks/termAndConERequestNewRegister.mock";
 import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
 
 export async function generateStyledERequestPdf(
@@ -215,7 +213,7 @@ export async function generateStyledERequestPdf(
           drawHeader: drawTermsHeader,
         });
       } else {
-        renderHtmlToPdfKit(doc, termsHtml, {
+        renderTcNew(doc, termsHtml, {
           margin,
           pageWidth,
           pageHeight,
