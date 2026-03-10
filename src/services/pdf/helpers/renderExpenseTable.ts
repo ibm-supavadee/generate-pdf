@@ -52,6 +52,18 @@ export function renderExpenseTable({
   const formatPriceText = (value: number) =>
     `${value < 0 ? "-" : ""}${formatPrice(Math.abs(value))} ${label.THB}`;
 
+  /* -----------------------------
+     UTIL
+  ----------------------------- */
+
+  const calculateTotal = (
+    items: { text: string; price: number; isDiscount?: boolean }[],
+  ) =>
+    items.reduce((sum, item) => {
+      const value = item.isDiscount ? -item.price : item.price;
+      return sum + value;
+    }, 0);
+
   const drawTopBorder = () => {
     const half = 0.5;
 
@@ -72,7 +84,12 @@ export function renderExpenseTable({
 
   const mapPriceRows = (
     items: { text: string; price: number; isDiscount?: boolean }[],
-    opts?: { showSubText?: boolean; totalLabel?: string },
+    opts?: {
+      showSubText?: boolean;
+      totalLabel?: string;
+      isAverage?: boolean;
+      monthlyTotal?: number;
+    },
   ): ExpenseRow[] => {
     const totalLabel = opts?.totalLabel ?? label.SUMMARY_OF_CHARGES;
 
@@ -88,6 +105,10 @@ export function renderExpenseTable({
         price: formatPriceText(value),
       };
     });
+
+    if (opts?.isAverage && opts.monthlyTotal !== undefined) {
+      total = opts.monthlyTotal + total;
+    }
 
     rows.push({
       text: totalLabel,
@@ -218,18 +239,22 @@ export function renderExpenseTable({
       .moveTo(col1X + half, rowStartY)
       .lineTo(col1X + half, rowStartY + rowHeight)
       .stroke();
+
     doc
       .moveTo(col2X + half, rowStartY)
       .lineTo(col2X + half, rowStartY + rowHeight)
       .stroke();
+
     doc
       .moveTo(col3X + half, rowStartY)
       .lineTo(col3X + half, rowStartY + rowHeight)
       .stroke();
+
     doc
       .moveTo(col1X + contentWidth - half, rowStartY)
       .lineTo(col1X + contentWidth - half, rowStartY + rowHeight)
       .stroke();
+
     doc
       .moveTo(col1X + half, rowStartY + rowHeight - half)
       .lineTo(col1X + contentWidth - half, rowStartY + rowHeight - half)
@@ -237,6 +262,12 @@ export function renderExpenseTable({
 
     y += rowHeight;
   };
+
+  /* -----------------------------
+     CALCULATE MONTHLY TOTAL
+  ----------------------------- */
+
+  const monthlyTotal = calculateTotal(data.monthlySection);
 
   /* -----------------------------
      RENDER SECTIONS
@@ -274,6 +305,8 @@ export function renderExpenseTable({
     mapPriceRows(data.averageSection.details, {
       showSubText: true,
       totalLabel: label.ESTIMATE_TOTAL_CHARGE,
+      isAverage: true,
+      monthlyTotal,
     }),
   );
 
