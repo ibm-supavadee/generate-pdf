@@ -141,6 +141,12 @@ export async function generateStyledERequestPdf(
         contentWidth,
         data,
         label,
+        fields: {
+          mainLabel: "MAIN_PACKAGE",
+          onTopLabel: "ON_TOP_PACKAGE",
+          mainData: "mainPackages",
+          onTopData: "onTopPackages",
+        },
       });
 
       /* -------------------------
