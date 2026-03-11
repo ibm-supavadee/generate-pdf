@@ -7,9 +7,9 @@ export const PDF_COLORS = {
   LINK: "#0000EE",
 };
 
-export const CUSTOMER_TYPE = {
-  EXISTING: "EXISTING",
-  NEW_REGISTER: "NEW_REGISTER",
+export enum CUSTOMER_TYPE {
+  EXISTING = "EXISTING",
+  NEW_REGISTER = "NEW_REGISTER",
 };
 
 export const FONT_SIZE = 11;
