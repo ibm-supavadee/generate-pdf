@@ -1,15 +1,20 @@
-import { PdfERequestData } from "../models/pdf-erequest-data.model";
 import { PDF_COLORS } from "../constants/pdf.constants";
-import { E_REQUEST_LABEL_EN } from "../constants/e-request-label-en.constant";
-import { E_REQUEST_LABEL_TH } from "../constants/e-request-label-th.constant";
 
 type Params = {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   contentWidth: number;
-  data: PdfERequestData;
-  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
+
+  data: any;
+  label: any;
+
+  fields: {
+    mainLabel: string;
+    onTopLabel: string;
+    mainData: string;
+    onTopData: string;
+  };
 };
 
 export function drawPackages({
@@ -19,8 +24,9 @@ export function drawPackages({
   contentWidth,
   data,
   label,
+  fields,
 }: Params): number {
-  const pkgStartY = y;
+  const startY = y;
 
   const labelWidth = 100;
   const contentX = margin + labelWidth + 10;
@@ -28,22 +34,22 @@ export function drawPackages({
 
   const rowPadding = 8;
 
-  const drawPackageRow = (label: string, items?: string[]) => {
+  const drawRow = (title: string, items?: string[]) => {
     const rowStartY = y;
 
     doc
       .font("bold")
       .fillColor(PDF_COLORS.GRAY)
-      .text(label, margin + 10, y + rowPadding);
+      .text(title, margin + 10, y + rowPadding);
 
     let contentY = y + rowPadding;
 
-    const displayItems = items && items.length ? items : ["-"];
+    const list = items?.length ? items : ["-"];
 
-    displayItems.forEach((item) => {
+    list.forEach((item) => {
       doc
         .font("regular")
-        .fillColor(items && items.length ? PDF_COLORS.GREEN : PDF_COLORS.GRAY)
+        .fillColor(items?.length ? PDF_COLORS.GREEN : PDF_COLORS.GRAY)
         .text(item, contentX, contentY, {
           width: contentWidthPkg,
         });
@@ -52,13 +58,12 @@ export function drawPackages({
     });
 
     const rowHeight = contentY - rowStartY + rowPadding;
-
     y = rowStartY + rowHeight;
-
-    return rowHeight;
   };
 
-  drawPackageRow(label.MAIN_PACKAGE, data.mainPackages || []);
+  /* MAIN PACKAGE */
+
+  drawRow(label[fields.mainLabel], data[fields.mainData]);
 
   doc
     .moveTo(margin, y)
@@ -67,10 +72,12 @@ export function drawPackages({
     .lineWidth(0.5)
     .stroke();
 
-  drawPackageRow(label.ON_TOP_PACKAGE, data.onTopPackages || []);
+  /* ON TOP PACKAGE */
+
+  drawRow(label[fields.onTopLabel], data[fields.onTopData]);
 
   doc
-    .rect(margin + 0.5, pkgStartY + 0.5, contentWidth - 1, y - pkgStartY - 1)
+    .rect(margin + 0.5, startY + 0.5, contentWidth - 1, y - startY - 1)
     .strokeColor(PDF_COLORS.BORDER)
     .lineWidth(1)
     .stroke();

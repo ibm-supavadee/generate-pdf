@@ -11,6 +11,8 @@ import { drawHeader } from "./helpers/drawHeader";
 import { drawSectionHeader } from "./helpers/drawSectionHeader";
 import { drawCustomerInfoEApp } from "./helpers/drawCustomerInfo/drawCustomerInfoEApp";
 import { PdfEAppData } from "./models/pdf-eapp-data.model";
+import { drawAddressInstall } from "./helpers/drawAddressInstall";
+import { drawPackages } from "./helpers/drawPackages";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -101,6 +103,119 @@ export async function generateStyledEAppPdf(
       });
 
       y += 20;
+
+      /* -------------------------
+   ADDRESS + PACKAGES (2 COLUMNS)
+------------------------- */
+
+      const columnGap = 20;
+      const columnWidth = (contentWidth - columnGap) / 2;
+
+      const leftX = margin;
+      const rightX = margin + columnWidth + columnGap;
+
+      const startY = y;
+
+      /* -------------------------
+   LEFT COLUMN
+------------------------- */
+
+      let leftY = drawSectionHeader({
+        doc,
+        y: startY,
+        margin: leftX,
+        contentWidth: columnWidth,
+        title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
+        options: { withDivider: true },
+      });
+
+      leftY = drawAddressInstall({
+        doc,
+        y: leftY,
+        margin: leftX,
+        contentWidth: columnWidth,
+        data,
+        label,
+      });
+
+      /* -------------------------
+   RIGHT COLUMN
+------------------------- */
+
+      let rightY = drawSectionHeader({
+        doc,
+        y: startY,
+        margin: rightX,
+        contentWidth: columnWidth,
+        title: label.STATEMENT,
+        options: { withDivider: true },
+      });
+
+      rightY = drawPackages({
+        doc,
+        y: rightY,
+        margin: rightX,
+        contentWidth: columnWidth,
+        data,
+        label,
+        fields: {
+          mainLabel: "STATEMENT",
+          onTopLabel: "DATA_OF_SUBSCRIBER_TITLE",
+          mainData: "packagesMain",
+          onTopData: "packagesAddon",
+        },
+      });
+
+      /* -------------------------
+        SYNC Y POSITION
+      ------------------------- */
+
+      y = Math.max(leftY, rightY) + 20;
+
+      // /* -------------------------
+      //    ADDRESS EQUIPMENT INSTALLATION INFO
+      // ------------------------- */
+      // y = drawSectionHeader({
+      //   doc,
+      //   y,
+      //   margin,
+      //   contentWidth,
+      //   title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
+      //   options: { withDivider: true },
+      // });
+
+      // drawAddressInstall({
+      //   doc,
+      //   y,
+      //   margin,
+      //   contentWidth,
+      //   data,
+      //   label,
+      // });
+
+      // y += 20;
+
+      // /* -------------------------
+      //          PACKAGES
+      //       ------------------------- */
+
+      // y = drawSectionHeader({
+      //   doc,
+      //   y,
+      //   margin,
+      //   contentWidth,
+      //   title: label.SUMMARY_SELECTED_PACKAGE,
+      //   options: { withDivider: true },
+      // });
+
+      // y = drawPackages({
+      //   doc,
+      //   y,
+      //   margin,
+      //   contentWidth,
+      //   data,
+      //   label,
+      // });
 
       /* -------------------------
          PAGE NUMBER

@@ -8,11 +8,7 @@ import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
-import {
-  CUSTOMER_TYPE,
-  DOCUMENT_TYPE,
-  FONT_SIZE,
-} from "./constants/pdf.constants";
+import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
 import { drawHeader } from "./helpers/drawHeader";
 import { drawSectionHeader } from "./helpers/drawSectionHeader";
 import { drawPackages } from "./helpers/drawPackages";
@@ -181,7 +177,7 @@ export async function generateStyledERequestPdf(
             margin,
             contentWidth,
             title: label.DETAIL_CHARGES,
-            options: { withDivider: true },
+            options: { fullWidth: true },
           });
 
           return newY;
