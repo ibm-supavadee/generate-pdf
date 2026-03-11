@@ -43,3 +43,40 @@ export const createERequestPdf = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const createEAppPdf = async (req: Request, res: Response) => {
+  try {
+    const data = req.body as PdfERequestData;
+
+    // TEMP for T&C
+    let termsHtml = "";
+
+    if (data.customerType === CUSTOMER_TYPE.EXISTING) {
+      termsHtml =
+        data.lang === "EN"
+          ? termAndConERequestExistingENMock
+          : termAndConERequestExistingMock;
+    } else {
+      termsHtml =
+        data.lang === "EN"
+          ? termAndConERequestNewRegisterENMock
+          : termAndConERequestNewRegisterMock;
+    }
+
+    data.termsAndConditions = termsHtml;
+
+    // console.log("Received data for PDF generation:", data);
+    const base64Pdf = await PdfService.generateEAppPdf(data);
+
+    res.json({
+      success: true,
+      pdfBase64: base64Pdf,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate PDF",
+    });
+  }
+};

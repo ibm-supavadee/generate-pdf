@@ -1,15 +1,6 @@
 import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
 
-import { drawHeader } from "./helpers/drawHeader";
-import { drawSectionHeader } from "./helpers/drawSectionHeader";
-import { drawCustomerInfo } from "./helpers/drawCustomerInfo";
-import { drawPackages } from "./helpers/drawPackages";
-import { drawRemark } from "./helpers/drawRemark";
-import { renderTcNew } from "./helpers/renderTcNew";
-import { renderExpenseTable } from "./helpers/renderExpenseTable";
-import { renderTcExisting } from "./helpers/renderTcExisting";
-
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 
@@ -17,7 +8,19 @@ import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
-import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
+import {
+  CUSTOMER_TYPE,
+  DOCUMENT_TYPE,
+  FONT_SIZE,
+} from "./constants/pdf.constants";
+import { drawHeader } from "./helpers/drawHeader";
+import { drawSectionHeader } from "./helpers/drawSectionHeader";
+import { drawPackages } from "./helpers/drawPackages";
+import { renderExpenseTable } from "./helpers/renderExpenseTable";
+import { renderTcNew } from "./helpers/renderTcNew";
+import { drawRemark } from "./helpers/drawRemark";
+import { renderTcExisting } from "./helpers/renderTcExisting";
+import { drawCustomerInfoERequest } from "./helpers/drawCustomerInfo/drawCustomerInfoERequest";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
@@ -106,7 +109,7 @@ export async function generateStyledERequestPdf(
         options: { withDivider: true },
       });
 
-      y = drawCustomerInfo({
+      y = drawCustomerInfoERequest({
         doc,
         y,
         margin,
