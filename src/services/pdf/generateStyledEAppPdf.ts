@@ -7,12 +7,12 @@ import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_b
 import { FONT_SIZE } from "./constants/pdf.constants";
 import { E_APP_LABEL_EN } from "./constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "./constants/e-app-label-th.constant";
-import { drawHeader } from "./helpers/drawHeader";
-import { drawSectionHeader } from "./helpers/drawSectionHeader";
-import { drawCustomerInfoEApp } from "./helpers/drawCustomerInfo/drawCustomerInfoEApp";
+import { drawSectionHeader } from "./helpers/e-request/drawSectionHeader";
+import { drawCustomerInfoEApp } from "./helpers/e-app/drawCustomerInfoEApp";
 import { PdfEAppData } from "./models/pdf-eapp-data.model";
-import { drawAddressInstall } from "./helpers/drawAddressInstall";
-import { drawPackages } from "./helpers/drawPackages";
+import { drawPackages } from "./helpers/e-request/drawPackages";
+import { drawHeader } from "./helpers/common/drawHeader";
+import { drawAddressInstall } from "./helpers/e-app/drawAddressInstall";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -105,8 +105,8 @@ export async function generateStyledEAppPdf(
       y += 20;
 
       /* -------------------------
-   ADDRESS + PACKAGES (2 COLUMNS)
-------------------------- */
+        ADDRESS + PACKAGES (2 COLUMNS)
+      ------------------------- */
 
       const columnGap = 20;
       const columnWidth = (contentWidth - columnGap) / 2;

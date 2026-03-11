@@ -9,14 +9,15 @@ import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
 import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
-import { drawHeader } from "./helpers/drawHeader";
-import { drawSectionHeader } from "./helpers/drawSectionHeader";
-import { drawPackages } from "./helpers/drawPackages";
-import { renderExpenseTable } from "./helpers/renderExpenseTable";
-import { renderTcNew } from "./helpers/renderTcNew";
-import { drawRemark } from "./helpers/drawRemark";
-import { renderTcExisting } from "./helpers/renderTcExisting";
-import { drawCustomerInfoERequest } from "./helpers/drawCustomerInfo/drawCustomerInfoERequest";
+import { drawSectionHeader } from "./helpers/e-request/drawSectionHeader";
+import { drawPackages } from "./helpers/e-request/drawPackages";
+import { renderExpenseTable } from "./helpers/e-request/renderExpenseTable";
+import { renderTcNew } from "./helpers/e-request/renderTcNew";
+import { drawRemark } from "./helpers/e-request/drawRemark";
+import { renderTcExisting } from "./helpers/e-request/renderTcExisting";
+import { drawCustomerInfoERequest } from "./helpers/e-request/drawCustomerInfoERequest";
+import { drawCustomerInfo } from "./helpers/e-request/drawCustomerInfo";
+import { drawHeader } from "./helpers/common/drawHeader";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,

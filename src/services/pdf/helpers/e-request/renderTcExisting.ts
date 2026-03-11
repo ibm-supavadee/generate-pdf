@@ -1,4 +1,4 @@
-import { FONT_SIZE, PDF_COLORS } from "../constants/pdf.constants";
+import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
