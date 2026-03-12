@@ -16,6 +16,7 @@ import { drawRemark } from "./helpers/e-request/drawRemark";
 import path from "path";
 import { drawCardBox } from "./helpers/e-app/drawCardBox";
 import { drawSignatureSection } from "./helpers/e-app/drawSignature";
+import { drawTwoColumnSection } from "./helpers/e-app/drawTwoColumnSection";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -117,69 +118,60 @@ export async function generateStyledEAppPdf(
       y += 20;
 
       /* -------------------------
-        ADDRESS + PACKAGES (2 COLUMNS)
+         ADDRESS & STATEMENT
       ------------------------- */
+      y =
+        drawTwoColumnSection({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          leftRatio: 0.5,
+          rightRatio: 0.5,
 
-      const columnGap = 20;
-      const columnWidth = (contentWidth - columnGap) / 2;
+          drawLeft: (x, y, width) => {
+            let newY = drawSectionHeader({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
+              options: { withDivider: true },
+            });
 
-      const leftX = margin;
-      const rightX = margin + columnWidth + columnGap;
+            return drawAddressInstall({
+              doc,
+              y: newY,
+              margin: x,
+              contentWidth: width,
+              data,
+              label,
+            });
+          },
 
-      const startY = y;
+          drawRight: (x, y, width) => {
+            let newY = drawSectionHeader({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              title: label.STATEMENT_TITLE,
+              options: { withDivider: true },
+            });
+
+            return drawStatement({
+              doc,
+              y: newY,
+              margin: x,
+              contentWidth: width,
+              data,
+              label,
+            });
+          },
+        }) + 20;
 
       /* -------------------------
-        LEFT COLUMN
-      ------------------------- */
-
-      let leftY = drawSectionHeader({
-        doc,
-        y: startY,
-        margin: leftX,
-        contentWidth: columnWidth,
-        title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-        options: { withDivider: true },
-      });
-
-      leftY = drawAddressInstall({
-        doc,
-        y: leftY,
-        margin: leftX,
-        contentWidth: columnWidth,
-        data,
-        label,
-      });
-
-      /* -------------------------
-        RIGHT COLUMN
-      ------------------------- */
-
-      let rightY = drawSectionHeader({
-        doc,
-        y: startY,
-        margin: rightX,
-        contentWidth: columnWidth,
-        title: label.STATEMENT_TITLE,
-        options: { withDivider: true },
-      });
-
-      rightY = drawStatement({
-        doc,
-        y: rightY,
-        margin: rightX,
-        contentWidth: columnWidth,
-        data,
-        label,
-      });
-
-      /* -------------------------
-        SYNC Y POSITION
-      ------------------------- */
-
-      y = Math.max(leftY, rightY) + 20;
-
-      /* -------------------------
-        EXPENSE TABLE
+        REQUEST DETAIL TABLE
       ------------------------- */
 
       y = drawSectionHeader({
@@ -226,62 +218,55 @@ export async function generateStyledEAppPdf(
       y += 20;
 
       /* -------------------------
-   CARD + SIGNATURE (70 / 30)
-------------------------- */
+        CARD + SIGNATURE 
+      ------------------------- */
+      y =
+        drawTwoColumnSection({
+          doc,
+          y,
+          margin,
+          contentWidth,
 
-      const columnGap2 = 20;
+          leftRatio: 0.6,
+          rightRatio: 0.4,
+          height: 200,
 
-      const cardWidth = contentWidth * 0.6 - columnGap2 / 2;
-      const signWidth = contentWidth * 0.4 - columnGap2 / 2;
+          drawLeft: (x, y, width) => {
+            const cardPath = path.join(
+              process.cwd(),
+              "src/assets/img/pdf/card.jpg",
+            );
 
-      const cardX = margin;
-      const signX = margin + cardWidth + columnGap2;
+            return drawCardBox({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              height: 200,
+              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardPassportNo}`,
+              imagePath: cardPath,
+            });
+          },
 
-      const sectionHeight = 200;
+          drawRight: (x, y, width) => {
+            const signPath = path.join(
+              process.cwd(),
+              "src/assets/img/pdf/sign.jpg",
+            );
 
-      const startY2 = y;
-
-      const cardPath = path.join(
-        process.cwd(),
-        "src",
-        "assets",
-        "img",
-        "pdf",
-        "card.jpg",
-      );
-
-      drawCardBox({
-        doc,
-        y: startY2,
-        margin: cardX,
-        contentWidth: cardWidth,
-        height: sectionHeight,
-        title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardPassportNo}`,
-        imagePath: cardPath,
-      });
-
-      const signaturePath = path.join(
-        process.cwd(),
-        "src",
-        "assets",
-        "img",
-        "pdf",
-        "sign.jpg",
-      );
-
-      drawSignatureSection({
-        doc,
-        y: startY2,
-        margin: signX,
-        contentWidth: signWidth,
-        height: sectionHeight,
-        title: label.SIGNATURE_LABEL,
-        dateTh: "วันที่ 3 พ.ย. 2568",
-        dateEn: "3 November 2025",
-        signaturePath,
-      });
-
-      y = startY2 + sectionHeight + 20;
+            return drawSignatureSection({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              height: 200,
+              title: label.SIGNATURE_LABEL,
+              date: "วันที่ 3 พ.ย. 2568",
+              data,
+              signaturePath: signPath,
+            });
+          },
+        }) + 20;
 
       /* -------------------------
          PAGE NUMBER

@@ -1,5 +1,6 @@
 import fs from "fs";
 import { PDF_COLORS } from "../../constants/pdf.constants";
+import { PdfEAppData } from "../../models/pdf-eapp-data.model";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -8,8 +9,8 @@ type Params = {
   contentWidth: number;
   height: number;
   title: string;
-  dateTh: string;
-  dateEn: string;
+  date: string;
+  data: PdfEAppData;
   signaturePath?: string;
 };
 
@@ -20,8 +21,8 @@ export function drawSignatureSection({
   contentWidth,
   height,
   title,
-  dateTh,
-  dateEn,
+  date,
+  data,
   signaturePath,
 }: Params): number {
   const startY = y;
@@ -63,22 +64,13 @@ export function drawSignatureSection({
 
   /* DATE TH */
 
+  const displayDate = data.lang === "TH" ? `วันที่ ${date}` : date;
+
   doc
     .font("bold")
     .fillColor(PDF_COLORS.GREEN)
     .fontSize(12)
-    .text(dateTh, margin, lineY + 8, {
-      width: contentWidth,
-      align: "center",
-    });
-
-  /* DATE EN */
-
-  doc
-    .font("regular")
-    .fillColor(PDF_COLORS.GRAY)
-    .fontSize(11)
-    .text(dateEn, margin, lineY + 24, {
+    .text(displayDate, margin, lineY + 8, {
       width: contentWidth,
       align: "center",
     });

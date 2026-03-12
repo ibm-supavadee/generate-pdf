@@ -1,5 +1,6 @@
 import fs from "fs";
 import { PDF_COLORS } from "../../constants/pdf.constants";
+import { drawSectionHeader } from "../e-request/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -22,21 +23,18 @@ export function drawCardBox({
 }: Params): number {
   const startY = y;
 
-  const headerHeight = 40;
-  const boxHeight = height - headerHeight;
-
   /* HEADER */
-  console.log("IMAGE PATH card box:", imagePath);
 
-  doc.rect(margin, y, contentWidth, headerHeight).fill(PDF_COLORS.GREEN);
+  y = drawSectionHeader({
+    doc,
+    y,
+    margin,
+    contentWidth,
+    title,
+    options: { fullWidth: true },
+  });
 
-  doc
-    .fillColor("white")
-    .font("bold")
-    .fontSize(12)
-    .text(title, margin + 15, y + 12);
-
-  y += headerHeight;
+  const boxHeight = height - (y - startY);
 
   /* BOX */
 
@@ -48,18 +46,16 @@ export function drawCardBox({
 
   /* IMAGE */
 
-  if (imagePath) {
-    if (fs.existsSync(imagePath)) {
-      const imageWidth = 160;
+  if (imagePath && fs.existsSync(imagePath)) {
+    const imageWidth = 160;
 
-      const centerX = margin + contentWidth / 2 - imageWidth / 2;
-      const centerY = y + boxHeight / 2 - 60;
+    const centerX = margin + contentWidth / 2 - imageWidth / 2;
+    const centerY = y + boxHeight / 2 - 60;
 
-      doc.image(imagePath, centerX, centerY, {
-        width: imageWidth,
-      });
-    }
+    doc.image(imagePath, centerX, centerY, {
+      width: imageWidth,
+    });
   }
 
-  return startY + headerHeight + boxHeight + 10;
+  return startY + height;
 }
