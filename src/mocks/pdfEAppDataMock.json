@@ -11,12 +11,24 @@
     "email": "-",
     "installDateTime": "2 ก.พ. 2569 09:00–12:00",
     "alternativeInstallDate": "-",
-    "billingAddress":
+    "documentDeliveryAddress":
       "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
     "installAddress":
       "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
-    "invoiceChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS"
+    "billingChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS"
   },
+   "requestSection": [
+    {
+      "text": "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
+      "price": 360,
+      "isDiscount": false
+    },
+    {
+      "text": "ส่วนลดค่าบริการรายเดือน 50% นาน 6 เดือน (เฉพาะแพ็กเกจ BROADBAND24)",
+      "price": 230,
+      "isDiscount": true
+    }
+  ],
   "mainPackages": [
     "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
     "ส่วนลดค่าติดตั้งอินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WIFI Router) มูลค่า 4,800.00 บาท"

@@ -16,7 +16,6 @@ import { renderTcNew } from "./helpers/e-request/renderTcNew";
 import { drawRemark } from "./helpers/e-request/drawRemark";
 import { renderTcExisting } from "./helpers/e-request/renderTcExisting";
 import { drawCustomerInfoERequest } from "./helpers/e-request/drawCustomerInfoERequest";
-import { drawCustomerInfo } from "./helpers/e-request/drawCustomerInfo";
 import { drawHeader } from "./helpers/common/drawHeader";
 
 export async function generateStyledERequestPdf(
@@ -194,7 +193,7 @@ export async function generateStyledERequestPdf(
         y,
         margin,
         contentWidth,
-        label,
+        label: label.REMARKS,
         ensureSpace,
       });
 

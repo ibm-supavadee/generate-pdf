@@ -1,18 +1,21 @@
 import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
-
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
-
-import { FONT_SIZE } from "./constants/pdf.constants";
+import { FONT_SIZE, PDF_COLORS } from "./constants/pdf.constants";
 import { E_APP_LABEL_EN } from "./constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "./constants/e-app-label-th.constant";
 import { drawSectionHeader } from "./helpers/e-request/drawSectionHeader";
 import { drawCustomerInfoEApp } from "./helpers/e-app/drawCustomerInfoEApp";
 import { PdfEAppData } from "./models/pdf-eapp-data.model";
-import { drawPackages } from "./helpers/e-request/drawPackages";
 import { drawHeader } from "./helpers/common/drawHeader";
 import { drawAddressInstall } from "./helpers/e-app/drawAddressInstall";
+import { drawStatement } from "./helpers/e-app/drawStatement";
+import { renderRequestTable } from "./helpers/e-app/renderRequestTable";
+import { drawRemark } from "./helpers/e-request/drawRemark";
+import path from "path";
+import { drawCardBox } from "./helpers/e-app/drawCardBox";
+import { drawSignatureSection } from "./helpers/e-app/drawSignature";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -76,7 +79,16 @@ export async function generateStyledEAppPdf(
       /* -------------------------
          HEADER
       ------------------------- */
+      doc
+        .font("regular")
+        .fontSize(9)
+        .fillColor(PDF_COLORS.GRAY)
+        .text(label.COMPANY_INFO, margin, y, {
+          width: contentWidth,
+          lineGap: 2,
+        });
 
+      y += 15;
       y = drawMainHeader(y);
 
       /* -------------------------
@@ -117,8 +129,8 @@ export async function generateStyledEAppPdf(
       const startY = y;
 
       /* -------------------------
-   LEFT COLUMN
-------------------------- */
+        LEFT COLUMN
+      ------------------------- */
 
       let leftY = drawSectionHeader({
         doc,
@@ -139,31 +151,25 @@ export async function generateStyledEAppPdf(
       });
 
       /* -------------------------
-   RIGHT COLUMN
-------------------------- */
+        RIGHT COLUMN
+      ------------------------- */
 
       let rightY = drawSectionHeader({
         doc,
         y: startY,
         margin: rightX,
         contentWidth: columnWidth,
-        title: label.STATEMENT,
+        title: label.STATEMENT_TITLE,
         options: { withDivider: true },
       });
 
-      rightY = drawPackages({
+      rightY = drawStatement({
         doc,
         y: rightY,
         margin: rightX,
         contentWidth: columnWidth,
         data,
         label,
-        fields: {
-          mainLabel: "STATEMENT",
-          onTopLabel: "DATA_OF_SUBSCRIBER_TITLE",
-          mainData: "packagesMain",
-          onTopData: "packagesAddon",
-        },
       });
 
       /* -------------------------
@@ -172,50 +178,110 @@ export async function generateStyledEAppPdf(
 
       y = Math.max(leftY, rightY) + 20;
 
-      // /* -------------------------
-      //    ADDRESS EQUIPMENT INSTALLATION INFO
-      // ------------------------- */
-      // y = drawSectionHeader({
-      //   doc,
-      //   y,
-      //   margin,
-      //   contentWidth,
-      //   title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-      //   options: { withDivider: true },
-      // });
+      /* -------------------------
+        EXPENSE TABLE
+      ------------------------- */
 
-      // drawAddressInstall({
-      //   doc,
-      //   y,
-      //   margin,
-      //   contentWidth,
-      //   data,
-      //   label,
-      // });
+      y = drawSectionHeader({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        title: label.REQUEST_REGISTRATION_INTERNET_TITLE,
+        options: { fullWidth: true },
+      });
 
-      // y += 20;
+      y = renderRequestTable({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        pageHeight,
+        data,
+        label,
+      });
 
-      // /* -------------------------
-      //          PACKAGES
-      //       ------------------------- */
+      /* -------------------------
+            REMARK
+        ------------------------- */
 
-      // y = drawSectionHeader({
-      //   doc,
-      //   y,
-      //   margin,
-      //   contentWidth,
-      //   title: label.SUMMARY_SELECTED_PACKAGE,
-      //   options: { withDivider: true },
-      // });
+      y = drawRemark({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        label: label.REMARKS,
+        ensureSpace,
+      });
 
-      // y = drawPackages({
-      //   doc,
-      //   y,
-      //   margin,
-      //   contentWidth,
-      //   data,
-      //   label,
-      // });
+      y = drawRemark({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        label: label.CONSENT,
+        ensureSpace,
+      });
+
+      y += 20;
+
+      /* -------------------------
+   CARD + SIGNATURE (70 / 30)
+------------------------- */
+
+      const columnGap2 = 20;
+
+      const cardWidth = contentWidth * 0.6 - columnGap2 / 2;
+      const signWidth = contentWidth * 0.4 - columnGap2 / 2;
+
+      const cardX = margin;
+      const signX = margin + cardWidth + columnGap2;
+
+      const sectionHeight = 200;
+
+      const startY2 = y;
+
+      const cardPath = path.join(
+        process.cwd(),
+        "src",
+        "assets",
+        "img",
+        "pdf",
+        "card.jpg",
+      );
+
+      drawCardBox({
+        doc,
+        y: startY2,
+        margin: cardX,
+        contentWidth: cardWidth,
+        height: sectionHeight,
+        title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardPassportNo}`,
+        imagePath: cardPath,
+      });
+
+      const signaturePath = path.join(
+        process.cwd(),
+        "src",
+        "assets",
+        "img",
+        "pdf",
+        "sign.jpg",
+      );
+
+      drawSignatureSection({
+        doc,
+        y: startY2,
+        margin: signX,
+        contentWidth: signWidth,
+        height: sectionHeight,
+        title: label.SIGNATURE_LABEL,
+        dateTh: "วันที่ 3 พ.ย. 2568",
+        dateEn: "3 November 2025",
+        signaturePath,
+      });
+
+      y = startY2 + sectionHeight + 20;
 
       /* -------------------------
          PAGE NUMBER

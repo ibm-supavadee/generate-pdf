@@ -1,5 +1,3 @@
-import { E_REQUEST_LABEL_EN } from "../../constants/e-request-label-en.constant";
-import { E_REQUEST_LABEL_TH } from "../../constants/e-request-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
 
 type Params = {
@@ -7,7 +5,7 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
+  label: string;
   ensureSpace: (height: number) => void;
 };
 
@@ -20,7 +18,7 @@ export function drawRemark({
   ensureSpace,
 }: Params): number {
   const topSpacing = 15;
-  const remarkHeight = doc.heightOfString(label.REMARKS, {
+  const remarkHeight = doc.heightOfString(label, {
     width: contentWidth,
   });
 
@@ -34,7 +32,7 @@ export function drawRemark({
     .font("regular")
     .fontSize(9)
     .fillColor(PDF_COLORS.GRAY)
-    .text(label.REMARKS, margin, y, {
+    .text(label, margin, y, {
       width: contentWidth,
       lineGap: 2,
     });

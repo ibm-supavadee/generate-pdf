@@ -24,8 +24,8 @@ export const E_REQUEST_LABEL_EN = {
   DETAIL_CHARGES: "Detail of Charges",
   DATA_OF_SUBSCRIBER: "Data of Subscriber",
   TERMS_AND_CONDITIONS_OF_SERVICE: "Terms and Conditions of Service",
-  REMARKS: `​*If the service is terminated, the Subscriber shall return borrowed equipment to AWN within the period and at the location specified by AWN. Failure to return the equipment shall render the Subscriber liable for compensation equivalent to the value of the equipment, subject  to the Terms and Conditions of Service.
-*If the Subscriber terminates the service prior to the expiry of the service period, the Subscriber agrees to pay the installation fee, proportionately reduced to reflect the period of service already used; provided, however, that this shall not apply where the termination results from the service not being provided in accordance with the advertised terms or stated service standards, or from any fault of AWN, in accordance with the Terms and Conditions of Service.​`,
+  REMARKS: `​*If the service is terminated, the Subscriber shall return borrowed equipment to AWN within the period and at the location specified by AWN. Failure to return the equipment shall render the Subscriber liable for compensation equivalent to the value of the equipment, subject  to the Terms and Conditions of Service.​
+*If the Subscriber terminates the service prior to the expiry of the service period, the Subscriber agrees to pay the installation fee, proportionately reduced to reflect the period of service already used; provided, however, that this shall not apply where the termination results from the service not being provided in accordance with the advertised terms or stated service standards, or from any fault of AWN, in accordance with the Terms and Conditions of Service.​​`,
   ESTIMATE_TOTAL_CHARGE: "Estimated total charges​",
   PRICE_EXCLUDE_VAT: " (Price excludes VAT)",
   MONTHLY_SUMMARY_OF_CHARGES: "Monthly summary of charges",

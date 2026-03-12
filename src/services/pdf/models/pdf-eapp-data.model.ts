@@ -23,7 +23,7 @@ export class CustomerInfo {
   otherTelephoneNo: string = "";
   installAddress: string = "";
   billingChannel: string = "";
-  billingAddress: string = "";
+  documentDeliveryAddress: string = "";
 }
 
 export class AverageSection {
