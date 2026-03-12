@@ -4,92 +4,51 @@
   "productOwner": "FBB",
   "customerInfo": {
     "registerType": "บัตรประชาชน",
-    "idCard": "1802034581530",
+    "idCardNo": "1802034581530",
     "name": "ทดสอบ นิวคนนึง",
     "repName": "",
     "mobileNo": "0633432145",
-    "email": "-",
-    "installDateTime": "2 ก.พ. 2569 09:00–12:00",
-    "alternativeInstallDate": "-",
-    "documentDeliveryAddress":
-      "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
-    "installAddress":
-      "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
+    "otherTelephoneNo": "0000000000",
+    "documentDeliveryAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
+    "installAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
     "billingChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS"
   },
-   "requestSection": [
-    {
-      "text": "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
-      "price": 360,
-      "isDiscount": false
-    },
-    {
-      "text": "ส่วนลดค่าบริการรายเดือน 50% นาน 6 เดือน (เฉพาะแพ็กเกจ BROADBAND24)",
-      "price": 230,
-      "isDiscount": true
-    }
-  ],
-  "mainPackages": [
-    "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
-    "ส่วนลดค่าติดตั้งอินเทอร์เน็ตพร้อมอุปกรณ์รับสัญญาณ (WIFI Router) มูลค่า 4,800.00 บาท"
-  ],
-  "onTopPackages": [
-    "HBO Add-on แพ็กเกจเสริมความบันเทิงระดับพรีเมียม รับชมภาพยนตร์และซีรีส์ดังจาก HBO Originals แบบเต็มอิ่ม ความคมชัดระดับ HD/4K พร้อมเสียงคุณภาพสูง รองรับการรับชมผ่าน Smart TV, มือถือ และแท็บเล็ต สามารถรับชมย้อนหลังและเลือกเสียงพากย์หรือคำบรรยายได้ตามต้องการ",
-    "ฟรี! AIS Playbox มูลค่า 1,490 บาท",
-    "ส่วนลดค่าบริการรายเดือน 50% นาน 6 เดือน (เฉพาะแพ็กเกจ BROADBAND24)"
-  ],
-  "entrySection": [
-    {
-      "text": "ค่าแรกเข้า",
-      "price": 747.66,
-      "isDiscount": false
-    },
-    {
-      "text": "ส่วนลดค่าแรกเข้า",
-      "price": 747.66,
-      "isDiscount": true
-    }
-  ],
-  "wireSection": [
-    "กรณีเดินสายมากกว่าระยะทางที่กำหนด (สายโทรศัพท์ความยาว 10 เมตร) คิดค่าสายเมตรละ 20 บาท โดยชำระเงินให้กับผู้ติดตั้งในวันที่ติดตั้ง"
-  ],
-  "installationSection": [
-    {
-      "text": "ค่าติดตั้ง อินเทอร์เน็ตพร้อมอุปกรณ์รับส่งสัญญาณ (WiFi router)",
-      "price": 4800,
-      "isDiscount": false
-    },
-    {
-      "text": "ส่วนลดค่าติดตั้ง โดยตกลงใช้บริการอย่างน้อย 12 รอบบิล",
-      "price": 4800,
-      "isDiscount": true
-    }
-  ],
-  "equipmentSection": [
-    "AIS PLAYBOX มูลค่าจุดละ 2,000 บาท หรือ 2,490 บาท (ตามเงื่อนไขของแพ็กเกจที่ลูกค้าตกลงใช้บริการ)",
-    "FTTH – Router มูลค่า 2,500 บาท"
-  ],
-  "monthlySection": [
-    {
-      "text": "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
-      "price": 360,
-      "isDiscount": false
-    },
-    {
-      "text": "ส่วนลดค่าบริการรายเดือน 50% นาน 6 เดือน (เฉพาะแพ็กเกจ BROADBAND24)",
-      "price": 230,
-      "isDiscount": true
-    }
-  ],
-  "averageSection":{
-    "days": 1,
-    "details":  [
-    {
-      "text": "คิดเฉลี่ย 123.91 บาทต่อ 1 วัน",
-      "price": 123.91,
-      "isDiscount": false
-    }
-  ] 
+ 
+  "packageDetailSection": {
+    "packageName": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
+    "details": [
+      {
+        "text": "ค่าบริการรายเดือน (Monthly Fee) 459.00 บาท (baht) (ไม่รวม VAT/Excl. VAT)",
+        "price": 459.00
+      },
+      {
+        "text": "ระยะเวลาใช้บริการขั้นต่ำ (Minimum Service period): 24 รอบบิล (24 Bill cycles)"
+      },
+      {
+        "text": "รับสิทธิ์ยืมใช้ FTTx Router มาตรฐาน (FTTx standard router) จำนวน 1 ชุด (set), AIS PlayBox 1 กล่อง (box)"
+      },
+      {
+        "text": "บริการอื่นๆ ใน Package (other service in Package)"
+      },
+      {
+        "text": "Mobile Service"
+      },
+      {
+        "text": "ค่าแรกเข้า (Entry fee) (ราคาปกติ/normal charge 2,000 บาท (baht) (ไม่รวม VAT/Excl. VAT))",
+        "price": 747.66
+      },
+      {
+        "text": "ค่าติดตั้ง (Installation Fee) (ไม่รวม VAT/Excl. VAT)",
+        "price": 4800.00
+      },
+      {
+        "text": "ส่วนลดค่าติดตั้งเมื่อใช้บริการครบตามกำหนดระยะเวลาและเงื่อนไขของแพ็กเกจหลัก (Receive the discount for installation fee of AIS Fiber service when using the service according to the duration and conditions of the main package)",
+        "price": 4800.00
+      }
+    ]
   },
+  "cardImage": "",
+  "signatureImage": "",
+  "registerDate": "01/06/2024",
   "termsAndConditions": ""
 }

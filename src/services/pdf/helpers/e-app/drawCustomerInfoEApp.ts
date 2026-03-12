@@ -53,7 +53,7 @@ export function drawCustomerInfoEApp({
           baseRow,
           [
             label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO,
-            customerInfo.idCardPassportNo,
+            customerInfo.idCardNo,
             label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
             customerInfo.otherTelephoneNo,
           ],

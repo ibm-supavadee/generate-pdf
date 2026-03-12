@@ -6,7 +6,9 @@ export const E_APP_LABEL_TH = {
   STATEMENT_TITLE: "ใบแจ้งค่าบริการ​",
   REQUEST_REGISTRATION_INTERNET_TITLE:
     "ขอแจ้งความประสงค์สมัครใช้บริการอินเทอร์เน็ต AIS Fibre3 ดังนี้",
- SIGNATURE_LABEL: "ลงชื่อผู้ใช้บริการ​",
+  SIGNATURE_LABEL: "ลงชื่อผู้ใช้บริการ​",
+  PACKAGEL_LABEL:
+    "แพ็กเกจหลัก บริการ AIS Fibre3 (Main package of AIS Fibre3 Service)",
   CUSTOMER_INFO: {
     NAME: "ชื่อ - นามสกุล​",
     CORPORATE_NAME: "ชื่อบริษัท",
@@ -21,6 +23,6 @@ export const E_APP_LABEL_TH = {
   REMARKS: `*กรณียกเลิกบริการต้องส่งคืนอุปกรณ์ที่ได้รับสิทธิ์ยืมใช้ให้แก่ AWN ตามระยะเวลาและสถานที่ที่ AWN กำหนด หากไม่ส่งคืน ผู้ใช้บริการยินยอมชดใช้ค่าเสียหายตามมูลค่าอุปกรณ์ ตามข้อกำหนดและเงื่อนไขการใช้บริการ​
  *หากยกเลิกการใช้บริการก่อนครบกำหนดระยะเวลาใช้บริการ ผู้ใช้บริการตกลงชำระค่าติดตั้งและเดินสายภายนอกในอัตราที่ได้มีการหักลดลงตามสัดส่วนที่ได้ใช้บริการไปก่อนแล้ว เว้นแต่กรณีที่เหตุแห่งการยกเลิกบริการเกิดขึ้นจากการให้บริการที่ไม่เป็นไปตามโฆษณาหรือมาตรฐานการให้บริการที่ได้แจ้งไว้ หรือเกิดขึ้นจากความผิดของ AWN ทั้งนี้ ตามข้อกำหนดและเงื่อนไขการใช้บริการ​​`,
   CONSENT: `ข้าพเจ้าขอรับรองว่าลายมือชื่อ หรือลายมือชื่ออิเล็กทรอนิกส์ที่ลงนามและ/หรือยืนยันตัวตนข้าพเจ้าในแบบคำขอนี้ และในเอกสารแนบแบบคำขอฉบับนี้ (ถ้ามี) เป็นลายมือชื่อที่แท้จริงของข้าพเจ้า 
-I hereby certify that the signature(s) or electronic signature executed and/or used to authenticate my identity in this Application Form, any attachments thereto (if any), are genuine signatures.`, 
- THB: "บาท",
+I hereby certify that the signature(s) or electronic signature executed and/or used to authenticate my identity in this Application Form, any attachments thereto (if any), are genuine signatures.`,
+  THB: "บาท",
 };

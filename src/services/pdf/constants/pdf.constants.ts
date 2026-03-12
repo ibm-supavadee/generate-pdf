@@ -10,10 +10,13 @@ export const PDF_COLORS = {
 export enum CUSTOMER_TYPE {
   EXISTING = "EXISTING",
   NEW_REGISTER = "NEW_REGISTER",
-};
+}
 
 export const FONT_SIZE = 11;
 export const HEADER_SPACING = 10;
+export const SECTION_GAP_SMALL = 6;
+export const SECTION_GAP = 12;
+export const SECTION_GAP_LARGE = 20;
 
 export enum REGISTER_TYPE {
   ID_CARD = "ID_CARD", // บัตรประชาชน

@@ -2,7 +2,11 @@ import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
-import { FONT_SIZE, PDF_COLORS } from "./constants/pdf.constants";
+import {
+  FONT_SIZE,
+  PDF_COLORS,
+  SECTION_GAP_SMALL,
+} from "./constants/pdf.constants";
 import { E_APP_LABEL_EN } from "./constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "./constants/e-app-label-th.constant";
 import { drawSectionHeader } from "./helpers/e-request/drawSectionHeader";
@@ -11,12 +15,13 @@ import { PdfEAppData } from "./models/pdf-eapp-data.model";
 import { drawHeader } from "./helpers/common/drawHeader";
 import { drawAddressInstall } from "./helpers/e-app/drawAddressInstall";
 import { drawStatement } from "./helpers/e-app/drawStatement";
-import { renderRequestTable } from "./helpers/e-app/renderRequestTable";
 import { drawRemark } from "./helpers/e-request/drawRemark";
 import path from "path";
 import { drawCardBox } from "./helpers/e-app/drawCardBox";
 import { drawSignatureSection } from "./helpers/e-app/drawSignature";
 import { drawTwoColumnSection } from "./helpers/e-app/drawTwoColumnSection";
+import { photoMock } from "../../mocks/photoMock.mock";
+import { renderPackageDetail } from "./helpers/e-app/renderPackageDetail";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -183,20 +188,20 @@ export async function generateStyledEAppPdf(
         options: { fullWidth: true },
       });
 
-      y = renderRequestTable({
+      y = renderPackageDetail({
         doc,
         y,
         margin,
         contentWidth,
-        pageHeight,
         data,
         label,
       });
 
+      doc.y = y - SECTION_GAP_SMALL;
+
       /* -------------------------
             REMARK
         ------------------------- */
-
       y = drawRemark({
         doc,
         y,
@@ -205,6 +210,10 @@ export async function generateStyledEAppPdf(
         label: label.REMARKS,
         ensureSpace,
       });
+
+      /* -------------------------
+            CONSENT
+        ------------------------- */
 
       y = drawRemark({
         doc,
@@ -232,28 +241,18 @@ export async function generateStyledEAppPdf(
           height: 200,
 
           drawLeft: (x, y, width) => {
-            const cardPath = path.join(
-              process.cwd(),
-              "src/assets/img/pdf/card.jpg",
-            );
-
             return drawCardBox({
               doc,
               y,
               margin: x,
               contentWidth: width,
               height: 200,
-              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardPassportNo}`,
-              imagePath: cardPath,
+              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
+              imageBase64: photoMock.idCardDocument,
             });
           },
 
           drawRight: (x, y, width) => {
-            const signPath = path.join(
-              process.cwd(),
-              "src/assets/img/pdf/sign.jpg",
-            );
-
             return drawSignatureSection({
               doc,
               y,
@@ -261,9 +260,9 @@ export async function generateStyledEAppPdf(
               contentWidth: width,
               height: 200,
               title: label.SIGNATURE_LABEL,
-              date: "วันที่ 3 พ.ย. 2568",
+              date: data.registerDate,
               data,
-              signaturePath: signPath,
+              signatureBase64: photoMock.signaturePhoto,
             });
           },
         }) + 20;

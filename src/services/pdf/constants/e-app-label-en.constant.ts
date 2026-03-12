@@ -7,6 +7,7 @@ export const E_APP_LABEL_EN = {
   REQUEST_REGISTRATION_INTERNET_TITLE:
     "To request for the registration of the AIS Fibre3 Internet Service as follows:​",
   SIGNATURE_LABEL: "Subscriber’s Signature​",
+  MAIN_PACKAGEL_LABEL: "Main package of AIS Fibre3 Service",
   CUSTOMER_INFO: {
     NAME: "Firstname - Lastname​",
     CORPORATE_NAME: "Company Name",

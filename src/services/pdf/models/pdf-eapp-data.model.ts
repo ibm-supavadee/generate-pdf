@@ -3,22 +3,18 @@ export class PdfEAppData {
   lang: "TH" | "EN" = "TH";
   productOwner: "FBB" | "3BB" = "FBB";
   customerInfo: CustomerInfo = new CustomerInfo();
-  mainPackages: string[] = [];
-  onTopPackages: string[] = [];
-  entrySection: Detail[] = [];
-  wireSection?: string[] = [];
-  installationSection: Detail[] = [];
-  equipmentSection?: string[] = [];
-  monthlySection: Detail[] = [];
-  averageSection: AverageSection = new AverageSection();
+  packageDetail: PackageDetailSection = new PackageDetailSection();
+  cardImage: string = "";
+  signatureImage: string = "";
+  registerDate: string = "";
   termsAndConditions: string = "";
 }
 
 export class CustomerInfo {
   registerType: string = "";
+  idCardNo: string = "";
   name: string = "";
   repName: string = "";
-  idCardPassportNo: string = "";
   mobileNo: string = "";
   otherTelephoneNo: string = "";
   installAddress: string = "";
@@ -26,13 +22,12 @@ export class CustomerInfo {
   documentDeliveryAddress: string = "";
 }
 
-export class AverageSection {
-  days: number = 0;
+export class PackageDetailSection {
+  packageName: string = "";
   details: Detail[] = [];
 }
 
 export class Detail {
   text: string = "";
   price: number = 0;
-  isDiscount: boolean = false;
 }

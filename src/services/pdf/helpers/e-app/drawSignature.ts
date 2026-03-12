@@ -1,4 +1,3 @@
-import fs from "fs";
 import { PDF_COLORS } from "../../constants/pdf.constants";
 import { PdfEAppData } from "../../models/pdf-eapp-data.model";
 
@@ -11,7 +10,7 @@ type Params = {
   title: string;
   date: string;
   data: PdfEAppData;
-  signaturePath?: string;
+  signatureBase64: string;
 };
 
 export function drawSignatureSection({
@@ -23,7 +22,7 @@ export function drawSignatureSection({
   title,
   date,
   data,
-  signaturePath,
+  signatureBase64,
 }: Params): number {
   const startY = y;
   const centerX = margin + contentWidth / 2;
@@ -43,10 +42,15 @@ export function drawSignatureSection({
 
   const imageY = startY + height / 2 - 70;
 
-  if (signaturePath && fs.existsSync(signaturePath)) {
+  console.log("signatureBase64", signatureBase64);
+  if (signatureBase64) {
     const width = 100;
 
-    doc.image(signaturePath, centerX - width / 2, imageY, {
+    const cleanBase64 = signatureBase64.replace(/^data:image\/\w+;base64,/, "");
+
+    const buffer = Buffer.from(cleanBase64, "base64");
+
+    doc.image(buffer, centerX - width / 2, imageY, {
       width,
     });
   }
@@ -62,7 +66,7 @@ export function drawSignatureSection({
     .lineWidth(1)
     .stroke();
 
-  /* DATE TH */
+  /* DATE */
 
   const displayDate = data.lang === "TH" ? `วันที่ ${date}` : date;
 

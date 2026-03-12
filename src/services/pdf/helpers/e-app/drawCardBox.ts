@@ -1,4 +1,3 @@
-import fs from "fs";
 import { PDF_COLORS } from "../../constants/pdf.constants";
 import { drawSectionHeader } from "../e-request/drawSectionHeader";
 
@@ -9,7 +8,7 @@ type Params = {
   contentWidth: number;
   height: number;
   title: string;
-  imagePath?: string;
+  imageBase64?: string;
 };
 
 export function drawCardBox({
@@ -19,7 +18,7 @@ export function drawCardBox({
   contentWidth,
   height,
   title,
-  imagePath,
+  imageBase64,
 }: Params): number {
   const startY = y;
 
@@ -46,13 +45,20 @@ export function drawCardBox({
 
   /* IMAGE */
 
-  if (imagePath && fs.existsSync(imagePath)) {
+  if (imageBase64) {
     const imageWidth = 160;
+
+    const cleanBase64 = imageBase64.replace(
+      /^data:image\/[a-zA-Z]+;base64,/,
+      "",
+    );
+
+    const buffer = Buffer.from(cleanBase64, "base64");
 
     const centerX = margin + contentWidth / 2 - imageWidth / 2;
     const centerY = y + boxHeight / 2 - 60;
 
-    doc.image(imagePath, centerX, centerY, {
+    doc.image(buffer, centerX, centerY, {
       width: imageWidth,
     });
   }
