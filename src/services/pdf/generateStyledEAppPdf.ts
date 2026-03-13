@@ -27,11 +27,7 @@ import { drawPageNumbers } from "./helpers/common/drawPageNumber";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
-  lang: "TH" | "EN",
 ): Promise<string> {
-  const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
-  const CARD_SIGN_SECTION_HEIGHT = 180;
-
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({
@@ -42,7 +38,7 @@ export async function generateStyledEAppPdf(
 
       const buffers: Buffer[] = [];
 
-      doc.on("data", buffers.push.bind(buffers));
+      doc.on("data", (chunk) => buffers.push(chunk));
 
       doc.on("end", () => {
         const pdf = Buffer.concat(buffers);
@@ -61,206 +57,228 @@ export async function generateStyledEAppPdf(
       /* -------------------------
          PAGE CONFIG
       ------------------------- */
+
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
 
       const margin = 20;
       const contentWidth = pageWidth - margin * 2;
 
-      let y = margin;
+      const CARD_SIGN_SECTION_HEIGHT = 180;
 
       /* -------------------------
-         HELPER FUNCTIONS
+         LANGUAGE LOOP
       ------------------------- */
-      const drawMainHeader = (startY: number): number => {
-        doc
-          .font("regular")
-          .fontSize(9)
-          .fillColor(PDF_COLORS.GRAY)
-          .text(label.COMPANY_INFO, margin, startY, {
-            width: contentWidth,
-            lineGap: 2,
-          });
 
-        const headerY = startY + 15;
+      const langs: ("TH" | "EN")[] = ["TH", "EN"];
 
-        return drawHeader({
-          doc,
-          y: headerY,
-          margin,
-          pageWidth,
-          title: label.EAPP_MAIN_TITLE,
-        });
-      };
-
-      const gap = (size = SECTION_GAP_SMALL) => {
-        y += size;
-      };
-
-      const ensureSpace = (height: number) => {
-        if (y + height > pageHeight - margin) {
+      langs.forEach((lang, index) => {
+        if (index !== 0) {
           doc.addPage();
-          y = drawMainHeader(margin);
         }
-      };
 
-      /* -------------------------
-         MAIN HEADER
-      ------------------------- */
-      y = drawMainHeader(y);
+        const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
 
-      /* -------------------------
-         CUSTOMER INFO
-      ------------------------- */
-      y = drawCustomerInfoEApp({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        data,
-        label,
-        ensureSpace,
-      });
+        let y = margin;
 
-      /* -------------------------
-         ADDRESS & STATEMENT
-      ------------------------- */
-      y = drawTwoColumnSection({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        leftRatio: 0.5,
-        rightRatio: 0.5,
+        /* -------------------------
+           HELPER FUNCTIONS
+        ------------------------- */
 
-        drawLeft: (x, y, width) =>
-          drawAddressInstallSection({
+        const drawMainHeader = (startY: number): number => {
+          doc
+            .font("regular")
+            .fontSize(9)
+            .fillColor(PDF_COLORS.GRAY)
+            .text(label.COMPANY_INFO, margin, startY, {
+              width: contentWidth,
+              lineGap: 2,
+            });
+
+          const headerY = startY + 15;
+
+          return drawHeader({
             doc,
-            y,
-            margin: x,
-            contentWidth: width,
-            data,
-            label,
-          }),
-        drawRight: (x, y, width) =>
-          drawStatementSection({
-            doc,
-            y,
-            margin: x,
-            contentWidth: width,
-            data,
-            label,
-          }),
-      });
+            y: headerY,
+            margin,
+            pageWidth,
+            title: label.EAPP_MAIN_TITLE,
+          });
+        };
 
-      /* -------------------------
-        PACKAGE DETAIL TABLE
-      ------------------------- */
-      y = renderPackageDetail({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        data,
-        label,
-      });
+        const ensureSpace = (height: number) => {
+          if (y + height > pageHeight - margin) {
+            doc.addPage();
+            y = drawMainHeader(margin);
+          }
+        };
 
-      y -= 10;
-      doc.y = y;
-
-      /* -------------------------
-            Note
-        ------------------------- */
-      y = drawRemark({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        label: label.REMARKS,
-        ensureSpace,
-      });
-
-      y += 10;
-      /* -------------------------
-            Remark
-        ------------------------- */
-      y = renderRemarkEApp({
-        doc,
-        html: eappRemark,
-        y,
-        margin,
-        pageWidth,
-        pageHeight,
-        drawHeader: drawMainHeader,
-      });
-
-      /* -------------------------
-            LINE
+        /* -------------------------
+           MAIN HEADER
         ------------------------- */
 
-      y = drawDivider({
-        doc,
-        y,
-        margin,
-        contentWidth,
-      });
-      /* -------------------------
-            CONSENT
+        y = drawMainHeader(y);
+
+        /* -------------------------
+           CUSTOMER INFO
         ------------------------- */
 
-      y = drawRemark({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        label: label.CONSENT,
-        fontSize: 11,
-        topSpacing: 10,
-        ensureSpace,
-      });
-
-      y += 20;
-
-      /* -------------------------
-        CARD + SIGNATURE 
-      ------------------------- */
-      y =
-        drawTwoColumnSection({
+        y = drawCustomerInfoEApp({
           doc,
           y,
           margin,
           contentWidth,
+          data,
+          label,
+          ensureSpace,
+        });
 
-          leftRatio: 0.6,
-          rightRatio: 0.4,
-          height: CARD_SIGN_SECTION_HEIGHT,
+        /* -------------------------
+           ADDRESS & STATEMENT
+        ------------------------- */
 
-          drawLeft: (x, y, width) => {
-            return drawCardBox({
+        y = drawTwoColumnSection({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          leftRatio: 0.5,
+          rightRatio: 0.5,
+
+          drawLeft: (x, y, width) =>
+            drawAddressInstallSection({
               doc,
               y,
               margin: x,
               contentWidth: width,
-              height: CARD_SIGN_SECTION_HEIGHT,
-              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
-              imageBase64: photoMock.idCardDocument,
-            });
-          },
-
-          drawRight: (x, y, width) => {
-            return drawSignatureSection({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              height: CARD_SIGN_SECTION_HEIGHT,
-              title: label.SIGNATURE_LABEL,
-              date: data.registerDate,
               data,
-              signatureBase64: photoMock.signaturePhoto,
-            });
-          },
-        }) + 20;
+              label,
+            }),
+
+          drawRight: (x, y, width) =>
+            drawStatementSection({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              data,
+              label,
+            }),
+        });
+
+        /* -------------------------
+           PACKAGE DETAIL
+        ------------------------- */
+
+        y = renderPackageDetail({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          data,
+          label,
+        });
+
+        y -= 10;
+        doc.y = y;
+
+        /* -------------------------
+           NOTE
+        ------------------------- */
+
+        y = drawRemark({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          label: label.REMARKS,
+          ensureSpace,
+        });
+
+        y += 10;
+
+        /* -------------------------
+           REMARK
+        ------------------------- */
+
+        y = renderRemarkEApp({
+          doc,
+          html: eappRemark,
+          y,
+          margin,
+          pageWidth,
+          pageHeight,
+          drawHeader: drawMainHeader,
+        });
+
+        /* -------------------------
+           DIVIDER
+        ------------------------- */
+
+        y = drawDivider({
+          doc,
+          y,
+          margin,
+          contentWidth,
+        });
+
+        /* -------------------------
+           CONSENT
+        ------------------------- */
+
+        y = drawRemark({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          label: label.CONSENT,
+          fontSize: 11,
+          topSpacing: 10,
+          ensureSpace,
+        });
+
+        y += 20;
+
+        /* -------------------------
+           CARD + SIGNATURE
+        ------------------------- */
+
+        y =
+          drawTwoColumnSection({
+            doc,
+            y,
+            margin,
+            contentWidth,
+
+            leftRatio: 0.6,
+            rightRatio: 0.4,
+            height: CARD_SIGN_SECTION_HEIGHT,
+
+            drawLeft: (x, y, width) =>
+              drawCardBox({
+                doc,
+                y,
+                margin: x,
+                contentWidth: width,
+                height: CARD_SIGN_SECTION_HEIGHT,
+                title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
+                imageBase64: photoMock.idCardDocument,
+              }),
+
+            drawRight: (x, y, width) =>
+              drawSignatureSection({
+                doc,
+                y,
+                margin: x,
+                contentWidth: width,
+                height: CARD_SIGN_SECTION_HEIGHT,
+                title: label.SIGNATURE_LABEL,
+                date: data.registerDate,
+                data,
+                signatureBase64: photoMock.signaturePhoto,
+              }),
+          }) + 20;
+      });
 
       /* -------------------------
          PAGE NUMBER
