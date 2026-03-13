@@ -70,7 +70,7 @@ export function drawCustomerInfoEApp({
     ensureSpace,
     leftLabelX: margin,
     leftValueX: margin + 130,
-    rightLabelX: margin + contentWidth / 2,
+    rightLabelX: margin + contentWidth / 2 + 10,
     rightValueX: margin + contentWidth / 2 + 120,
   });
 }

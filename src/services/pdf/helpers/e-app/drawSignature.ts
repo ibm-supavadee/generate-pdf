@@ -27,7 +27,7 @@ export function drawSignatureSection({
   const startY = y;
   const centerX = margin + contentWidth / 2;
 
-  /* TITLE */
+  /* ---------- HEADER ---------- */
 
   doc
     .font("bold")
@@ -38,26 +38,14 @@ export function drawSignatureSection({
       align: "center",
     });
 
-  /* SIGNATURE IMAGE */
+  const headerBottomY = doc.y; // ตำแหน่งจริงหลัง header
 
-  const imageY = startY + height / 2 - 70;
+  /* ---------- FOOTER ---------- */
 
-  console.log("signatureBase64", signatureBase64);
-  if (signatureBase64) {
-    const width = 100;
+  const bottomY = startY + height;
+  const LINE_MARGIN_BOTTOM = 25;
 
-    const cleanBase64 = signatureBase64.replace(/^data:image\/\w+;base64,/, "");
-
-    const buffer = Buffer.from(cleanBase64, "base64");
-
-    doc.image(buffer, centerX - width / 2, imageY, {
-      width,
-    });
-  }
-
-  /* LINE */
-
-  const lineY = startY + height - 70;
+  const lineY = bottomY - LINE_MARGIN_BOTTOM;
 
   doc
     .moveTo(margin + 40, lineY)
@@ -66,18 +54,86 @@ export function drawSignatureSection({
     .lineWidth(1)
     .stroke();
 
-  /* DATE */
+  /* ---------- DATE ---------- */
 
-  const displayDate = data.lang === "TH" ? `วันที่ ${date}` : date;
+  const displayDate =
+    data.lang === "TH"
+      ? `วันที่ ${formatDate(date, data.lang)}`
+      : formatDate(date, data.lang);
 
   doc
     .font("bold")
     .fillColor(PDF_COLORS.GREEN)
     .fontSize(12)
-    .text(displayDate, margin, lineY + 8, {
+    .text(displayDate, margin, lineY + 6, {
       width: contentWidth,
       align: "center",
     });
+  /* ---------- SIGNATURE CENTER ---------- */
 
+  if (signatureBase64) {
+    const cleanBase64 = signatureBase64.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(cleanBase64, "base64");
+
+    const boxWidth = 120;
+    const boxHeight = 100;
+
+    const availableTop = headerBottomY;
+    const availableBottom = lineY;
+
+    const availableHeight = availableBottom - availableTop;
+
+    const centerY = availableTop + availableHeight / 2 - boxHeight / 2;
+
+    doc.image(buffer, centerX - boxWidth / 2, centerY, {
+      fit: [boxWidth, boxHeight],
+      align: "center",
+    });
+  }
   return startY + height;
+}
+
+function formatDate(dateStr: string, lang: string): string {
+  const [dayStr, monthStr, yearStr] = dateStr.split("/");
+
+  const day = parseInt(dayStr, 10);
+  const month = parseInt(monthStr, 10);
+  const year = parseInt(yearStr, 10);
+
+  const monthsTH = [
+    "ม.ค.",
+    "ก.พ.",
+    "มี.ค.",
+    "เม.ย.",
+    "พ.ค.",
+    "มิ.ย.",
+    "ก.ค.",
+    "ส.ค.",
+    "ก.ย.",
+    "ต.ค.",
+    "พ.ย.",
+    "ธ.ค.",
+  ];
+
+  const monthsEN = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  if (lang === "TH") {
+    const buddhistYear = year + 543;
+    return `${day} ${monthsTH[month - 1]} ${buddhistYear}`;
+  }
+
+  return `${day} ${monthsEN[month - 1]} ${year}`;
 }

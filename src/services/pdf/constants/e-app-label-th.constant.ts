@@ -7,7 +7,7 @@ export const E_APP_LABEL_TH = {
   REQUEST_REGISTRATION_INTERNET_TITLE:
     "ขอแจ้งความประสงค์สมัครใช้บริการอินเทอร์เน็ต AIS Fibre3 ดังนี้",
   SIGNATURE_LABEL: "ลงชื่อผู้ใช้บริการ​",
-  PACKAGEL_LABEL:
+  MAIN_PACKAGEL_LABEL:
     "แพ็กเกจหลัก บริการ AIS Fibre3 (Main package of AIS Fibre3 Service)",
   CUSTOMER_INFO: {
     NAME: "ชื่อ - นามสกุล​",

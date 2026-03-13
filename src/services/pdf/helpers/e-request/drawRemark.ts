@@ -6,6 +6,8 @@ type Params = {
   margin: number;
   contentWidth: number;
   label: string;
+  fontSize?: number;
+  topSpacing?: number;
   ensureSpace: (height: number) => void;
 };
 
@@ -15,9 +17,10 @@ export function drawRemark({
   margin,
   contentWidth,
   label,
+  fontSize = 9,
+  topSpacing = 15,
   ensureSpace,
 }: Params): number {
-  const topSpacing = 15;
   const remarkHeight = doc.heightOfString(label, {
     width: contentWidth,
   });
@@ -30,7 +33,7 @@ export function drawRemark({
 
   doc
     .font("regular")
-    .fontSize(9)
+    .fontSize(fontSize)
     .fillColor(PDF_COLORS.GRAY)
     .text(label, margin, y, {
       width: contentWidth,

@@ -1,4 +1,4 @@
-import PDFDocument from "pdfkit";
+import PDFDocument, { fontSize } from "pdfkit";
 import { Buffer } from "buffer";
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
@@ -16,12 +16,13 @@ import { drawHeader } from "./helpers/common/drawHeader";
 import { drawAddressInstall } from "./helpers/e-app/drawAddressInstall";
 import { drawStatement } from "./helpers/e-app/drawStatement";
 import { drawRemark } from "./helpers/e-request/drawRemark";
-import path from "path";
 import { drawCardBox } from "./helpers/e-app/drawCardBox";
 import { drawSignatureSection } from "./helpers/e-app/drawSignature";
 import { drawTwoColumnSection } from "./helpers/e-app/drawTwoColumnSection";
 import { photoMock } from "../../mocks/photoMock.mock";
 import { renderPackageDetail } from "./helpers/e-app/renderPackageDetail";
+import { eappRemark } from "../../mocks/eapp-remark";
+import { renderRemarkEApp } from "./helpers/e-app/renderRemarkEApp";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -73,28 +74,30 @@ export async function generateStyledEAppPdf(
         }
       };
 
-      const drawMainHeader = (startY: number) =>
-        drawHeader({
+      const drawMainHeader = (startY: number) => {
+        doc
+          .font("regular")
+          .fontSize(9)
+          .fillColor(PDF_COLORS.GRAY)
+          .text(label.COMPANY_INFO, margin, startY, {
+            width: contentWidth,
+            lineGap: 2,
+          });
+
+        startY += 15;
+
+        return drawHeader({
           doc,
           y: startY,
           margin,
           pageWidth,
           title: label.EAPP_MAIN_TITLE,
         });
+      };
 
       /* -------------------------
          HEADER
       ------------------------- */
-      doc
-        .font("regular")
-        .fontSize(9)
-        .fillColor(PDF_COLORS.GRAY)
-        .text(label.COMPANY_INFO, margin, y, {
-          width: contentWidth,
-          lineGap: 2,
-        });
-
-      y += 15;
       y = drawMainHeader(y);
 
       /* -------------------------
@@ -120,60 +123,61 @@ export async function generateStyledEAppPdf(
         ensureSpace,
       });
 
-      y += 20;
+      y += SECTION_GAP_SMALL;
 
       /* -------------------------
          ADDRESS & STATEMENT
       ------------------------- */
-      y =
-        drawTwoColumnSection({
-          doc,
-          y,
-          margin,
-          contentWidth,
-          leftRatio: 0.5,
-          rightRatio: 0.5,
+      y = drawTwoColumnSection({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        leftRatio: 0.5,
+        rightRatio: 0.5,
 
-          drawLeft: (x, y, width) => {
-            let newY = drawSectionHeader({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-              options: { withDivider: true },
-            });
+        drawLeft: (x, y, width) => {
+          let newY = drawSectionHeader({
+            doc,
+            y,
+            margin: x,
+            contentWidth: width,
+            title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
+            options: { withDivider: true },
+          });
 
-            return drawAddressInstall({
-              doc,
-              y: newY,
-              margin: x,
-              contentWidth: width,
-              data,
-              label,
-            });
-          },
+          return drawAddressInstall({
+            doc,
+            y: newY,
+            margin: x,
+            contentWidth: width,
+            data,
+            label,
+          });
+        },
 
-          drawRight: (x, y, width) => {
-            let newY = drawSectionHeader({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              title: label.STATEMENT_TITLE,
-              options: { withDivider: true },
-            });
+        drawRight: (x, y, width) => {
+          let newY = drawSectionHeader({
+            doc,
+            y,
+            margin: x,
+            contentWidth: width,
+            title: label.STATEMENT_TITLE,
+            options: { withDivider: true },
+          });
 
-            return drawStatement({
-              doc,
-              y: newY,
-              margin: x,
-              contentWidth: width,
-              data,
-              label,
-            });
-          },
-        }) + 20;
+          return drawStatement({
+            doc,
+            y: newY,
+            margin: x,
+            contentWidth: width,
+            data,
+            label,
+          });
+        },
+      });
+
+      y += SECTION_GAP_SMALL;
 
       /* -------------------------
         REQUEST DETAIL TABLE
@@ -197,10 +201,10 @@ export async function generateStyledEAppPdf(
         label,
       });
 
-      doc.y = y - SECTION_GAP_SMALL;
+      doc.y = y - 10;
 
       /* -------------------------
-            REMARK
+            Note
         ------------------------- */
       y = drawRemark({
         doc,
@@ -211,6 +215,35 @@ export async function generateStyledEAppPdf(
         ensureSpace,
       });
 
+      y += 10;
+      /* -------------------------
+            Remark
+        ------------------------- */
+      y = renderRemarkEApp({
+        doc,
+        html: eappRemark,
+        y,
+        margin,
+        pageWidth,
+        pageHeight,
+        drawHeader: drawMainHeader,
+      });
+
+      /* -------------------------
+            LINE
+        ------------------------- */
+
+      y = doc.y;
+      y += 10;
+
+      doc
+        .moveTo(margin, y)
+        .lineTo(margin + contentWidth, y)
+        .strokeColor(PDF_COLORS.GREEN)
+        .lineWidth(1)
+        .stroke();
+
+      doc.y = y;
       /* -------------------------
             CONSENT
         ------------------------- */
@@ -221,6 +254,8 @@ export async function generateStyledEAppPdf(
         margin,
         contentWidth,
         label: label.CONSENT,
+        fontSize: 11,
+        topSpacing: 10,
         ensureSpace,
       });
 
@@ -246,7 +281,7 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              height: 200,
+              height: 180,
               title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
               imageBase64: photoMock.idCardDocument,
             });
@@ -258,7 +293,7 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              height: 200,
+              height: 180,
               title: label.SIGNATURE_LABEL,
               date: data.registerDate,
               data,
