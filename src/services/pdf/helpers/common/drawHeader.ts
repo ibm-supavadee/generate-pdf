@@ -49,7 +49,7 @@ export function drawHeader({
      TITLE (CENTER)
   ------------------------- */
 
-  doc.font("regular").fontSize(18);
+  doc.font("regular").fontSize(16);
 
   const textHeight = doc.currentLineHeight();
 

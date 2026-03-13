@@ -38,30 +38,43 @@ export function drawCardBox({
   /* BOX */
 
   doc
-    .rect(margin + 0.5, y + 0.5, contentWidth - 1, boxHeight)
+    .rect(margin + 0.5, y + 0.5, contentWidth - 1, boxHeight - 1)
     .strokeColor(PDF_COLORS.GREEN)
-    .lineWidth(1.5)
+    .lineWidth(1)
     .stroke();
-
   /* IMAGE */
 
   if (imageBase64) {
-    const imageWidth = 160;
+  const cleanBase64 = imageBase64.replace(
+    /^data:image\/[a-zA-Z]+;base64,/,
+    "",
+  );
 
-    const cleanBase64 = imageBase64.replace(
-      /^data:image\/[a-zA-Z]+;base64,/,
-      "",
-    );
+  const buffer = Buffer.from(cleanBase64, "base64");
 
-    const buffer = Buffer.from(cleanBase64, "base64");
+  const padding = 10;
 
-    const centerX = margin + contentWidth / 2 - imageWidth / 2;
-    const centerY = y + boxHeight / 2 - 60;
+  const maxW = contentWidth - padding * 2;
+  const maxH = boxHeight - padding * 2;
 
-    doc.image(buffer, centerX, centerY, {
-      width: imageWidth,
-    });
-  }
+  // เปิดรูปเพื่ออ่านขนาดจริง
+const img = (doc as any).openImage(buffer);
+
+  // คำนวณ scale ให้พอดีกรอบ
+  const scale = Math.min(maxW / img.width, maxH / img.height);
+
+  const finalW = img.width * scale;
+  const finalH = img.height * scale;
+
+  // คำนวณตำแหน่ง center
+  const imgX = margin + (contentWidth - finalW) / 2;
+  const imgY = y + (boxHeight - finalH) / 2;
+
+  doc.image(buffer, imgX, imgY, {
+    width: finalW,
+    height: finalH,
+  });
+}
 
   return startY + height;
 }

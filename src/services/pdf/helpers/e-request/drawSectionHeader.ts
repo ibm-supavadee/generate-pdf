@@ -28,7 +28,7 @@ export function drawSectionHeader({
   const paddingX = 10;
   const boxHeight = 24;
 
-  doc.font("regular").fontSize(16);
+  doc.font("regular").fontSize(14);
 
   const textWidth = doc.widthOfString(title);
   const textHeight = doc.currentLineHeight();
