@@ -2,6 +2,7 @@ import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
 import { PdfEAppData } from "../../models/pdf-eapp-data.model";
+import { drawSectionHeader } from "../e-request/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -12,7 +13,7 @@ type Params = {
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
-export function drawStatement({
+export function drawStatementSection({
   doc,
   y,
   margin,
@@ -20,6 +21,19 @@ export function drawStatement({
   data,
   label,
 }: Params): number {
+  /* -----------------------------
+     HEADER
+  ----------------------------- */
+
+  y = drawSectionHeader({
+    doc,
+    y,
+    margin,
+    contentWidth,
+    title: label.STATEMENT_TITLE,
+    options: { withDivider: true },
+  });
+
   const startY = y;
 
   const labelWidth = 110;
@@ -85,7 +99,5 @@ export function drawStatement({
     .lineWidth(1)
     .stroke();
 
-  y += 4;
-
-  return y;
+  return y + 4;
 }

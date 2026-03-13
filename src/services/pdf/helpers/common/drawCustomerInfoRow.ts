@@ -1,4 +1,4 @@
-import { PDF_COLORS } from "../../constants/pdf.constants";
+import { PDF_COLORS, SECTION_GAP_SMALL } from "../../constants/pdf.constants";
 
 type Row = [string?, string?, string?, string?];
 
@@ -50,5 +50,5 @@ export function drawCustomerInfoRows({
     y += rowSpacing;
   });
 
-  return y;
+  return y + SECTION_GAP_SMALL;
 }

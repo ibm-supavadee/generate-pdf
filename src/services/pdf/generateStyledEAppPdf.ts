@@ -1,4 +1,4 @@
-import PDFDocument, { fontSize } from "pdfkit";
+import PDFDocument from "pdfkit";
 import { Buffer } from "buffer";
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
@@ -9,12 +9,11 @@ import {
 } from "./constants/pdf.constants";
 import { E_APP_LABEL_EN } from "./constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "./constants/e-app-label-th.constant";
-import { drawSectionHeader } from "./helpers/e-request/drawSectionHeader";
 import { drawCustomerInfoEApp } from "./helpers/e-app/drawCustomerInfoEApp";
 import { PdfEAppData } from "./models/pdf-eapp-data.model";
 import { drawHeader } from "./helpers/common/drawHeader";
-import { drawAddressInstall } from "./helpers/e-app/drawAddressInstall";
-import { drawStatement } from "./helpers/e-app/drawStatement";
+import { drawAddressInstallSection } from "./helpers/e-app/drawAddressInstallSection";
+import { drawStatementSection } from "./helpers/e-app/drawStatementSection";
 import { drawRemark } from "./helpers/e-request/drawRemark";
 import { drawCardBox } from "./helpers/e-app/drawCardBox";
 import { drawSignatureSection } from "./helpers/e-app/drawSignature";
@@ -23,11 +22,15 @@ import { photoMock } from "../../mocks/photoMock.mock";
 import { renderPackageDetail } from "./helpers/e-app/renderPackageDetail";
 import { eappRemark } from "../../mocks/eapp-remark";
 import { renderRemarkEApp } from "./helpers/e-app/renderRemarkEApp";
+import { drawDivider } from "./helpers/common/drawDivider";
+import { drawPageNumbers } from "./helpers/common/drawPageNumber";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
+  lang: "TH" | "EN",
 ): Promise<string> {
-  const label = data.lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
+  const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
+  const CARD_SIGN_SECTION_HEIGHT = 180;
 
   return new Promise((resolve, reject) => {
     try {
@@ -58,7 +61,6 @@ export async function generateStyledEAppPdf(
       /* -------------------------
          PAGE CONFIG
       ------------------------- */
-
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
 
@@ -67,14 +69,10 @@ export async function generateStyledEAppPdf(
 
       let y = margin;
 
-      const ensureSpace = (height: number) => {
-        if (y + height > pageHeight - margin) {
-          doc.addPage();
-          y = margin;
-        }
-      };
-
-      const drawMainHeader = (startY: number) => {
+      /* -------------------------
+         HELPER FUNCTIONS
+      ------------------------- */
+      const drawMainHeader = (startY: number): number => {
         doc
           .font("regular")
           .fontSize(9)
@@ -84,35 +82,36 @@ export async function generateStyledEAppPdf(
             lineGap: 2,
           });
 
-        startY += 15;
+        const headerY = startY + 15;
 
         return drawHeader({
           doc,
-          y: startY,
+          y: headerY,
           margin,
           pageWidth,
           title: label.EAPP_MAIN_TITLE,
         });
       };
 
+      const gap = (size = SECTION_GAP_SMALL) => {
+        y += size;
+      };
+
+      const ensureSpace = (height: number) => {
+        if (y + height > pageHeight - margin) {
+          doc.addPage();
+          y = drawMainHeader(margin);
+        }
+      };
+
       /* -------------------------
-         HEADER
+         MAIN HEADER
       ------------------------- */
       y = drawMainHeader(y);
 
       /* -------------------------
          CUSTOMER INFO
       ------------------------- */
-
-      y = drawSectionHeader({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        title: label.DATA_OF_SUBSCRIBER_TITLE,
-        options: { withDivider: true },
-      });
-
       y = drawCustomerInfoEApp({
         doc,
         y,
@@ -122,8 +121,6 @@ export async function generateStyledEAppPdf(
         label,
         ensureSpace,
       });
-
-      y += SECTION_GAP_SMALL;
 
       /* -------------------------
          ADDRESS & STATEMENT
@@ -136,62 +133,29 @@ export async function generateStyledEAppPdf(
         leftRatio: 0.5,
         rightRatio: 0.5,
 
-        drawLeft: (x, y, width) => {
-          let newY = drawSectionHeader({
+        drawLeft: (x, y, width) =>
+          drawAddressInstallSection({
             doc,
             y,
             margin: x,
             contentWidth: width,
-            title: label.CUSTOMER_INFO.ADDRESS_EQUIPMENT_INSTALLATION,
-            options: { withDivider: true },
-          });
-
-          return drawAddressInstall({
-            doc,
-            y: newY,
-            margin: x,
-            contentWidth: width,
             data,
             label,
-          });
-        },
-
-        drawRight: (x, y, width) => {
-          let newY = drawSectionHeader({
+          }),
+        drawRight: (x, y, width) =>
+          drawStatementSection({
             doc,
             y,
             margin: x,
             contentWidth: width,
-            title: label.STATEMENT_TITLE,
-            options: { withDivider: true },
-          });
-
-          return drawStatement({
-            doc,
-            y: newY,
-            margin: x,
-            contentWidth: width,
             data,
             label,
-          });
-        },
+          }),
       });
-
-      y += SECTION_GAP_SMALL;
 
       /* -------------------------
-        REQUEST DETAIL TABLE
+        PACKAGE DETAIL TABLE
       ------------------------- */
-
-      y = drawSectionHeader({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        title: label.REQUEST_REGISTRATION_INTERNET_TITLE,
-        options: { fullWidth: true },
-      });
-
       y = renderPackageDetail({
         doc,
         y,
@@ -201,7 +165,8 @@ export async function generateStyledEAppPdf(
         label,
       });
 
-      doc.y = y - 10;
+      y -= 10;
+      doc.y = y;
 
       /* -------------------------
             Note
@@ -233,17 +198,12 @@ export async function generateStyledEAppPdf(
             LINE
         ------------------------- */
 
-      y = doc.y;
-      y += 10;
-
-      doc
-        .moveTo(margin, y)
-        .lineTo(margin + contentWidth, y)
-        .strokeColor(PDF_COLORS.GREEN)
-        .lineWidth(1)
-        .stroke();
-
-      doc.y = y;
+      y = drawDivider({
+        doc,
+        y,
+        margin,
+        contentWidth,
+      });
       /* -------------------------
             CONSENT
         ------------------------- */
@@ -273,7 +233,7 @@ export async function generateStyledEAppPdf(
 
           leftRatio: 0.6,
           rightRatio: 0.4,
-          height: 200,
+          height: CARD_SIGN_SECTION_HEIGHT,
 
           drawLeft: (x, y, width) => {
             return drawCardBox({
@@ -281,7 +241,7 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              height: 180,
+              height: CARD_SIGN_SECTION_HEIGHT,
               title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
               imageBase64: photoMock.idCardDocument,
             });
@@ -293,7 +253,7 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              height: 180,
+              height: CARD_SIGN_SECTION_HEIGHT,
               title: label.SIGNATURE_LABEL,
               date: data.registerDate,
               data,
@@ -306,23 +266,7 @@ export async function generateStyledEAppPdf(
          PAGE NUMBER
       ------------------------- */
 
-      const range = doc.bufferedPageRange();
-      const totalPages = range.count;
-
-      for (let i = range.start; i < range.start + range.count; i++) {
-        doc.switchToPage(i);
-
-        const page = i + 1;
-
-        doc
-          .font("regular")
-          .fontSize(10)
-          .fillColor("gray")
-          .text(`${page}/${totalPages}`, 0, doc.page.height - 25, {
-            width: doc.page.width - 20,
-            align: "right",
-          });
-      }
+      drawPageNumbers(doc);
 
       doc.end();
     } catch (err) {

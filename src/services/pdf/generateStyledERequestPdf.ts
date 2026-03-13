@@ -17,6 +17,7 @@ import { drawRemark } from "./helpers/e-request/drawRemark";
 import { renderTcExisting } from "./helpers/e-request/renderTcExisting";
 import { drawCustomerInfoERequest } from "./helpers/e-request/drawCustomerInfoERequest";
 import { drawHeader } from "./helpers/common/drawHeader";
+import { drawPageNumbers } from "./helpers/common/drawPageNumber";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
@@ -230,24 +231,7 @@ export async function generateStyledERequestPdf(
       /* -------------------------
          PAGE NUMBER
       ------------------------- */
-
-      const range = doc.bufferedPageRange();
-      const totalPages = range.count;
-
-      for (let i = range.start; i < range.start + range.count; i++) {
-        doc.switchToPage(i);
-
-        const page = i + 1;
-
-        doc
-          .font("regular")
-          .fontSize(10)
-          .fillColor("gray")
-          .text(`${page}/${totalPages}`, 0, doc.page.height - 25, {
-            width: doc.page.width - 20,
-            align: "right",
-          });
-      }
+      drawPageNumbers(doc);
 
       doc.end();
     } catch (err) {

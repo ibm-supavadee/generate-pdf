@@ -1,4 +1,5 @@
 import { PDF_COLORS } from "../../constants/pdf.constants";
+import { drawSectionHeader } from "../e-request/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -16,12 +17,7 @@ export function renderPackageDetail({
   contentWidth,
   data,
   label,
-}: Params) {
-  const tablePaddingTop = 10;
-  const tablePaddingBottom = 10;
-  const cellPaddingTop = 1;
-  const cellPaddingBottom = 1;
-
+}: Params): number {
   const startY = y;
 
   const priceWidth = 80;
@@ -29,6 +25,12 @@ export function renderPackageDetail({
 
   const detailX = margin;
   const priceX = margin + detailWidth;
+
+  const tablePaddingTop = 10;
+  const tablePaddingBottom = 10;
+  const textPaddingTop = 8;
+
+  const rowPadding = 1;
 
   const formatPrice = (price: number) =>
     price.toLocaleString("th-TH", {
@@ -39,7 +41,20 @@ export function renderPackageDetail({
   const formatPriceText = (value: number) =>
     `${formatPrice(value)} ${label.THB}`;
 
-  y += tablePaddingTop;
+  /* HEADER */
+
+  y = drawSectionHeader({
+    doc,
+    y,
+    margin,
+    contentWidth,
+    title: label.REQUEST_REGISTRATION_INTERNET_TITLE,
+    options: { fullWidth: true },
+  });
+
+  const tableStartY = y;
+
+  /* PACKAGE NAME */
 
   doc
     .font("bold")
@@ -47,13 +62,15 @@ export function renderPackageDetail({
     .text(
       data.packageDetailSection.packageName,
       detailX + 10,
-      y + cellPaddingTop,
+      y + textPaddingTop,
       {
         width: detailWidth - 20,
       },
     );
 
-  y = doc.y + cellPaddingBottom;
+  y = doc.y + rowPadding;
+
+  /* DETAILS */
 
   data.packageDetailSection.details.forEach((item: any) => {
     const rowStartY = y;
@@ -61,7 +78,7 @@ export function renderPackageDetail({
     doc
       .font("regular")
       .fillColor(PDF_COLORS.GRAY)
-      .text(`• ${item.text}`, detailX + 20, rowStartY + cellPaddingTop, {
+      .text(`• ${item.text}`, detailX + 20, rowStartY + rowPadding, {
         width: detailWidth - 30,
         lineGap: 2,
       });
@@ -69,34 +86,46 @@ export function renderPackageDetail({
     const textEndY = doc.y;
 
     let priceEndY = rowStartY;
+
     if (item.price !== undefined) {
       doc
         .font("regular")
         .fillColor(PDF_COLORS.GREEN)
-        .text(formatPriceText(item.price), priceX, rowStartY + cellPaddingTop, {
+        .text(formatPriceText(item.price), priceX, rowStartY + rowPadding, {
           width: priceWidth - 10,
           align: "right",
         });
+
       priceEndY = doc.y;
     }
 
-    y = Math.max(textEndY, priceEndY) + cellPaddingBottom;
+    y = Math.max(textEndY, priceEndY) + rowPadding;
   });
 
-  // Add final padding before closing the table
+  /* TABLE BOTTOM */
+
   y += tablePaddingBottom;
+
   const tableBottomY = y;
 
-  // Vertical Divider Line
+  /* VERTICAL DIVIDER */
+
   doc
-    .moveTo(priceX, startY)
+    .moveTo(priceX, tableStartY)
     .lineTo(priceX, tableBottomY)
     .strokeColor(PDF_COLORS.BORDER)
     .lineWidth(1)
     .stroke();
 
+  /* TABLE BORDER */
+
   doc
-    .rect(margin, startY, contentWidth, tableBottomY - startY)
+    .rect(
+      margin + 0.5,
+      tableStartY + 0.5,
+      contentWidth - 1,
+      tableBottomY - tableStartY - 1,
+    )
     .strokeColor(PDF_COLORS.BORDER)
     .lineWidth(1)
     .stroke();

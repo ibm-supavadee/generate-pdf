@@ -7,6 +7,7 @@ import {
 } from "../../constants/pdf.constants";
 import { PdfEAppData } from "../../models/pdf-eapp-data.model";
 import { drawCustomerInfoRows } from "../common/drawCustomerInfoRow";
+import { drawSectionHeader } from "../e-request/drawSectionHeader";
 
 type Row = [string?, string?, string?, string?];
 
@@ -29,6 +30,15 @@ export function drawCustomerInfoEApp({
   label,
   ensureSpace,
 }: Params): number {
+  y = drawSectionHeader({
+    doc,
+    y,
+    margin,
+    contentWidth,
+    title: label.DATA_OF_SUBSCRIBER_TITLE,
+    options: { withDivider: true },
+  });
+
   y += HEADER_SPACING;
 
   const customerInfo = data.customerInfo;
