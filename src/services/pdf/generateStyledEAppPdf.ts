@@ -3,9 +3,9 @@ import { Buffer } from "buffer";
 import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
 import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
 import {
+  CUSTOMER_TYPE,
   FONT_SIZE,
   PDF_COLORS,
-  SECTION_GAP_SMALL,
 } from "./constants/pdf.constants";
 import { E_APP_LABEL_EN } from "./constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "./constants/e-app-label-th.constant";
@@ -24,6 +24,7 @@ import { eappRemark } from "../../mocks/eapp-remark";
 import { renderRemarkEApp } from "./helpers/e-app/renderRemarkEApp";
 import { drawDivider } from "./helpers/common/drawDivider";
 import { drawPageNumbers } from "./helpers/common/drawPageNumber";
+import { renderTcEAppNew } from "./helpers/e-app/renderTcEAppNew";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -111,6 +112,16 @@ export async function generateStyledEAppPdf(
             doc.addPage();
             y = drawMainHeader(margin);
           }
+        };
+
+        const getTermAndCon = (): any => {
+          let html = "";
+          if (lang === "EN") {
+            html = data.termsAndConditionsEN;
+          } else {
+            html = data.termsAndConditionsTH;
+          }
+          return html;
         };
 
         /* -------------------------
@@ -243,41 +254,73 @@ export async function generateStyledEAppPdf(
            CARD + SIGNATURE
         ------------------------- */
 
-        y =
-          drawTwoColumnSection({
+        y = drawTwoColumnSection({
+          doc,
+          y,
+          margin,
+          contentWidth,
+
+          leftRatio: 0.6,
+          rightRatio: 0.4,
+          height: CARD_SIGN_SECTION_HEIGHT,
+
+          drawLeft: (x, y, width) =>
+            drawCardBox({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              height: CARD_SIGN_SECTION_HEIGHT,
+              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
+              imageBase64: photoMock.idCardDocument,
+            }),
+
+          drawRight: (x, y, width) =>
+            drawSignatureSection({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              height: CARD_SIGN_SECTION_HEIGHT,
+              title: label.SIGNATURE_LABEL,
+              date: data.registerDate,
+              data,
+              signatureBase64: photoMock.signaturePhoto,
+            }),
+        });
+
+        y += 20;
+
+        /* -------------------------
+              TERMS PAGE
+        ------------------------- */
+
+        doc.addPage();
+
+        y = drawMainHeader(margin);
+
+        const termsHtml = getTermAndCon();
+
+        if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+          y = renderTcEAppNew({
             doc,
+            html: termsHtml,
             y,
             margin,
-            contentWidth,
-
-            leftRatio: 0.6,
-            rightRatio: 0.4,
-            height: CARD_SIGN_SECTION_HEIGHT,
-
-            drawLeft: (x, y, width) =>
-              drawCardBox({
-                doc,
-                y,
-                margin: x,
-                contentWidth: width,
-                height: CARD_SIGN_SECTION_HEIGHT,
-                title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
-                imageBase64: photoMock.idCardDocument,
-              }),
-
-            drawRight: (x, y, width) =>
-              drawSignatureSection({
-                doc,
-                y,
-                margin: x,
-                contentWidth: width,
-                height: CARD_SIGN_SECTION_HEIGHT,
-                title: label.SIGNATURE_LABEL,
-                date: data.registerDate,
-                data,
-                signatureBase64: photoMock.signaturePhoto,
-              }),
-          }) + 20;
+            pageWidth,
+            pageHeight,
+            drawHeader: drawMainHeader,
+          });
+        }
+        // else {
+        //   renderTcNew(doc, termsHtml, {
+        //     margin,
+        //     pageWidth,
+        //     pageHeight,
+        //     startY: y,
+        //     drawHeader: drawTermsHeader,
+        //   });
+        // }
       });
 
       /* -------------------------

@@ -45,36 +45,34 @@ export function drawCardBox({
   /* IMAGE */
 
   if (imageBase64) {
-  const cleanBase64 = imageBase64.replace(
-    /^data:image\/[a-zA-Z]+;base64,/,
-    "",
-  );
+    const cleanBase64 = imageBase64.replace(
+      /^data:image\/[a-zA-Z]+;base64,/,
+      "",
+    );
 
-  const buffer = Buffer.from(cleanBase64, "base64");
+    const buffer = Buffer.from(cleanBase64, "base64");
 
-  const padding = 10;
+    const padding = 10;
 
-  const maxW = contentWidth - padding * 2;
-  const maxH = boxHeight - padding * 2;
+    const maxW = contentWidth - padding * 2;
+    const maxH = boxHeight - padding * 2;
 
-  // เปิดรูปเพื่ออ่านขนาดจริง
-const img = (doc as any).openImage(buffer);
+    const img = (doc as any).openImage(buffer);
 
-  // คำนวณ scale ให้พอดีกรอบ
-  const scale = Math.min(maxW / img.width, maxH / img.height);
+    const scale = Math.min(maxW / img.width, maxH / img.height);
 
-  const finalW = img.width * scale;
-  const finalH = img.height * scale;
+    const finalW = img.width * scale;
+    const finalH = img.height * scale;
 
-  // คำนวณตำแหน่ง center
-  const imgX = margin + (contentWidth - finalW) / 2;
-  const imgY = y + (boxHeight - finalH) / 2;
+    // คำนวณตำแหน่ง center
+    const imgX = margin + (contentWidth - finalW) / 2;
+    const imgY = y + (boxHeight - finalH) / 2;
 
-  doc.image(buffer, imgX, imgY, {
-    width: finalW,
-    height: finalH,
-  });
-}
+    doc.image(buffer, imgX, imgY, {
+      width: finalW,
+      height: finalH,
+    });
+  }
 
   return startY + height;
 }

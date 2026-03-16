@@ -6,6 +6,11 @@ import { termAndConERequestNewRegisterMock } from "../mocks/termAndConERequestNe
 import { CUSTOMER_TYPE } from "../services/pdf/constants/pdf.constants";
 import { termAndConERequestExistingENMock } from "../mocks/termAndConERequestExistingEN.mock";
 import { termAndConERequestNewRegisterENMock } from "../mocks/termAndConERequestNewRegisterEN.mock";
+import { PdfEAppData } from "../services/pdf/models/pdf-eapp-data.model";
+import { termAndConEAppNewRegisterENMock } from "../mocks/termAndConEAppNewRegisterEN.mock";
+import { termAndConEAppNewRegisterTHMock } from "../mocks/termAndConEAppNewRegisterTH.mock";
+import { termAndConEAppExistingTHMock } from "../mocks/termAndConEAppExistingTH.mock";
+import { termAndConEAppExistingENMock } from "../mocks/termAndConEAppExistingEN.mock";
 
 export const createERequestPdf = async (req: Request, res: Response) => {
   try {
@@ -46,24 +51,18 @@ export const createERequestPdf = async (req: Request, res: Response) => {
 
 export const createEAppPdf = async (req: Request, res: Response) => {
   try {
-    const data = req.body as PdfERequestData;
+    const data = req.body as PdfEAppData;
 
     // TEMP for T&C
     let termsHtml = "";
 
     if (data.customerType === CUSTOMER_TYPE.EXISTING) {
-      termsHtml =
-        data.lang === "EN"
-          ? termAndConERequestExistingENMock
-          : termAndConERequestExistingMock;
+      // data.termsAndConditionsTH = termAndConEAppExistingTHMock;
+      // data.termsAndConditionsEN = termAndConEAppExistingENMock;
     } else {
-      termsHtml =
-        data.lang === "EN"
-          ? termAndConERequestNewRegisterENMock
-          : termAndConERequestNewRegisterMock;
+      data.termsAndConditionsTH = termAndConEAppNewRegisterTHMock;
+      data.termsAndConditionsEN = termAndConEAppNewRegisterENMock;
     }
-
-    data.termsAndConditions = termsHtml;
 
     // console.log("Received data for PDF generation:", data);
     const base64Pdf = await PdfService.generateEAppPdf(data);

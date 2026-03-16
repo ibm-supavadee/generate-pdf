@@ -6,7 +6,8 @@ export class PdfEAppData {
   cardImage: string = "";
   signatureImage: string = "";
   registerDate: string = "";
-  termsAndConditions: string = "";
+  termsAndConditionsTH: string = "";
+  termsAndConditionsEN: string = "";
 }
 
 export class CustomerInfo {
