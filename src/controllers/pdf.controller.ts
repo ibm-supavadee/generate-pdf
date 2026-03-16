@@ -54,11 +54,9 @@ export const createEAppPdf = async (req: Request, res: Response) => {
     const data = req.body as PdfEAppData;
 
     // TEMP for T&C
-    let termsHtml = "";
-
     if (data.customerType === CUSTOMER_TYPE.EXISTING) {
-      // data.termsAndConditionsTH = termAndConEAppExistingTHMock;
-      // data.termsAndConditionsEN = termAndConEAppExistingENMock;
+      data.termsAndConditionsTH = termAndConEAppExistingTHMock;
+      data.termsAndConditionsEN = termAndConEAppExistingENMock;
     } else {
       data.termsAndConditionsTH = termAndConEAppNewRegisterTHMock;
       data.termsAndConditionsEN = termAndConEAppNewRegisterENMock;

@@ -25,6 +25,7 @@ import { renderRemarkEApp } from "./helpers/e-app/renderRemarkEApp";
 import { drawDivider } from "./helpers/common/drawDivider";
 import { drawPageNumbers } from "./helpers/common/drawPageNumber";
 import { renderTcEAppNew } from "./helpers/e-app/renderTcEAppNew";
+import { renderTcEAppExisting } from "./helpers/e-app/renderTcEAppExisting";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -112,16 +113,6 @@ export async function generateStyledEAppPdf(
             doc.addPage();
             y = drawMainHeader(margin);
           }
-        };
-
-        const getTermAndCon = (): any => {
-          let html = "";
-          if (lang === "EN") {
-            html = data.termsAndConditionsEN;
-          } else {
-            html = data.termsAndConditionsTH;
-          }
-          return html;
         };
 
         /* -------------------------
@@ -284,7 +275,7 @@ export async function generateStyledEAppPdf(
               height: CARD_SIGN_SECTION_HEIGHT,
               title: label.SIGNATURE_LABEL,
               date: data.registerDate,
-              data,
+              lang,
               signatureBase64: photoMock.signaturePhoto,
             }),
         });
@@ -296,31 +287,59 @@ export async function generateStyledEAppPdf(
         ------------------------- */
 
         doc.addPage();
-
         y = drawMainHeader(margin);
+        doc.y = y;
 
-        const termsHtml = getTermAndCon();
+        const terms =
+          lang === "EN" ? data.termsAndConditionsEN : data.termsAndConditionsTH;
+
+        y += 10;
 
         if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
           y = renderTcEAppNew({
             doc,
-            html: termsHtml,
+            html: terms as string,
             y,
             margin,
             pageWidth,
             pageHeight,
             drawHeader: drawMainHeader,
           });
+        } else {
+          y = renderTcEAppExisting({
+            doc,
+            texts: terms as { packageInfo?: string[]; remark?: string[] },
+            y,
+            margin,
+            contentWidth,
+            ensureSpace,
+          });
         }
-        // else {
-        //   renderTcNew(doc, termsHtml, {
-        //     margin,
-        //     pageWidth,
-        //     pageHeight,
-        //     startY: y,
-        //     drawHeader: drawTermsHeader,
-        //   });
-        // }
+
+        y = drawTwoColumnSection({
+          doc,
+          y,
+          margin,
+          contentWidth,
+
+          leftRatio: 0.6,
+          rightRatio: 0.4,
+          height: CARD_SIGN_SECTION_HEIGHT - 30,
+
+          drawLeft: (y) => y,
+          drawRight: (x, y, width) =>
+            drawSignatureSection({
+              doc,
+              y,
+              margin: x,
+              contentWidth: width,
+              height: CARD_SIGN_SECTION_HEIGHT - 30,
+              title: label.SIGNATURE_LABEL,
+              date: data.registerDate,
+              lang,
+              signatureBase64: photoMock.signaturePhoto,
+            }),
+        });
       });
 
       /* -------------------------

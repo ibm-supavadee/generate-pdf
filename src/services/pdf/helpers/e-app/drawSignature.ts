@@ -9,7 +9,7 @@ type Params = {
   height: number;
   title: string;
   date: string;
-  data: PdfEAppData;
+  lang: string;
   signatureBase64: string;
 };
 
@@ -21,7 +21,7 @@ export function drawSignatureSection({
   height,
   title,
   date,
-  data,
+  lang,
   signatureBase64,
 }: Params): number {
   const startY = y;
@@ -57,9 +57,7 @@ export function drawSignatureSection({
   /* ---------- DATE ---------- */
 
   const displayDate =
-    data.lang === "TH"
-      ? `วันที่ ${formatDate(date, data.lang)}`
-      : formatDate(date, data.lang);
+    lang === "TH" ? `วันที่ ${formatDate(date, lang)}` : formatDate(date, lang);
 
   doc
     .font("bold")

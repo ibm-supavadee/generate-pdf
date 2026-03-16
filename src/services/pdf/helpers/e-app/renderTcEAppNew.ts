@@ -151,6 +151,12 @@ export function renderTcEAppNew({
 
   for (const block of blocks) {
     const { className, content } = block;
+    /* ---------- blank line ---------- */
+
+    if (!content || content === "&nbsp;") {
+      //   y += 12;
+      continue;
+    }
 
     /* ---------- header ---------- */
 

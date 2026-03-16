@@ -6,8 +6,8 @@ export class PdfEAppData {
   cardImage: string = "";
   signatureImage: string = "";
   registerDate: string = "";
-  termsAndConditionsTH: string = "";
-  termsAndConditionsEN: string = "";
+  termsAndConditionsTH: string | TermsObject = "";
+  termsAndConditionsEN: string | TermsObject = "";
 }
 
 export class CustomerInfo {
@@ -31,3 +31,8 @@ export class Detail {
   text: string = "";
   price: number = 0;
 }
+
+type TermsObject = {
+  packageInfo?: string[];
+  remark?: string[];
+};
