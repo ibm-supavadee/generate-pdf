@@ -1,7 +1,10 @@
+import { LANG, PRODUCT_OWNER } from "../../../constants/enum";
+import { CUSTOMER_TYPE } from "../constants/pdf.constants";
+
 export class PdfERequestData {
-  customerType: "NEW_REGISTER" | "EXISTING" = "NEW_REGISTER";
-  lang: "TH" | "EN" = "TH";
-  productOwner: "FBB" | "3BB" = "FBB";
+  customerType: CUSTOMER_TYPE = CUSTOMER_TYPE.NEW_REGISTER;
+  lang: LANG = LANG.TH;
+  productOwner: PRODUCT_OWNER = PRODUCT_OWNER.FBB;
   customerInfo: CustomerInfo = new CustomerInfo();
   mainPackages: string[] = [];
   onTopPackages: string[] = [];
@@ -21,10 +24,10 @@ export class CustomerInfo {
   mobileNo: string = "";
   email: string = "";
   installDateTime: string = "";
-  alternativeInstallDate: string = "";
+  alternativeInstallDate?: string = "";
   installAddress: string = "";
   billingAddress: string = "";
-  invoiceChannel: string = "";
+  invoiceChannel?: string = "";
 }
 
 export class AverageSection {
