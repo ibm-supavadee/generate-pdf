@@ -1,10 +1,12 @@
+import { LANG, PRODUCT_OWNER } from "../constants/enum";
+import { CUSTOMER_TYPE } from "../services/pdf/constants/pdf.constants";
 import { PdfERequestData } from "../services/pdf/models/pdf-erequest-data.model";
 import { termAndConERequestExistingMock } from "./termAndConERequestExisting.mock";
 
 export const pdfERequestDataMock: PdfERequestData = {
-  customerType: "EXISTING",
-  lang: "TH",
-  productOwner: "FBB",
+  customerType: CUSTOMER_TYPE.EXISTING,
+  lang: LANG.TH,
+  productOwner: PRODUCT_OWNER.FBB,
   customerInfo: {
     registerType: "บัตรประชาชน",
     name: "ทดสอบ นิวคนนึง",
