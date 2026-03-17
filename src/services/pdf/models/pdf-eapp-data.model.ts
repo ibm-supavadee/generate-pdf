@@ -1,38 +1,45 @@
+import { PRODUCT_OWNER } from "../../../constants/enum";
+import { CUSTOMER_TYPE } from "../constants/pdf.constants";
+
 export class PdfEAppData {
-  customerType: "NEW_REGISTER" | "EXISTING" = "NEW_REGISTER";
-  productOwner: "FBB" | "3BB" = "FBB";
+  customerType: CUSTOMER_TYPE = CUSTOMER_TYPE.NEW_REGISTER;
+  productOwner: PRODUCT_OWNER = PRODUCT_OWNER.FBB;
+  thData: PdfData = new PdfData();
+  enData: PdfData = new PdfData();
+  cardImage?: string = "";
+  signatureImage?: string = "";
+}
+
+export class PdfData {
   customerInfo: CustomerInfo = new CustomerInfo();
-  packageDetail: PackageDetailSection = new PackageDetailSection();
-  cardImage: string = "";
-  signatureImage: string = "";
-  registerDate: string = "";
-  termsAndConditionsTH: string | TermsObject = "";
-  termsAndConditionsEN: string | TermsObject = "";
+  mainPackageSection?: Section = new Section();
+  onTopDetailSection?: Section[] = [];
+  registerDate: string = ""; //"13 มี.ค. 2569" or "13 March 2026"
+  remark: string = "";
+  termsAndConditions: string ="";
 }
 
 export class CustomerInfo {
   registerType: string = "";
-  idCardNo: string = "";
+  idCardNo?: string = "";
   name: string = "";
-  repName: string = "";
+  repName?: string = "";
   mobileNo: string = "";
   otherTelephoneNo: string = "";
   installAddress: string = "";
-  billingChannel: string = "";
+  billingChannel?: string = "";
   documentDeliveryAddress: string = "";
 }
 
-export class PackageDetailSection {
-  packageName: string = "";
+export class Section {
+  title: string = "";
+  description?: string = "";
   details: Detail[] = [];
 }
 
 export class Detail {
   text: string = "";
-  price: number = 0;
+  price?: number = 0;
+  isDiscount?: boolean = false;
+  list?: Detail[];
 }
-
-type TermsObject = {
-  packageInfo?: string[];
-  remark?: string[];
-};
