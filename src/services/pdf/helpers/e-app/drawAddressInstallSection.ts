@@ -1,7 +1,7 @@
 import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
-import { PdfEAppData } from "../../models/pdf-eapp-data.model";
+import { PdfData } from "../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Params = {
@@ -9,7 +9,7 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  data: PdfEAppData;
+  pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
@@ -18,7 +18,7 @@ export function drawAddressInstallSection({
   y,
   margin,
   contentWidth,
-  data,
+  pdfData,
   label,
 }: Params): number {
   /* -----------------------------
@@ -36,7 +36,7 @@ export function drawAddressInstallSection({
 
   const startY = y;
   const padding = 10;
-  const address = data.customerInfo.installAddress || "-";
+  const address = pdfData.customerInfo.installAddress || "-";
 
   /* -----------------------------
      DRAW TEXT

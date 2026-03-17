@@ -1,6 +1,7 @@
 import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
+import { PdfData } from "../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Params = {
@@ -8,7 +9,7 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  data: any;
+  pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
@@ -17,7 +18,7 @@ export function renderPackageDetail({
   y,
   margin,
   contentWidth,
-  data,
+  pdfData,
   label,
 }: Params): number {
   const startY = y;
@@ -56,56 +57,57 @@ export function renderPackageDetail({
   const tableStartY = y;
 
   /* PACKAGE NAME */
+  if (pdfData.mainPackageSection?.details?.length) {
+    doc
+      .font("bold")
+      .fillColor(PDF_COLORS.GRAY)
+      .text(label.MAIN_PACKAGEL_LABEL, detailX + 10, y + textPaddingTop, {
+        width: detailWidth - 20,
+      });
 
-  doc
-    .font("bold")
-    .fillColor(PDF_COLORS.GRAY)
-    .text(label.MAIN_PACKAGEL_LABEL, detailX + 10, y + textPaddingTop, {
-      width: detailWidth - 20,
-    });
-
-  y = doc.y;
-
-  doc
-    .font("regular")
-    .fillColor(PDF_COLORS.GRAY)
-    .text(data.packageDetailSection.packageName, detailX + 10, y + 5, {
-      width: detailWidth - 20,
-    });
-
-  y = doc.y + rowPadding;
-
-  /* DETAILS */
-
-  data.packageDetailSection.details.forEach((item: any) => {
-    const rowStartY = y;
+    y = doc.y;
 
     doc
       .font("regular")
       .fillColor(PDF_COLORS.GRAY)
-      .text(`• ${item.text}`, detailX + 20, rowStartY + rowPadding, {
-        width: detailWidth - 30,
-        lineGap: 2,
+      .text(pdfData.mainPackageSection.title ?? "-", detailX + 10, y + 5, {
+        width: detailWidth - 20,
       });
 
-    const textEndY = doc.y;
+    y = doc.y + rowPadding;
 
-    let priceEndY = rowStartY;
+    /* DETAILS */
 
-    if (item.price !== undefined) {
+    pdfData.mainPackageSection.details.forEach((item: any) => {
+      const rowStartY = y;
+
       doc
         .font("regular")
-        .fillColor(PDF_COLORS.GREEN)
-        .text(formatPriceText(item.price), priceX, rowStartY + rowPadding, {
-          width: priceWidth - 10,
-          align: "right",
+        .fillColor(PDF_COLORS.GRAY)
+        .text(`• ${item.text}`, detailX + 20, rowStartY + rowPadding, {
+          width: detailWidth - 30,
+          lineGap: 2,
         });
 
-      priceEndY = doc.y;
-    }
+      const textEndY = doc.y;
 
-    y = Math.max(textEndY, priceEndY) + rowPadding;
-  });
+      let priceEndY = rowStartY;
+
+      if (item.price !== undefined) {
+        doc
+          .font("regular")
+          .fillColor(PDF_COLORS.GREEN)
+          .text(formatPriceText(item.price), priceX, rowStartY + rowPadding, {
+            width: priceWidth - 10,
+            align: "right",
+          });
+
+        priceEndY = doc.y;
+      }
+
+      y = Math.max(textEndY, priceEndY) + rowPadding;
+    });
+  }
 
   /* TABLE BOTTOM */
 

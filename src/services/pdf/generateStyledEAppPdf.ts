@@ -80,6 +80,7 @@ export async function generateStyledEAppPdf(
         }
 
         const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
+        const pdfData = lang === "EN" ? data.enData : data.thData;
 
         let y = margin;
 
@@ -130,7 +131,8 @@ export async function generateStyledEAppPdf(
           y,
           margin,
           contentWidth,
-          data,
+          customerType: data.customerType,
+          pdfData,
           label,
           ensureSpace,
         });
@@ -153,7 +155,7 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              data,
+              pdfData,
               label,
             }),
 
@@ -163,7 +165,8 @@ export async function generateStyledEAppPdf(
               y,
               margin: x,
               contentWidth: width,
-              data,
+              customerType: data.customerType,
+              pdfData,
               label,
             }),
         });
@@ -177,7 +180,7 @@ export async function generateStyledEAppPdf(
           y,
           margin,
           contentWidth,
-          data,
+          pdfData,
           label,
         });
 
@@ -263,8 +266,8 @@ export async function generateStyledEAppPdf(
                 margin: x,
                 contentWidth: width,
                 height: CARD_SIGN_SECTION_HEIGHT,
-                title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
-                imageBase64: photoMock.idCardDocument,
+                title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${pdfData.customerInfo.idCardNo}`,
+                imageBase64: data.cardImage,
               }),
 
             drawRight: (x, y, width) =>
@@ -275,9 +278,8 @@ export async function generateStyledEAppPdf(
                 contentWidth: width,
                 height: CARD_SIGN_SECTION_HEIGHT,
                 title: label.SIGNATURE_LABEL,
-                date: data.registerDate,
-                lang,
-                signatureBase64: photoMock.signaturePhoto,
+                date: pdfData.registerDate,
+                signatureBase64: data.signatureImage,
               }),
           });
         }
@@ -292,15 +294,12 @@ export async function generateStyledEAppPdf(
         y = drawMainHeader(margin);
         doc.y = y;
 
-        const terms =
-          lang === "EN" ? data.termsAndConditionsEN : data.termsAndConditionsTH;
-
         y += 10;
 
         if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
           y = renderTcEAppNew({
             doc,
-            html: terms as string,
+            html: pdfData.termsAndConditions,
             y,
             margin,
             pageWidth,
@@ -310,11 +309,12 @@ export async function generateStyledEAppPdf(
         } else {
           y = renderTcEAppExisting({
             doc,
-            texts: terms as { packageInfo?: string[]; remark?: string[] },
+            html: pdfData.termsAndConditions,
             y,
             margin,
-            contentWidth,
-            ensureSpace,
+            pageWidth,
+            pageHeight,
+            drawHeader: drawMainHeader,
           });
         }
 
@@ -338,8 +338,7 @@ export async function generateStyledEAppPdf(
                 contentWidth: width,
                 height: CARD_SIGN_SECTION_HEIGHT - 30,
                 title: label.SIGNATURE_LABEL,
-                date: data.registerDate,
-                lang,
+                date: pdfData.registerDate,
                 signatureBase64: photoMock.signaturePhoto,
               }),
           });

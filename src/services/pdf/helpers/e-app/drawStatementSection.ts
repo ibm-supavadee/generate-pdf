@@ -1,7 +1,7 @@
 import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
-import { PdfEAppData } from "../../models/pdf-eapp-data.model";
+import { PdfData, PdfEAppData } from "../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Params = {
@@ -9,7 +9,8 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  data: PdfEAppData;
+  customerType: string;
+  pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
@@ -18,7 +19,8 @@ export function drawStatementSection({
   y,
   margin,
   contentWidth,
-  data,
+  customerType,
+  pdfData,
   label,
 }: Params): number {
   /* -----------------------------
@@ -66,11 +68,11 @@ export function drawStatementSection({
     y = rowStartY + rowHeight;
   };
 
-  if (data.customerType === "NEW_REGISTER") {
+  if (customerType === "NEW_REGISTER") {
     /* BILLING CHANNEL */
     drawRow(
       label.CUSTOMER_INFO.BILLING_CHANNEL,
-      data.customerInfo.billingChannel,
+      pdfData.customerInfo.billingChannel,
     );
 
     /* divider */
@@ -85,7 +87,7 @@ export function drawStatementSection({
   /* DOCUMENT DELIVERY ADDRESS */
   drawRow(
     label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
-    data.customerInfo.documentDeliveryAddress,
+    pdfData.customerInfo.documentDeliveryAddress,
   );
 
   /* box */

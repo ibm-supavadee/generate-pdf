@@ -5,7 +5,7 @@ import {
   HEADER_SPACING,
   REGISTER_TYPE,
 } from "../../constants/pdf.constants";
-import { PdfEAppData } from "../../models/pdf-eapp-data.model";
+import { PdfData, PdfEAppData } from "../../models/pdf-eapp-data.model";
 import { drawCustomerInfoRows } from "../common/drawCustomerInfoRow";
 import { drawSectionHeader } from "../common/drawSectionHeader";
 
@@ -16,7 +16,8 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  data: PdfEAppData;
+  customerType: CUSTOMER_TYPE;
+  pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
   ensureSpace: (height: number) => void;
 };
@@ -26,7 +27,8 @@ export function drawCustomerInfoEApp({
   y,
   margin,
   contentWidth,
-  data,
+  customerType,
+  pdfData,
   label,
   ensureSpace,
 }: Params): number {
@@ -41,7 +43,7 @@ export function drawCustomerInfoEApp({
 
   y += HEADER_SPACING;
 
-  const customerInfo = data.customerInfo;
+  const customerInfo = pdfData.customerInfo;
 
   const nameTitle =
     customerInfo.registerType === REGISTER_TYPE.CORPORATE
@@ -58,7 +60,7 @@ export function drawCustomerInfoEApp({
   ];
 
   const rows: Row[] =
-    data.customerType === CUSTOMER_TYPE.NEW_REGISTER
+    customerType === CUSTOMER_TYPE.NEW_REGISTER
       ? [
           baseRow,
           [

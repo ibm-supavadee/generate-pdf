@@ -1,54 +1,161 @@
 {
   "customerType": "EXISTING",
-  "lang": "TH",
   "productOwner": "FBB",
-  "customerInfo": {
-    "registerType": "บัตรประชาชน",
-    "idCardNo": "1802034581530",
-    "name": "ทดสอบ นิวคนนึง",
-    "repName": "",
-    "mobileNo": "0633432145",
-    "otherTelephoneNo": "0000000000",
-    "documentDeliveryAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
-    "installAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
-    "billingChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS"
-  },
- 
-  "packageDetailSection": {
-    "packageName": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
-    "details": [
+  "thData": {
+    "customerInfo": {
+      "registerType": "บัตรประชาชน",
+      "idCardNo": "1802034581530",
+      "name": "ทดสอบ นิวคนนึง",
+      "repName": "",
+      "mobileNo": "0633432145",
+      "otherTelephoneNo": "0000000000",
+      "documentDeliveryAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
+      "installAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
+      "billingChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS"
+    },
+    "mainPackageSection": {
+      "title": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
+      "details": [
+        {
+          "text": "ค่าบริการรายเดือน (Monthly Fee) 459.00 บาท (baht) (ไม่รวม VAT/Excl. VAT)",
+          "price": 459.00
+        },
+        {
+          "text": "ระยะเวลาใช้บริการขั้นต่ำ (Minimum Service period): 24 รอบบิล (24 Bill cycles)"
+        },
+        {
+          "text": "รับสิทธิ์ยืมใช้ FTTx Router มาตรฐาน (FTTx standard router) จำนวน 1 ชุด (set), AIS PlayBox 1 กล่อง (box)"
+        },
+        {
+          "text": "บริการอื่นๆ ใน Package (other service in Package)",
+          "list": [
+            "Mobile Service"
+          ]
+        },
+        {
+          "text": "ค่าแรกเข้า (Entry fee) (ราคาปกติ/normal charge 2,000 บาท (baht) (ไม่รวม VAT/Excl. VAT))",
+          "price": 747.66
+        },
+        {
+          "text": "ค่าติดตั้ง (Installation Fee) (ไม่รวม VAT/Excl. VAT)",
+          "price": 4800.00
+        },
+        {
+          "text": "ส่วนลดค่าติดตั้งเมื่อใช้บริการครบตามกำหนดระยะเวลาและเงื่อนไขของแพ็กเกจหลัก (Receive the discount for installation fee of AIS Fiber service when using the service according to the duration and conditions of the main package)",
+          "price": 4800.00
+        }
+      ]
+    },
+    "onTopDetailSection": [
       {
-        "text": "ค่าบริการรายเดือน (Monthly Fee) 459.00 บาท (baht) (ไม่รวม VAT/Excl. VAT)",
-        "price": 459.00
+        "title": "AIS PLAYBOX:",
+        "details": [
+          {
+            "text": "จำนวน (total) 1 จุด (point) รับสิทธิ์ยืมใช้ AIS PlayBox (Borrow AIS PlayBox) จำนวน (total) 1 กล่อง (box)"
+          },
+          {
+            "text": "ค่าบริการรายเดือน (Monthly Fee) 199.00 บาท/เดือน/จุด/ (baht/month/point)",
+            "price": 199.00
+          },
+          {
+            "text": "Content Package: PLAY PREMIER รายเดือน 199 บาท สัญญา 12 เดือน ดูบอลพรีเมียร์ลีกผ่าน AIS PLAY & MONOMAX"
+          },
+          {
+            "text": "ระยะเวลาใช้บริการ (Service period): 24 รอบบิล (24 Bill cycles)"
+          }
+        ]
       },
       {
-        "text": "ระยะเวลาใช้บริการขั้นต่ำ (Minimum Service period): 24 รอบบิล (24 Bill cycles)"
+        "title": "MESH WIFI:",
+        "details": [
+          {
+            "text": "จำนวน (total) 2 จุด (point) รับสิทธิ์ยืมใช้ Mesh Witi Router (Borrow Mesh Wifi Router) จำนวน (total) 2 ชุด (set)"
+          },
+          {
+            "text": "ค่าบริการรายเดือน (Monthly Fee) 69 บาท/เดือน/จุด/ (baht/month/point)",
+            "price": 69.00
+          },
+          {
+            "text": "ระยะเวลาใช้บริการ (Service period): undefined รอบบิล (undefined Bill cycles)"
+          }
+        ]
       },
       {
-        "text": "รับสิทธิ์ยืมใช้ FTTx Router มาตรฐาน (FTTx standard router) จำนวน 1 ชุด (set), AIS PlayBox 1 กล่อง (box)"
+        "title": "Fixed Line Service:",
+        "details": [
+          {
+            "text": "จำนวน (total) 1 จุด (point)"
+          },
+          {
+            "text": "ค่าบริการรายเดือน (Monthly Fee) 100.00 บาท/เดือน (baht/month) (ค่าบริการยังไม่ รวมค่าโทรศัพท์/Monthly Fee is excludes voice call charges)",
+            "price": 100.00
+          }
+        ]
       },
       {
-        "text": "บริการอื่นๆ ใน Package (other service in Package)"
+        "title": "Cloud IP Camera:",
+        "description": "บริการเก็บภาพย้อนหลังจากกล้องบนคลาวด์ (video movement recording and playback service on the cloud) 7 วัน/days",
+        "details": [
+          {
+            "text": "ค่าบริการรายเดือน (Monthly Fee) 99 บาท/แพ็กเกจ/เดือน (baht/package/month)",
+            "price": 99.00
+          },
+          {
+            "text": "ระยะเวลาใช้บริการ (Service Period): 24 รอบบิล (24 Bill cycles)"
+          }
+        ]
       },
       {
-        "text": "Mobile Service"
-      },
-      {
-        "text": "ค่าแรกเข้า (Entry fee) (ราคาปกติ/normal charge 2,000 บาท (baht) (ไม่รวม VAT/Excl. VAT))",
-        "price": 747.66
-      },
-      {
-        "text": "ค่าติดตั้ง (Installation Fee) (ไม่รวม VAT/Excl. VAT)",
-        "price": 4800.00
-      },
-      {
-        "text": "ส่วนลดค่าติดตั้งเมื่อใช้บริการครบตามกำหนดระยะเวลาและเงื่อนไขของแพ็กเกจหลัก (Receive the discount for installation fee of AIS Fiber service when using the service according to the duration and conditions of the main package)",
-        "price": 4800.00
+        "title": "SMART SOUNDBAR:",
+        "details": [
+          {
+            "text": "จำนวน (total) 1 แพ็กเกจ (package) รับลำโพง Soundbar (received Soundbar speaker) 1 อุปกรณ์/แพ็กเกจ (Soundbar speaker/package)"
+          },
+          {
+            "text": "ค่าบริการรายเดือน (Monthly Fee) 350 บาท/แพ็กเกจ/เดือน (baht/package/month)",
+            "price": 350.00
+          },
+          {
+            "text": "ค่าบริการแรกเข้า (Entry Fee) 934.58 บาท/แพ็กเกจ (baht/package)",
+            "price": 934.58
+          },
+          {
+            "text": "ระยะเวลาใช้บริการ (Service Period): 24 รอบบิล (24 Bill cycles)"
+          }
+        ]
       }
-    ]
+    ],
+    "registerDate": "01/06/2024",
+    "remark": "",
+    "termsAndConditions": ""
+  },
+  "enData": {
+    "customerInfo": {
+      "registerType": "National ID Card",
+      "name": "Test New Customer",
+      "repName": "",
+      "mobileNo": "0633432145",
+      "email": "-",
+      "contactTime": "08:00 - 17:00",
+      "installDateTime": "2 Feb 2026 09:00–12:00",
+      "alternativeInstallDate": "-",
+      "billingAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
+      "installAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
+      "invoiceChannel": "Bill notification via SMS + view bill via My AIS"
+    },
+    "mainPackages": [
+      "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
+      "Internet installation fee discount including WiFi Router worth 4,800.00 THB"
+    ],
+    "onTopPackages": [
+      "HBO Add-on premium entertainment package. Enjoy blockbuster movies and HBO Original series in HD/4K quality with high-quality sound. Supports Smart TV, mobile, and tablet viewing with replay options and selectable audio/subtitles.",
+      "Free! AIS Playbox worth 1,490 THB",
+      "50% monthly fee discount for 6 months (for BROADBAND24 package only)"
+    ],
+    "registerDate": "01/06/2024",
+    "remark": "",
+    "termsAndConditions": ""
   },
   "cardImage": "",
-  "signatureImage": "",
-  "registerDate": "01/06/2024",
-  "termsAndConditions": ""
+  "signatureImage": ""
 }

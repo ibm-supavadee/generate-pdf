@@ -10,8 +10,7 @@ type Params = {
   height: number;
   title: string;
   date: string;
-  lang: string;
-  signatureBase64: string;
+  signatureBase64?: string;
 };
 
 export function drawSignatureSection({
@@ -22,7 +21,6 @@ export function drawSignatureSection({
   height,
   title,
   date,
-  lang,
   signatureBase64,
 }: Params): number {
   const startY = y;
@@ -57,12 +55,11 @@ export function drawSignatureSection({
 
   /* ---------- DATE ---------- */
 
-  const displayDate = getDisplayDate(date, lang);
   doc
     .font("bold")
     .fillColor(PDF_COLORS.GREEN)
     .fontSize(12)
-    .text(displayDate, margin, lineY + 6, {
+    .text(date, margin, lineY + 6, {
       width: contentWidth,
       align: "center",
     });

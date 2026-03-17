@@ -1,120 +1,136 @@
 import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
 
-type TermsObject = {
-  packageInfo?: string[];
-  remark?: string[];
-};
-
-type RenderTcEAppExistingParams = {
+type Params = {
   doc: PDFKit.PDFDocument;
-  texts: string[] | TermsObject;
+  html: string;
   y: number;
   margin: number;
-  contentWidth: number;
-  ensureSpace: (height: number) => void;
-  spacing?: number;
+  pageWidth: number;
+  pageHeight: number;
+  drawHeader: (y: number) => number;
+};
+
+type Segment = {
+  text: string;
+  bold: boolean;
+  link?: string;
 };
 
 export function renderTcEAppExisting({
   doc,
-  texts,
+  html,
   y,
   margin,
-  contentWidth,
-  ensureSpace,
-  spacing = 8,
-}: RenderTcEAppExistingParams): number {
-  const FIRST_LINE_INDENT = 30;
+  pageWidth,
+  pageHeight,
+  drawHeader,
+}: Params): number {
+  const HEADER_SPACING = 10;
+  const contentWidth = pageWidth - margin * 2;
 
-  doc.y = y;
+  console.log("html: ", html);
 
-  const urlRegex = /(www\.ais\.th\/(?:th\/|en\/)?about-us\/terms-and-legal)/;
+  const ensureSpace = (height: number) => {
+    if (y + height > pageHeight - margin) {
+      doc.addPage();
+      y = drawHeader(margin) + HEADER_SPACING;
+    }
+  };
 
-  const processText = (text: string, isFirstPackageInfo: boolean) => {
-    const cleanText = text?.trim();
-    if (!cleanText) return;
+  /* ---------- parse bold / link ---------- */
 
-    const height = doc.heightOfString(cleanText, {
-      width: contentWidth,
-    });
+  const parseSegments = (raw: string): Segment[] => {
+    const segments: Segment[] = [];
 
-    ensureSpace(height + spacing);
+    const parts = raw.split(
+      /(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>|<a[\s\S]*?<\/a>)/gi,
+    );
 
-    const indent = isFirstPackageInfo ? 0 : FIRST_LINE_INDENT;
+    for (const part of parts) {
+      if (!part) continue;
 
-    /* ---------- PACKAGE INFO (FIRST ROW) ---------- */
-    if (isFirstPackageInfo) {
-      doc
-        .font("bold")
-        .fontSize(FONT_SIZE)
-        .fillColor(PDF_COLORS.GRAY)
-        .text(cleanText, margin, doc.y, {
-          width: contentWidth,
-          indent,
-        });
-    } else {
-      const match = cleanText.match(urlRegex);
+      if (/<(?:b|strong)>/.test(part)) {
+        const text = part
+          .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
+          .replace(/<[^>]+>/g, "");
 
-      /* ---------- TEXT WITH URL ---------- */
-      if (match) {
-        const foundUrl = match[0];
-        const parts = cleanText.split(foundUrl);
+        segments.push({ text, bold: true });
+      } else if (/<a/.test(part)) {
+        const link = part.match(/href="([^"]+)"/)?.[1];
+        const text = part.replace(/<[^>]+>/g, "");
 
-        doc.font("regular").fontSize(FONT_SIZE).fillColor(PDF_COLORS.GRAY);
-
-        /* ---------- BEFORE URL ---------- */
-        if (parts[0]) {
-          doc.text(parts[0], margin, doc.y, {
-            indent,
-            continued: true,
-          });
-        } else {
-          doc.x = margin + indent;
-        }
-
-        /* ---------- URL ---------- */
-        doc.fillColor(PDF_COLORS.LINK).text(foundUrl, {
-          link: `https://${foundUrl}`,
-          underline: true,
-          continued: parts[1] ? true : false,
-        });
-
-        /* ---------- AFTER URL ---------- */
-        if (parts[1]) {
-          doc.fillColor(PDF_COLORS.GRAY).text(parts[1], {
-            link: null, // ยกเลิกความเป็น Link
-            underline: false, // ปิดเส้นใต้
-            continued: false,
-          });
-          /* ---------- TEXT WITHOUT URL ---------- */
-        } else {
-          doc.text("", { link: null, underline: false });
-        }
+        segments.push({ text, bold: false, link });
       } else {
-        doc
-          .font("regular")
-          .fontSize(FONT_SIZE)
-          .fillColor(PDF_COLORS.GRAY)
-          .text(cleanText, margin, doc.y, {
-            width: contentWidth,
-            lineGap: 1,
-            indent,
-          });
+        const text = part.replace(/<[^>]+>/g, "");
+        segments.push({ text, bold: false });
       }
     }
 
-    doc.y += spacing;
+    return segments;
   };
 
-  /* ---------- PROCESS TEXTS ---------- */
-  if (Array.isArray(texts)) {
-    texts.forEach((t) => processText(t, false));
-  } else {
-    (texts.packageInfo ?? []).forEach((t, index) =>
-      processText(t, index === 0),
-    );
-    (texts.remark ?? []).forEach((t) => processText(t, false));
-  }
+  /* ---------- draw text ---------- */
 
-  return doc.y;
+  const drawText = (rawBlock: string) => {
+    const nbspCount = (rawBlock.match(/&nbsp;/g) || []).length;
+    const indent = nbspCount * 6;
+
+    const cleaned = rawBlock.replace(/&nbsp;/g, "");
+
+    const plainText = cleaned.replace(/<[^>]+>/g, "").trim();
+
+    const height = doc.heightOfString(plainText, {
+      width: contentWidth,
+    });
+
+    ensureSpace(height);
+
+    const segments = parseSegments(cleaned);
+
+    segments.forEach((seg, i) => {
+      const isLast = i === segments.length - 1;
+      const isLink = !!seg.link;
+
+      doc
+        .font(seg.bold ? "bold" : "regular")
+        .fontSize(FONT_SIZE)
+        .fillColor(isLink ? PDF_COLORS.LINK : PDF_COLORS.GRAY);
+
+      const continued = !isLast && !isLink;
+
+      if (i === 0) {
+        doc.text(seg.text, margin, y, {
+          width: contentWidth,
+          indent: indent,
+          continued,
+          link: seg.link,
+          underline: isLink,
+        });
+      } else {
+        doc.text(seg.text, {
+          continued,
+          link: seg.link,
+          underline: isLink,
+        });
+      }
+    });
+
+    y = doc.y + 6;
+  };
+  /* ---------- clean html ---------- */
+
+  const cleaned = html.replace(/\r/g, "").replace(/<br\s*\/?>/gi, "\n");
+
+  const blocks = cleaned
+    .split("\n")
+    .map((x) => x.trim())
+    .filter(Boolean);
+
+  /* ---------- render ---------- */
+
+  blocks.forEach((block) => {
+    drawText(block);
+  });
+
+  return y;
 }

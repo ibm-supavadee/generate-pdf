@@ -11,6 +11,7 @@ import { termAndConEAppNewRegisterENMock } from "../mocks/termAndConEAppNewRegis
 import { termAndConEAppNewRegisterTHMock } from "../mocks/termAndConEAppNewRegisterTH.mock";
 import { termAndConEAppExistingTHMock } from "../mocks/termAndConEAppExistingTH.mock";
 import { termAndConEAppExistingENMock } from "../mocks/termAndConEAppExistingEN.mock";
+import { photoMock } from "../mocks/photoMock.mock";
 
 export const createERequestPdf = async (req: Request, res: Response) => {
   try {
@@ -53,13 +54,27 @@ export const createEAppPdf = async (req: Request, res: Response) => {
   try {
     const data = req.body as PdfEAppData;
 
+    // TEMP for Base64 image in PDF
+    data.signatureImage = photoMock.signaturePhoto;
+    data.cardImage = photoMock.idCardDocument;
+
     // TEMP for T&C
+    const textTermAndConditionsTH = [
+      ...termAndConEAppExistingTHMock.packageInfo,
+      ...termAndConEAppExistingTHMock.remark,
+    ].join(" ");
+
+    const textTermAndConditionsEN = [
+      ...termAndConEAppExistingENMock.packageInfo,
+      ...termAndConEAppExistingENMock.remark,
+    ].join(" ");
+
     if (data.customerType === CUSTOMER_TYPE.EXISTING) {
-      data.termsAndConditionsTH = termAndConEAppExistingTHMock;
-      data.termsAndConditionsEN = termAndConEAppExistingENMock;
+      data.thData.termsAndConditions = textTermAndConditionsTH;
+      data.enData.termsAndConditions = textTermAndConditionsEN;
     } else {
-      data.termsAndConditionsTH = termAndConEAppNewRegisterTHMock;
-      data.termsAndConditionsEN = termAndConEAppNewRegisterENMock;
+      data.thData.termsAndConditions = termAndConEAppNewRegisterTHMock;
+      data.enData.termsAndConditions = termAndConEAppNewRegisterENMock;
     }
 
     // console.log("Received data for PDF generation:", data);
