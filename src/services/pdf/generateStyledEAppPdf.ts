@@ -245,40 +245,42 @@ export async function generateStyledEAppPdf(
            CARD + SIGNATURE
         ------------------------- */
 
-        y = drawTwoColumnSection({
-          doc,
-          y,
-          margin,
-          contentWidth,
+        if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+          y = drawTwoColumnSection({
+            doc,
+            y,
+            margin,
+            contentWidth,
 
-          leftRatio: 0.6,
-          rightRatio: 0.4,
-          height: CARD_SIGN_SECTION_HEIGHT,
+            leftRatio: 0.6,
+            rightRatio: 0.4,
+            height: CARD_SIGN_SECTION_HEIGHT,
 
-          drawLeft: (x, y, width) =>
-            drawCardBox({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              height: CARD_SIGN_SECTION_HEIGHT,
-              title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
-              imageBase64: photoMock.idCardDocument,
-            }),
+            drawLeft: (x, y, width) =>
+              drawCardBox({
+                doc,
+                y,
+                margin: x,
+                contentWidth: width,
+                height: CARD_SIGN_SECTION_HEIGHT,
+                title: `${label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO} ${data.customerInfo.idCardNo}`,
+                imageBase64: photoMock.idCardDocument,
+              }),
 
-          drawRight: (x, y, width) =>
-            drawSignatureSection({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              height: CARD_SIGN_SECTION_HEIGHT,
-              title: label.SIGNATURE_LABEL,
-              date: data.registerDate,
-              lang,
-              signatureBase64: photoMock.signaturePhoto,
-            }),
-        });
+            drawRight: (x, y, width) =>
+              drawSignatureSection({
+                doc,
+                y,
+                margin: x,
+                contentWidth: width,
+                height: CARD_SIGN_SECTION_HEIGHT,
+                title: label.SIGNATURE_LABEL,
+                date: data.registerDate,
+                lang,
+                signatureBase64: photoMock.signaturePhoto,
+              }),
+          });
+        }
 
         y += 20;
 
@@ -316,30 +318,32 @@ export async function generateStyledEAppPdf(
           });
         }
 
-        y = drawTwoColumnSection({
-          doc,
-          y,
-          margin,
-          contentWidth,
+        if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+          y = drawTwoColumnSection({
+            doc,
+            y,
+            margin,
+            contentWidth,
 
-          leftRatio: 0.6,
-          rightRatio: 0.4,
-          height: CARD_SIGN_SECTION_HEIGHT - 30,
+            leftRatio: 0.6,
+            rightRatio: 0.4,
+            height: CARD_SIGN_SECTION_HEIGHT - 30,
 
-          drawLeft: (y) => y,
-          drawRight: (x, y, width) =>
-            drawSignatureSection({
-              doc,
-              y,
-              margin: x,
-              contentWidth: width,
-              height: CARD_SIGN_SECTION_HEIGHT - 30,
-              title: label.SIGNATURE_LABEL,
-              date: data.registerDate,
-              lang,
-              signatureBase64: photoMock.signaturePhoto,
-            }),
-        });
+            drawLeft: (y) => y,
+            drawRight: (x, y, width) =>
+              drawSignatureSection({
+                doc,
+                y,
+                margin: x,
+                contentWidth: width,
+                height: CARD_SIGN_SECTION_HEIGHT - 30,
+                title: label.SIGNATURE_LABEL,
+                date: data.registerDate,
+                lang,
+                signatureBase64: photoMock.signaturePhoto,
+              }),
+          });
+        }
       });
 
       /* -------------------------

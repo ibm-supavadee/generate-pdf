@@ -1,9 +1,11 @@
 import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
+import { getDisplayDate } from "./displayDate";
 
 type Options = {
   withDivider?: boolean;
   fullWidth?: boolean;
   width?: number;
+  isShowDate?: boolean;
 };
 
 type Params = {
@@ -39,6 +41,7 @@ export function drawSectionHeader({
   else if (fullWidth) boxWidth = contentWidth;
   else boxWidth = textWidth + paddingX * 2;
 
+  /* GREEN TITLE BOX */
   doc.rect(margin, y, boxWidth, boxHeight).fill(PDF_COLORS.GREEN);
 
   doc.fillColor("white").font("regular");
@@ -53,6 +56,22 @@ export function drawSectionHeader({
     );
   }
 
+  /* DATE ON RIGHT */
+  if (options?.isShowDate) {
+    const date = new Date().toLocaleDateString();
+    const displayDate = getDisplayDate(date, "TH");
+
+    doc
+      .fillColor(PDF_COLORS.GRAY)
+      .font("regular")
+      .fontSize(FONT_SIZE)
+      .text(displayDate, margin, y + 4, {
+        width: contentWidth - 10,
+        align: "right",
+      });
+  }
+
+  /* DIVIDER */
   if (withDivider) {
     const dividerY = y + boxHeight + 0.5;
 

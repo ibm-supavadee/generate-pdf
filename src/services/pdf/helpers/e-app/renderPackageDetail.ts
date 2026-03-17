@@ -1,5 +1,7 @@
+import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
+import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
-import { drawSectionHeader } from "../e-request/drawSectionHeader";
+import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -7,7 +9,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   data: any;
-  label: any;
+  label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
 export function renderPackageDetail({
@@ -26,7 +28,6 @@ export function renderPackageDetail({
   const detailX = margin;
   const priceX = margin + detailWidth;
 
-  const tablePaddingTop = 10;
   const tablePaddingBottom = 10;
   const textPaddingTop = 8;
 
@@ -59,14 +60,18 @@ export function renderPackageDetail({
   doc
     .font("bold")
     .fillColor(PDF_COLORS.GRAY)
-    .text(
-      data.packageDetailSection.packageName,
-      detailX + 10,
-      y + textPaddingTop,
-      {
-        width: detailWidth - 20,
-      },
-    );
+    .text(label.MAIN_PACKAGEL_LABEL, detailX + 10, y + textPaddingTop, {
+      width: detailWidth - 20,
+    });
+
+  y = doc.y;
+
+  doc
+    .font("regular")
+    .fillColor(PDF_COLORS.GRAY)
+    .text(data.packageDetailSection.packageName, detailX + 10, y + 5, {
+      width: detailWidth - 20,
+    });
 
   y = doc.y + rowPadding;
 

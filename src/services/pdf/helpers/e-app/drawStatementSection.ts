@@ -2,7 +2,7 @@ import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../constants/pdf.constants";
 import { PdfEAppData } from "../../models/pdf-eapp-data.model";
-import { drawSectionHeader } from "../e-request/drawSectionHeader";
+import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -48,14 +48,12 @@ export function drawStatementSection({
     const text = value || "-";
 
     /* label */
-
     doc
       .font("bold")
       .fillColor(PDF_COLORS.GRAY)
       .text(title, margin + 10, y + rowPadding);
 
     /* value */
-
     doc
       .font("regular")
       .fillColor(text === "-" ? PDF_COLORS.GRAY : PDF_COLORS.GREEN)
@@ -68,31 +66,29 @@ export function drawStatementSection({
     y = rowStartY + rowHeight;
   };
 
-  /* BILLING CHANNEL */
+  if (data.customerType === "NEW_REGISTER") {
+    /* BILLING CHANNEL */
+    drawRow(
+      label.CUSTOMER_INFO.BILLING_CHANNEL,
+      data.customerInfo.billingChannel,
+    );
 
-  drawRow(
-    label.CUSTOMER_INFO.BILLING_CHANNEL,
-    data.customerInfo.billingChannel,
-  );
-
-  /* divider */
-
-  doc
-    .moveTo(margin, y)
-    .lineTo(margin + contentWidth, y)
-    .strokeColor(PDF_COLORS.BORDER)
-    .lineWidth(0.5)
-    .stroke();
+    /* divider */
+    doc
+      .moveTo(margin, y)
+      .lineTo(margin + contentWidth, y)
+      .strokeColor(PDF_COLORS.BORDER)
+      .lineWidth(0.5)
+      .stroke();
+  }
 
   /* DOCUMENT DELIVERY ADDRESS */
-
   drawRow(
     label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
     data.customerInfo.documentDeliveryAddress,
   );
 
   /* box */
-
   doc
     .rect(margin + 0.5, startY + 0.5, contentWidth - 1, y - startY - 1)
     .strokeColor(PDF_COLORS.BORDER)

@@ -7,7 +7,7 @@ import {
 } from "../../constants/pdf.constants";
 import { PdfEAppData } from "../../models/pdf-eapp-data.model";
 import { drawCustomerInfoRows } from "../common/drawCustomerInfoRow";
-import { drawSectionHeader } from "../e-request/drawSectionHeader";
+import { drawSectionHeader } from "../common/drawSectionHeader";
 
 type Row = [string?, string?, string?, string?];
 
@@ -36,7 +36,7 @@ export function drawCustomerInfoEApp({
     margin,
     contentWidth,
     title: label.DATA_OF_SUBSCRIBER_TITLE,
-    options: { withDivider: true },
+    options: { withDivider: true, isShowDate: true },
   });
 
   y += HEADER_SPACING;
@@ -70,7 +70,12 @@ export function drawCustomerInfoEApp({
         ]
       : [
           baseRow,
-          [label.CUSTOMER_INFO.BILLING_CHANNEL, customerInfo.billingChannel],
+          [
+            "",
+            "",
+            label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
+            customerInfo.otherTelephoneNo,
+          ],
         ];
 
   return drawCustomerInfoRows({
