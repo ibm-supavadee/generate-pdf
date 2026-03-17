@@ -216,33 +216,35 @@ export async function generateStyledEAppPdf(
           drawHeader: drawMainHeader,
         });
 
-        /* -------------------------
+        if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+          /* -------------------------
            DIVIDER
         ------------------------- */
 
-        y = drawDivider({
-          doc,
-          y,
-          margin,
-          contentWidth,
-        });
+          y = drawDivider({
+            doc,
+            y,
+            margin,
+            contentWidth,
+          });
 
-        /* -------------------------
+          /* -------------------------
            CONSENT
         ------------------------- */
 
-        y = drawRemark({
-          doc,
-          y,
-          margin,
-          contentWidth,
-          label: label.CONSENT,
-          fontSize: 11,
-          topSpacing: 10,
-          ensureSpace,
-        });
+          y = drawRemark({
+            doc,
+            y,
+            margin,
+            contentWidth,
+            label: label.CONSENT,
+            fontSize: 11,
+            topSpacing: 10,
+            ensureSpace,
+          });
 
-        y += 20;
+          y += 20;
+        }
 
         /* -------------------------
            CARD + SIGNATURE
