@@ -8,6 +8,7 @@ export class PdfEAppData {
   enData: PdfData = new PdfData();
   cardImage?: string = "";
   signatureImage?: string = "";
+  isShowInstallationFeeRemark: boolean = false;
 }
 
 export class PdfData {
