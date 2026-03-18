@@ -11,7 +11,10 @@ export function drawSignatureCard({
   label,
   data,
   height,
+  ensureSpace,
 }: any) {
+  y = ensureSpace(height);
+
   return drawTwoColumnSection({
     doc,
     y,

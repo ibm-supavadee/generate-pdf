@@ -1,7 +1,12 @@
 import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
-import { PDF_COLORS } from "../../../constants/pdf.constants";
-import { PdfData } from "../../../models/pdf-eapp-data.model";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../../constants/pdf.constants";
+import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
+import { drawDivider } from "../../utils/drawDivider";
 import { drawSectionHeader } from "../../utils/drawSectionHeader";
 
 type Params = {
@@ -9,8 +14,10 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
+  pageHeight: number;
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
+  drawMainHeader: (margin: number) => number;
 };
 
 export function drawPackageDetail({
@@ -18,21 +25,18 @@ export function drawPackageDetail({
   y,
   margin,
   contentWidth,
+  pageHeight,
   pdfData,
   label,
+  drawMainHeader,
 }: Params): number {
-  const startY = y;
-
-  const priceWidth = 80;
+  const priceWidth = 70;
   const detailWidth = contentWidth - priceWidth;
 
   const detailX = margin;
   const priceX = margin + detailWidth;
 
-  const tablePaddingBottom = 10;
-  const textPaddingTop = 8;
-
-  const rowPadding = 1;
+  const rowPadding = 2;
 
   const formatPrice = (price: number) =>
     price.toLocaleString("th-TH", {
@@ -43,7 +47,7 @@ export function drawPackageDetail({
   const formatPriceText = (value: number) =>
     `${formatPrice(value)} ${label.THB}`;
 
-  /* HEADER */
+  /* ---------------- HEADER ---------------- */
 
   y = drawSectionHeader({
     doc,
@@ -54,88 +58,236 @@ export function drawPackageDetail({
     options: { fullWidth: true },
   });
 
-  const tableStartY = y;
+  let tableStartY = y;
 
-  /* PACKAGE NAME */
-  if (pdfData.mainPackageSection?.details?.length) {
-    doc
-      .font("bold")
-      .fillColor(PDF_COLORS.GRAY)
-      .text(label.MAIN_PACKAGEL_LABEL, detailX + 10, y + textPaddingTop, {
-        width: detailWidth - 20,
-      });
+  /* ---------------- TABLE HEADER ---------------- */
 
-    y = doc.y;
+  const drawTableHeader = (startY: number) => {
+    const half = 0.5;
 
     doc
-      .font("regular")
-      .fillColor(PDF_COLORS.GRAY)
-      .text(pdfData.mainPackageSection.title ?? "-", detailX + 10, y + 5, {
-        width: detailWidth - 20,
+      .lineWidth(1)
+      .strokeColor(PDF_COLORS.BORDER)
+      .moveTo(detailX + half, startY + half)
+      .lineTo(detailX + contentWidth - half, startY + half)
+      .stroke();
+  };
+
+  /* ---------------- TABLE BORDER ---------------- */
+
+  const drawTableBorder = (startY: number, endY: number) => {
+    doc
+      .moveTo(priceX, startY)
+      .lineTo(priceX, endY)
+      .strokeColor(PDF_COLORS.BORDER)
+      .lineWidth(1)
+      .stroke();
+
+    doc
+      .rect(margin + 0.5, startY + 0.5, contentWidth - 1, endY - startY - 1)
+      .strokeColor(PDF_COLORS.BORDER)
+      .lineWidth(1)
+      .stroke();
+  };
+
+  drawTableHeader(y);
+  y += HEADER_SPACING;
+  tableStartY = y - HEADER_SPACING;
+
+  /* ---------------- RENDER ROW ---------------- */
+
+  const renderRow = (
+    text: string,
+    price?: number,
+    option: {
+      isBold?: boolean;
+      description?: string;
+      bullet?: boolean;
+    } = {},
+  ) => {
+    const bullet = option.bullet ? "• " : "";
+    const displayText = `${bullet}${text}`;
+
+    const fullText = option.description
+      ? `${displayText} ${option.description}`
+      : displayText;
+
+    const textTotalHeight = doc.heightOfString(fullText, {
+      width: detailWidth - 30,
+      lineGap: 2,
+    });
+
+    const priceText = price !== undefined ? formatPriceText(price) : "";
+
+    const priceHeight = doc.heightOfString(priceText, {
+      width: priceWidth - 10,
+      lineGap: 2,
+    });
+
+    const rowHeight = Math.max(textTotalHeight, priceHeight) + rowPadding * 2;
+
+    if (y + rowHeight > pageHeight - margin) {
+      y += HEADER_SPACING;
+      drawTableBorder(tableStartY, y);
+
+      doc.addPage();
+
+      y = drawMainHeader(margin);
+
+      y = drawSectionHeader({
+        doc,
+        y,
+        margin,
+        contentWidth,
+        title: label.REQUEST_REGISTRATION_INTERNET_TITLE,
+        options: { fullWidth: true },
       });
 
-    y = doc.y + rowPadding;
+      doc.font("regular").fontSize(FONT_SIZE).fillColor(PDF_COLORS.GRAY);
 
-    /* DETAILS */
+      drawTableHeader(y);
+      y += HEADER_SPACING;
+      tableStartY = y - HEADER_SPACING;
+    }
 
-    pdfData.mainPackageSection.details.forEach((item: any) => {
-      const rowStartY = y;
+    const rowStartY = y;
 
+    doc
+      .font(option.isBold ? "bold" : "regular")
+      .fontSize(FONT_SIZE)
+      .fillColor(PDF_COLORS.GRAY)
+      .text(displayText, detailX + 20, rowStartY + rowPadding, {
+        width: detailWidth - 30,
+        lineGap: 2,
+        continued: !!option.description,
+      });
+
+    if (option.description) {
       doc
         .font("regular")
+        .fontSize(FONT_SIZE)
         .fillColor(PDF_COLORS.GRAY)
-        .text(`• ${item.text}`, detailX + 20, rowStartY + rowPadding, {
+        .text(` ${option.description}`, {
+          width: detailWidth - 30,
+          lineGap: 2,
+        });
+    }
+
+    if (price !== undefined) {
+      doc
+        .font(option.isBold ? "bold" : "regular")
+        .fontSize(FONT_SIZE)
+        .fillColor(PDF_COLORS.GREEN)
+        .text(priceText, priceX, rowStartY + rowPadding, {
+          width: priceWidth - 10,
+          align: "right",
+          lineGap: 2,
+        });
+    }
+
+    y = doc.y + rowPadding;
+    doc.y = y;
+  };
+
+  /* ---------------- MAIN PACKAGE ---------------- */
+
+  if (pdfData.mainPackageSection?.details?.length) {
+    renderRow(label.MAIN_PACKAGE_LABEL, undefined, { isBold: true });
+
+    renderRow(pdfData.mainPackageSection.title ?? "-", undefined, {
+      bullet: true,
+    });
+
+    pdfData.mainPackageSection.details.forEach((item: Detail) => {
+      renderRow(item.text, item.price, { bullet: true });
+    });
+  }
+
+  /* ---------------- ON TOP PACKAGE ---------------- */
+
+  if (pdfData.onTopDetailSection?.length) {
+    y = drawDivider({
+      doc,
+      y,
+      margin,
+      contentWidth,
+      spaceBefore: 20,
+      spaceAfter: 6,
+    });
+
+    renderRow(label.ONTOP_PACKAGE_LABEL, undefined, { isBold: true });
+
+    /* ---- helper: calculate section height ---- */
+
+    const getSectionHeight = (section: Section) => {
+      let height = 0;
+
+      const titleText = section.description
+        ? `• ${section.title} ${section.description}`
+        : `• ${section.title}`;
+
+      height +=
+        doc.heightOfString(titleText, {
+          width: detailWidth - 30,
+          lineGap: 2,
+        }) +
+        rowPadding * 2;
+
+      section.details.forEach((item) => {
+        const textHeight = doc.heightOfString(item.text, {
           width: detailWidth - 30,
           lineGap: 2,
         });
 
-      const textEndY = doc.y;
+        height += textHeight + rowPadding * 2;
+      });
 
-      let priceEndY = rowStartY;
+      return height;
+    };
 
-      if (item.price !== undefined) {
-        doc
-          .font("regular")
-          .fillColor(PDF_COLORS.GREEN)
-          .text(formatPriceText(item.price), priceX, rowStartY + rowPadding, {
-            width: priceWidth - 10,
-            align: "right",
-          });
+    pdfData.onTopDetailSection.forEach((section: Section) => {
+      const sectionHeight = getSectionHeight(section);
 
-        priceEndY = doc.y;
+      if (y + sectionHeight > pageHeight - margin) {
+        y += HEADER_SPACING;
+        drawTableBorder(tableStartY, y);
+
+        doc.addPage();
+
+        y = drawMainHeader(margin);
+
+        y = drawSectionHeader({
+          doc,
+          y,
+          margin,
+          contentWidth,
+          title: label.REQUEST_REGISTRATION_INTERNET_TITLE,
+          options: { fullWidth: true },
+        });
+
+        doc.font("regular").fontSize(FONT_SIZE).fillColor(PDF_COLORS.GRAY);
+
+        drawTableHeader(y);
+        y += HEADER_SPACING;
+        tableStartY = y - HEADER_SPACING;
       }
 
-      y = Math.max(textEndY, priceEndY) + rowPadding;
+      renderRow(section.title, undefined, {
+        isBold: true,
+        description: section.description,
+        bullet: true,
+      });
+
+      section.details.forEach((item: Detail) => {
+        renderRow(`   ${item.text}`, item.price, { bullet: false });
+      });
     });
   }
 
-  /* TABLE BOTTOM */
+  /* ---------------- CLOSE TABLE ---------------- */
 
-  y += tablePaddingBottom;
+  y += HEADER_SPACING;
+  drawTableBorder(tableStartY, y);
 
-  const tableBottomY = y;
-
-  /* VERTICAL DIVIDER */
-
-  doc
-    .moveTo(priceX, tableStartY)
-    .lineTo(priceX, tableBottomY)
-    .strokeColor(PDF_COLORS.BORDER)
-    .lineWidth(1)
-    .stroke();
-
-  /* TABLE BORDER */
-
-  doc
-    .rect(
-      margin + 0.5,
-      tableStartY + 0.5,
-      contentWidth - 1,
-      tableBottomY - tableStartY - 1,
-    )
-    .strokeColor(PDF_COLORS.BORDER)
-    .lineWidth(1)
-    .stroke();
-
-  return tableBottomY;
+  return y;
 }

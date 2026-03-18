@@ -7,8 +7,18 @@ import { drawTwoColumnSection } from "../layout/drawTwoColumnSection";
 import { renderRemarkEApp } from "../utils/renderRemarkEApp";
 
 export function drawMainContentPage(params: any) {
-  let { doc, y, margin, contentWidth, data, pdfData, label, ensureSpace } =
-    params;
+  let {
+    doc,
+    y,
+    margin,
+    contentWidth,
+    pageHeight,
+    data,
+    pdfData,
+    label,
+    ensureSpace,
+    drawMainHeader,
+  } = params;
 
   y = drawCustomerInfoEApp({
     doc,
@@ -56,12 +66,11 @@ export function drawMainContentPage(params: any) {
     y,
     margin,
     contentWidth,
+    pageHeight,
     pdfData,
     label,
+    drawMainHeader,
   });
-
-  y -= 10;
-  doc.y = y;
 
   y = drawRemark({
     doc,

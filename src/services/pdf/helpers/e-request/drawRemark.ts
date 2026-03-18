@@ -1,4 +1,4 @@
-import { PDF_COLORS } from "../../constants/pdf.constants";
+import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -17,7 +17,7 @@ export function drawRemark({
   margin,
   contentWidth,
   label,
-  fontSize = 9,
+  fontSize = FONT_SIZE,
   topSpacing = 15,
   ensureSpace,
 }: Params): number {

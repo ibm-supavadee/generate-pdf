@@ -70,6 +70,8 @@ export function renderRemarkEApp({
     .map((x) => x.trim())
     .filter(Boolean);
 
+  y += HEADER_SPACING;
+
   for (const block of blocks) {
     const nbspCount = (block.match(/&nbsp;/g) || []).length;
     const indent = nbspCount * 4;

@@ -44,11 +44,12 @@ export function drawLanguagePage(
     });
   };
 
-  const ensureSpace = (height: number) => {
+  const ensureSpace = (height: number): number => {
     if (y + height > pageHeight - margin) {
       doc.addPage();
       y = drawMainHeader(margin);
     }
+    return y;
   };
 
   y = drawMainHeader(y);
@@ -67,18 +68,17 @@ export function drawLanguagePage(
     ensureSpace,
   });
 
-  if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
-    y = drawSignatureCard({
-      doc,
-      y,
-      margin,
-      contentWidth,
-      pdfData,
-      label,
-      data,
-      height: CARD_SIGN_SECTION_HEIGHT,
-    });
-  }
+  y = drawSignatureCard({
+    doc,
+    y,
+    margin,
+    contentWidth,
+    pdfData,
+    label,
+    data,
+    height: CARD_SIGN_SECTION_HEIGHT,
+    ensureSpace,
+  });
 
   drawTermsPage({
     doc,
