@@ -1,8 +1,8 @@
-import { E_APP_LABEL_EN } from "../../constants/e-app-label-en.constant";
-import { E_APP_LABEL_TH } from "../../constants/e-app-label-th.constant";
-import { PDF_COLORS } from "../../constants/pdf.constants";
-import { PdfData } from "../../models/pdf-eapp-data.model";
-import { drawSectionHeader } from "../common/drawSectionHeader";
+import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
+import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
+import { PDF_COLORS } from "../../../constants/pdf.constants";
+import { PdfData } from "../../../models/pdf-eapp-data.model";
+import { drawSectionHeader } from "../../common/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -13,7 +13,7 @@ type Params = {
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
 };
 
-export function renderPackageDetail({
+export function drawPackageDetail({
   doc,
   y,
   margin,

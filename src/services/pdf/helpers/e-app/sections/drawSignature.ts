@@ -1,6 +1,4 @@
-import { PDF_COLORS } from "../../constants/pdf.constants";
-import { PdfEAppData } from "../../models/pdf-eapp-data.model";
-import { getDisplayDate } from "../common/displayDate";
+import { PDF_COLORS } from "../../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -13,7 +11,7 @@ type Params = {
   signatureBase64?: string;
 };
 
-export function drawSignatureSection({
+export function drawSignature({
   doc,
   y,
   margin,

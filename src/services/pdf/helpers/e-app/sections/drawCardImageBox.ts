@@ -1,5 +1,5 @@
-import { PDF_COLORS } from "../../constants/pdf.constants";
-import { drawSectionHeader } from "../common/drawSectionHeader";
+import { PDF_COLORS } from "../../../constants/pdf.constants";
+import { drawSectionHeader } from "../../common/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -11,7 +11,7 @@ type Params = {
   imageBase64?: string;
 };
 
-export function drawCardBox({
+export function drawCardImageBox({
   doc,
   y,
   margin,
@@ -64,7 +64,6 @@ export function drawCardBox({
     const finalW = img.width * scale;
     const finalH = img.height * scale;
 
-    // คำนวณตำแหน่ง center
     const imgX = margin + (contentWidth - finalW) / 2;
     const imgY = y + (boxHeight - finalH) / 2;
 
