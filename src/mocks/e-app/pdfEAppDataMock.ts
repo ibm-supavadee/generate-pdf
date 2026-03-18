@@ -8,6 +8,9 @@ import { PdfEAppData } from "../../services/pdf/models/pdf-eapp-data.model";
 export const pdfEAppDataMock: PdfEAppData = {
   customerType: CUSTOMER_TYPE.NEW_REGISTER,
   productOwner: PRODUCT_OWNER.FBB,
+  isShowInstallationFeeRemark: true,
+  cardImage: "",
+  signatureImage: "",
   thData: {
     registerDate: "13 มี.ค. 2569",
     customerInfo: {

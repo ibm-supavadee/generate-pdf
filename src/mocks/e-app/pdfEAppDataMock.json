@@ -258,5 +258,6 @@
     "termsAndConditions": ""
   },
   "cardImage": "",
-  "signatureImage": ""
+  "signatureImage": "",
+  "isShowInstallationFeeRemark": true
 }

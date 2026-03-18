@@ -72,14 +72,16 @@ export function drawMainContentPage(params: any) {
     drawMainHeader,
   });
 
-  y = drawRemark({
-    doc,
-    y,
-    margin,
-    contentWidth,
-    label: label.REMARKS,
-    ensureSpace,
-  });
+  if (data.isShowInstallationFeeRemark) {
+    y = drawRemark({
+      doc,
+      y,
+      margin,
+      contentWidth,
+      label: label.REMARKS,
+      ensureSpace,
+    });
+  }
 
   y = renderRemarkEApp({
     doc,
