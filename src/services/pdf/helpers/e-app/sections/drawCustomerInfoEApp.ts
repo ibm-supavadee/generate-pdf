@@ -6,8 +6,8 @@ import {
   REGISTER_TYPE,
 } from "../../../constants/pdf.constants";
 import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
-import { drawCustomerInfoRows } from "../../common/drawCustomerInfoRow";
-import { drawSectionHeader } from "../../common/drawSectionHeader";
+import { drawCustomerInfoRows } from "../../utils/drawCustomerInfoRow";
+import { drawSectionHeader } from "../../utils/drawSectionHeader";
 
 type Row = [string?, string?, string?, string?];
 

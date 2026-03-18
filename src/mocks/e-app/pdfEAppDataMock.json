@@ -141,14 +141,117 @@
       "billingChannel": "Bill notification via SMS + view bill via My AIS",
       "documentDeliveryAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310"
     },
-    "mainPackages": [
-      "BROADBAND24 Package 500/500 Mbps 599 THB 24 months (Internet only)",
-      "Internet installation fee discount including WiFi Router worth 4,800.00 THB"
-    ],
-    "onTopPackages": [
-      "HBO Add-on premium entertainment package. Enjoy blockbuster movies and HBO Original series in HD/4K quality with high-quality sound. Supports Smart TV, mobile, and tablet viewing with replay options and selectable audio/subtitles.",
-      "Free! AIS Playbox worth 1,490 THB",
-      "50% monthly fee discount for 6 months (for BROADBAND24 package only)"
+     "mainPackageSection": {
+      "title": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
+      "details": [
+        {
+          "text": "Monthly Fee 459.00 baht (Excl. VAT)",
+          "price": 459.00
+        },
+        {
+          "text": "Minimum Service period: 24 Bill cycles"
+        },
+        {
+          "text": "Receive the right to borrow FTTx standard router 1 set, AIS PlayBox 1 box"
+        },
+        {
+          "text": "Other services in Package",
+          "list": [
+            "Mobile Service"
+          ]
+        },
+        {
+          "text": "Entry fee (Normal charge 2,000 baht) (Excl. VAT)",
+          "price": 747.66
+        },
+        {
+          "text": "Installation Fee (Excl. VAT)",
+          "price": 4800.00
+        },
+        {
+          "text": "Receive the discount for installation fee of AIS Fiber service when using the service according to the duration and conditions of the main package",
+          "price": 4800.00
+        }
+      ]
+    },
+    "onTopDetailSection": [
+      {
+        "title": "AIS PLAYBOX:",
+        "details": [
+          {
+            "text": "Total 1 point, Receive the right to borrow AIS PlayBox 1 box"
+          },
+          {
+            "text": "Monthly Fee 199.00 baht (Excl. VAT)",
+            "price": 199.00
+          },
+          {
+            "text": "Content Package: PLAY PREMIER Monthly 199 baht, 12-month contract, watch Premier League through AIS PLAY & MONOMAX"
+          },
+          {
+            "text": "Service period: 24 Bill cycles"
+          }
+        ]
+      },
+      {
+        "title": "MESH WIFI:",
+        "details": [
+          {
+            "text": "Total 2 points, Receive the right to borrow Mesh Wifi Router 2 sets"
+          },
+          {
+            "text": "Monthly Fee 69.00 baht (Excl. VAT)",
+            "price": 69.00
+          },
+          {
+            "text": "Service period: 24 Bill cycles"
+          }
+        ]
+      },
+      {
+        "title": "Fixed Line Service:",
+        "details": [
+          {
+            "text": "Total 1 point"
+          },
+          {
+            "text": "Monthly Fee 100.00 baht (Excl. VAT) (Monthly Fee is excludes voice call charges)",
+            "price": 100.00
+          }
+        ]
+      },
+      {
+        "title": "Cloud IP Camera:",
+        "description": "Video movement recording and playback service on the cloud 7 days",
+        "details": [
+          {
+            "text": "Monthly Fee 99.00 baht (Excl. VAT) (baht/package/month)",
+            "price": 99.00
+          },
+          {
+            "text": "Service Period: 24 Bill cycles"
+          }
+        ]
+      },
+      {
+        "title": "SMART SOUNDBAR:",
+        "details": [
+          {
+            "text": "Total 1 package, Receive the right to borrow Soundbar speaker 1 device/package"
+          },
+          {
+            "text": "Monthly Fee 350.00 baht (Excl. VAT) (baht/package/month)",
+            "price": 350.00
+          },
+          {
+            "text": "Entry Fee 934.58 baht (Excl. VAT) (baht/package)",
+            "price": 934.58
+          },
+          {
+            "text": "Service Period: 24 Bill cycles"
+          }
+        ]
+      }
     ],
     "registerDate": "01/06/2024",
     "remark": "",

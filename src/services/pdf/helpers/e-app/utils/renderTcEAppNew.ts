@@ -1,4 +1,8 @@
-import { FONT_SIZE, PDF_COLORS } from "../../../constants/pdf.constants";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -25,7 +29,6 @@ export function renderTcEAppNew({
   pageHeight,
   drawHeader,
 }: Params): number {
-  const HEADER_SPACING = 10;
   const contentWidth = pageWidth - margin * 2;
 
   /* ---------- page break ---------- */

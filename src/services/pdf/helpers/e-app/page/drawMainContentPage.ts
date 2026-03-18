@@ -4,7 +4,6 @@ import { drawStatement } from "../sections/drawStatement";
 import { drawPackageDetail } from "../sections/drawPackageDetail";
 import { drawRemark } from "../../e-request/drawRemark";
 import { drawTwoColumnSection } from "../layout/drawTwoColumnSection";
-import { eappRemark } from "../../../../../mocks/eapp-remark";
 import { renderRemarkEApp } from "../utils/renderRemarkEApp";
 
 export function drawMainContentPage(params: any) {
@@ -75,7 +74,7 @@ export function drawMainContentPage(params: any) {
 
   y = renderRemarkEApp({
     doc,
-    html: eappRemark,
+    html: pdfData.remark,
     y,
     margin,
     pageWidth: params.pageWidth,

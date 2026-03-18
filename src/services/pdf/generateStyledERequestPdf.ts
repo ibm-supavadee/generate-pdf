@@ -9,15 +9,15 @@ import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
 
 import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
-import { drawSectionHeader } from "./helpers/common/drawSectionHeader";
+import { drawSectionHeader } from "./helpers/utils/drawSectionHeader";
 import { drawPackages } from "./helpers/e-request/drawPackages";
 import { renderExpenseTable } from "./helpers/e-request/renderExpenseTable";
 import { renderTcNew } from "./helpers/e-request/renderTcNew";
 import { drawRemark } from "./helpers/e-request/drawRemark";
 import { renderTcExisting } from "./helpers/e-request/renderTcExisting";
 import { drawCustomerInfoERequest } from "./helpers/e-request/drawCustomerInfoERequest";
-import { drawHeader } from "./helpers/common/drawHeader";
-import { drawPageNumbers } from "./helpers/common/drawPageNumber";
+import { drawHeader } from "./helpers/utils/drawHeader";
+import { drawPageNumbers } from "./helpers/utils/drawPageNumber";
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,

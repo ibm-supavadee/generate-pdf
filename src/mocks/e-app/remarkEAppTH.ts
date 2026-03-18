@@ -1,4 +1,4 @@
-export const eappRemark = `
+export const remarkEAppTH = `
 <b>หมายเหตุ (Remark) :</b>
 <br>
 1. มูลค่าอุปกรณ์ (Equipment Value)

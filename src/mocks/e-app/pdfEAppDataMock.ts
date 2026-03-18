@@ -1,9 +1,9 @@
-import { PRODUCT_OWNER } from "../constants/enum";
+import { PRODUCT_OWNER } from "../../constants/enum";
 import {
   CUSTOMER_TYPE,
   REGISTER_TYPE,
-} from "../services/pdf/constants/pdf.constants";
-import { PdfEAppData } from "../services/pdf/models/pdf-eapp-data.model";
+} from "../../services/pdf/constants/pdf.constants";
+import { PdfEAppData } from "../../services/pdf/models/pdf-eapp-data.model";
 
 export const pdfEAppDataMock: PdfEAppData = {
   customerType: CUSTOMER_TYPE.NEW_REGISTER,

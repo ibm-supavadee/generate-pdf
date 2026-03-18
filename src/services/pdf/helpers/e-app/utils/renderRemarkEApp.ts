@@ -1,4 +1,8 @@
-import { FONT_SIZE, PDF_COLORS } from "../../../constants/pdf.constants";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -26,7 +30,6 @@ export function renderRemarkEApp({
 }: Params): number {
   const contentWidth = pageWidth - margin * 2;
   const LINE_SPACING = 2;
-  const HEADER_SPACING = 10;
 
   /* ---------- page break ---------- */
 

@@ -1,4 +1,8 @@
-import { FONT_SIZE, PDF_COLORS } from "../../../constants/pdf.constants";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -25,10 +29,7 @@ export function renderTcEAppExisting({
   pageHeight,
   drawHeader,
 }: Params): number {
-  const HEADER_SPACING = 10;
   const contentWidth = pageWidth - margin * 2;
-
-  console.log("html: ", html);
 
   const ensureSpace = (height: number) => {
     if (y + height > pageHeight - margin) {
@@ -96,7 +97,7 @@ export function renderTcEAppExisting({
         .fontSize(FONT_SIZE)
         .fillColor(isLink ? PDF_COLORS.LINK : PDF_COLORS.GRAY);
 
-      const continued = !isLast && !isLink;
+      const continued = !isLast;
 
       if (i === 0) {
         doc.text(seg.text, margin, y, {

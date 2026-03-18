@@ -1,4 +1,8 @@
-import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../constants/pdf.constants";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -25,7 +29,6 @@ export function renderTcExisting({
   pageHeight,
   drawHeader,
 }: Params): number {
-  const HEADER_SPACING = 10;
   const BULLET_WIDTH = 6;
   const NUMBER_WIDTH = 14;
   const PADDING = 10;

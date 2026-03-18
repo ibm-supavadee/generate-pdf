@@ -1,5 +1,5 @@
 import { PDF_COLORS } from "../../../constants/pdf.constants";
-import { drawSectionHeader } from "../../common/drawSectionHeader";
+import { drawSectionHeader } from "../../utils/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;

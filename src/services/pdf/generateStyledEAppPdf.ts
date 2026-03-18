@@ -1,6 +1,6 @@
 import { Buffer } from "buffer";
 import { PdfEAppData } from "./models/pdf-eapp-data.model";
-import { drawPageNumbers } from "./helpers/common/drawPageNumber";
+import { drawPageNumbers } from "./helpers/utils/drawPageNumber";
 import { createPdfDocument } from "./helpers/e-app/createPdfDocument";
 import { drawLanguagePage } from "./helpers/e-app/page/drawLanguagePage";
 

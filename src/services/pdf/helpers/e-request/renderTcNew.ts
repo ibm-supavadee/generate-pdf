@@ -1,4 +1,8 @@
-import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
+import {
+  FONT_SIZE,
+  HEADER_SPACING,
+  PDF_COLORS,
+} from "../../constants/pdf.constants";
 
 export function renderTcNew(
   doc: PDFKit.PDFDocument,
@@ -13,7 +17,6 @@ export function renderTcNew(
 ) {
   const { margin, pageWidth, pageHeight } = options;
 
-  const HEADER_SPACING = 10;
   const BULLET_WIDTH = 6;
   const NUMBER_WIDTH = 14;
 
