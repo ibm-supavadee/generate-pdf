@@ -6,8 +6,8 @@ import {
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
 import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
+import { drawSectionHeader } from "../../layout/drawSectionHeader";
 import { drawDivider } from "../../utils/drawDivider";
-import { drawSectionHeader } from "../../utils/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -203,9 +203,10 @@ export function drawPackageDetail({
     });
   }
 
-  /* ---------------- ON TOP PACKAGE ---------------- */
-
-  if (pdfData.onTopDetailSection?.length) {
+  if (
+    pdfData.mainPackageSection?.details?.length &&
+    pdfData.onTopDetailSection?.length
+  ) {
     y = drawDivider({
       doc,
       y,
@@ -214,7 +215,11 @@ export function drawPackageDetail({
       spaceBefore: 20,
       spaceAfter: 6,
     });
+  }
 
+  /* ---------------- ON TOP PACKAGE ---------------- */
+
+  if (pdfData.onTopDetailSection?.length) {
     renderRow(label.ONTOP_PACKAGE_LABEL, undefined, { isBold: true });
 
     /* ---- helper: calculate section height ---- */

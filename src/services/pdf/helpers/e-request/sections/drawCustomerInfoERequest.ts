@@ -1,12 +1,12 @@
-import { E_REQUEST_LABEL_EN } from "../../constants/e-request-label-en.constant";
-import { E_REQUEST_LABEL_TH } from "../../constants/e-request-label-th.constant";
+import { E_REQUEST_LABEL_EN } from "../../../constants/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "../../../constants/e-request-label-th.constant";
 import {
   CUSTOMER_TYPE,
   HEADER_SPACING,
   REGISTER_TYPE,
-} from "../../constants/pdf.constants";
-import { PdfERequestData } from "../../models/pdf-erequest-data.model";
-import { drawCustomerInfoRows } from "../utils/drawCustomerInfoRow";
+} from "../../../constants/pdf.constants";
+import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
+import { drawCustomerInfoRows } from "../../utils/drawCustomerInfoRow";
 
 type Row = [string?, string?, string?, string?];
 

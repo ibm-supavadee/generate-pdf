@@ -2,7 +2,7 @@ import {
   FONT_SIZE,
   HEADER_SPACING,
   PDF_COLORS,
-} from "../../constants/pdf.constants";
+} from "../../../constants/pdf.constants";
 
 export function renderTcNew(
   doc: PDFKit.PDFDocument,

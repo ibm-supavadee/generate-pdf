@@ -1,5 +1,5 @@
 import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
-import { getDisplayDate } from "./displayDate";
+import { getDisplayDate } from "../utils/displayDate";
 
 type Options = {
   withDivider?: boolean;

@@ -2,8 +2,8 @@ import { drawAddressInstall } from "../sections/drawAddressInstall";
 import { drawCustomerInfoEApp } from "../sections/drawCustomerInfoEApp";
 import { drawStatement } from "../sections/drawStatement";
 import { drawPackageDetail } from "../sections/drawPackageDetail";
-import { drawRemark } from "../../e-request/drawRemark";
-import { drawTwoColumnSection } from "../layout/drawTwoColumnSection";
+import { drawRemark } from "../../e-request/sections/drawRemark";
+import { drawTwoColumnSection } from "../../layout/drawTwoColumnSection";
 import { renderRemarkEApp } from "../utils/renderRemarkEApp";
 
 export function drawMainContentPage(params: any) {

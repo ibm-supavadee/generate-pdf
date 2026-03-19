@@ -1,6 +1,7 @@
 import { drawCardImageBox } from "./drawCardImageBox";
-import { drawTwoColumnSection } from "../layout/drawTwoColumnSection";
+import { drawTwoColumnSection } from "../../layout/drawTwoColumnSection";
 import { drawSignature } from "./drawSignature";
+import { HEADER_SPACING } from "../../../constants/pdf.constants";
 
 export function drawSignatureCard({
   doc,
@@ -14,6 +15,7 @@ export function drawSignatureCard({
   ensureSpace,
 }: any) {
   y = ensureSpace(height);
+  y += HEADER_SPACING;
 
   return drawTwoColumnSection({
     doc,

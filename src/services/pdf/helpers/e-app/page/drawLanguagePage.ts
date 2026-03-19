@@ -1,8 +1,8 @@
 import { PdfEAppData } from "../../../models/pdf-eapp-data.model";
 import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
-import { CUSTOMER_TYPE, PDF_COLORS } from "../../../constants/pdf.constants";
-import { drawHeader } from "../../utils/drawHeader";
+import { PDF_COLORS } from "../../../constants/pdf.constants";
+import { drawHeader } from "../../layout/drawHeader";
 import { drawMainContentPage } from "./drawMainContentPage";
 import { drawTermsPage } from "./drawTermsPage";
 import { drawSignatureCard } from "../sections/drawSignatureCard";

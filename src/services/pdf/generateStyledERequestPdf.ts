@@ -1,241 +1,113 @@
-import PDFDocument from "pdfkit";
-import { Buffer } from "buffer";
-
-import { dbHelvethaicaAisXV3 } from "../../assets/fonts/db_helvethaica_ais_x_v3";
-import { dbHelvethaicaAisXBdV3 } from "../../assets/fonts/db_helvethaica_ais_x_bd_v3";
-
-import { PdfERequestData } from "./models/pdf-erequest-data.model";
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
-
-import { CUSTOMER_TYPE, FONT_SIZE } from "./constants/pdf.constants";
-import { drawSectionHeader } from "./helpers/utils/drawSectionHeader";
-import { drawPackages } from "./helpers/e-request/drawPackages";
-import { renderExpenseTable } from "./helpers/e-request/renderExpenseTable";
-import { renderTcNew } from "./helpers/e-request/renderTcNew";
-import { drawRemark } from "./helpers/e-request/drawRemark";
-import { renderTcExisting } from "./helpers/e-request/renderTcExisting";
-import { drawCustomerInfoERequest } from "./helpers/e-request/drawCustomerInfoERequest";
-import { drawHeader } from "./helpers/utils/drawHeader";
+import { createDocument } from "./helpers/core/createDocument";
+import { createLayoutContext } from "./helpers/core/layoutContext";
+import { drawTermsPage } from "./helpers/e-app/page/drawTermsPage";
+import { drawMainPage } from "./helpers/e-request/pages/drawMainPage";
+import { drawTermsErequestPage } from "./helpers/e-request/pages/drawTermsErequestPage";
+import { drawHeader } from "./helpers/layout/drawHeader";
+import { drawSectionHeader } from "./helpers/layout/drawSectionHeader";
 import { drawPageNumbers } from "./helpers/utils/drawPageNumber";
+import { PdfERequestData } from "./models/pdf-erequest-data.model";
+
+/* -----------------------------
+   MAIN FUNCTION
+----------------------------- */
 
 export async function generateStyledERequestPdf(
   data: PdfERequestData,
 ): Promise<string> {
   const label = data.lang === "EN" ? E_REQUEST_LABEL_EN : E_REQUEST_LABEL_TH;
 
-  return new Promise((resolve, reject) => {
-    try {
-      const doc = new PDFDocument({
-        size: "A4",
-        margin: 10,
-        bufferPages: true,
-      });
+  /* -------------------------
+     CREATE DOCUMENT
+  ------------------------- */
 
-      const buffers: Buffer[] = [];
+  const { doc, getBase64 } = createDocument();
 
-      doc.on("data", buffers.push.bind(buffers));
+  /* -------------------------
+     PAGE CONFIG
+  ------------------------- */
 
-      doc.on("end", () => {
-        const pdf = Buffer.concat(buffers);
-        resolve(`data:application/pdf;base64,${pdf.toString("base64")}`);
-      });
+  const pageWidth = doc.page.width;
+  const pageHeight = doc.page.height;
 
-      /* -------------------------
-         FONT SETUP
-      ------------------------- */
+  const margin = 20;
+  const contentWidth = pageWidth - margin * 2;
 
-      doc.registerFont("regular", Buffer.from(dbHelvethaicaAisXV3, "base64"));
-      doc.registerFont("bold", Buffer.from(dbHelvethaicaAisXBdV3, "base64"));
+  /* -------------------------
+     HEADER FUNCTIONS
+  ------------------------- */
 
-      doc.font("regular").fontSize(FONT_SIZE);
+  const drawMainHeader = (startY: number) =>
+    drawHeader({
+      doc,
+      y: startY,
+      margin,
+      pageWidth,
+      title: label.SUMMARY_SELECTED_PACKAGE,
+    });
 
-      /* -------------------------
-         PAGE CONFIG
-      ------------------------- */
+  const drawTermsHeader = (startY: number) =>
+    drawHeader({
+      doc,
+      y: startY,
+      margin,
+      pageWidth,
+      title: label.TERMS_AND_CONDITIONS_OF_SERVICE,
+    });
 
-      const pageWidth = doc.page.width;
-      const pageHeight = doc.page.height;
+  /* -------------------------
+     LAYOUT CONTEXT
+  ------------------------- */
 
-      const margin = 20;
-      const contentWidth = pageWidth - margin * 2;
-
-      let y = margin;
-
-      const ensureSpace = (height: number) => {
-        if (y + height > pageHeight - margin) {
-          doc.addPage();
-          y = margin;
-        }
-      };
-
-      const drawMainHeader = (startY: number) =>
-        drawHeader({
-          doc,
-          y: startY,
-          margin,
-          pageWidth,
-          title: label.SUMMARY_SELECTED_PACKAGE,
-        });
-
-      const drawTermsHeader = (startY: number) =>
-        drawHeader({
-          doc,
-          y: startY,
-          margin,
-          pageWidth,
-          title: label.TERMS_AND_CONDITIONS_OF_SERVICE,
-        });
-
-      /* -------------------------
-         HEADER
-      ------------------------- */
-
-      y = drawMainHeader(y);
-
-      /* -------------------------
-         CUSTOMER INFO
-      ------------------------- */
-
-      y = drawSectionHeader({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        title: label.DATA_OF_SUBSCRIBER,
-        options: { withDivider: true },
-      });
-
-      y = drawCustomerInfoERequest({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        data,
-        label,
-        ensureSpace,
-      });
-
-      y += 20;
-
-      /* -------------------------
-         PACKAGES
-      ------------------------- */
-
-      y = drawSectionHeader({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        title: label.SUMMARY_SELECTED_PACKAGE,
-        options: { withDivider: true },
-      });
-
-      y = drawPackages({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        data,
-        label,
-        fields: {
-          mainLabel: "MAIN_PACKAGE",
-          onTopLabel: "ON_TOP_PACKAGE",
-          mainData: "mainPackages",
-          onTopData: "onTopPackages",
-        },
-      });
-
-      /* -------------------------
-         EXPENSE TABLE
-      ------------------------- */
-
-      y = drawSectionHeader({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        title: label.DETAIL_CHARGES,
-        options: { fullWidth: true },
-      });
-
-      y = renderExpenseTable({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        pageHeight,
-        data,
-        label,
-        drawPageHeader: () => {
-          let newY = margin;
-
-          newY = drawMainHeader(newY);
-
-          newY = drawSectionHeader({
-            doc,
-            y: newY,
-            margin,
-            contentWidth,
-            title: label.DETAIL_CHARGES,
-            options: { fullWidth: true },
-          });
-
-          return newY;
-        },
-      });
-
-      /* -------------------------
-         REMARK
-      ------------------------- */
-
-      y = drawRemark({
-        doc,
-        y,
-        margin,
-        contentWidth,
-        label: label.REMARKS,
-        ensureSpace,
-      });
-
-      /* -------------------------
-         TERMS PAGE
-      ------------------------- */
-
-      doc.addPage();
-
-      y = drawTermsHeader(margin);
-
-      const termsHtml = data.termsAndConditions;
-
-      if (data.customerType === CUSTOMER_TYPE.EXISTING) {
-        y = renderTcExisting({
-          doc,
-          html: termsHtml,
-          y,
-          margin,
-          pageWidth,
-          pageHeight,
-          drawHeader: drawTermsHeader,
-        });
-      } else {
-        renderTcNew(doc, termsHtml, {
-          margin,
-          pageWidth,
-          pageHeight,
-          startY: y,
-          drawHeader: drawTermsHeader,
-        });
-      }
-
-      /* -------------------------
-         PAGE NUMBER
-      ------------------------- */
-      drawPageNumbers(doc);
-
-      doc.end();
-    } catch (err) {
-      reject(err);
-    }
+  const ctx = createLayoutContext({
+    doc,
+    margin,
+    pageHeight,
+    drawHeader: drawMainHeader,
   });
+
+  /* -------------------------
+     MAIN PAGE
+  ------------------------- */
+
+  ctx.setY(drawMainHeader(margin));
+
+  drawMainPage({
+    doc,
+    ctx,
+    data,
+    label,
+    margin,
+    contentWidth,
+    pageHeight,
+    drawMainHeader,
+  });
+
+  /* -------------------------
+     TERMS PAGE
+  ------------------------- */
+
+  drawTermsErequestPage({
+    doc,
+    data,
+    label,
+    margin,
+    pageWidth,
+    pageHeight,
+    drawTermsHeader,
+    drawSectionHeader,
+    contentWidth,
+  });
+
+  /* -------------------------
+     PAGE NUMBER
+  ------------------------- */
+
+  drawPageNumbers(doc);
+
+  doc.end();
+
+  return await getBase64();
 }

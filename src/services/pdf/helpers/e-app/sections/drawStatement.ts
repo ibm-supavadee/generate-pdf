@@ -2,7 +2,7 @@ import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../../constants/pdf.constants";
 import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
-import { drawSectionHeader } from "../../utils/drawSectionHeader";
+import { drawSectionHeader } from "../../layout/drawSectionHeader";
 
 type Params = {
   doc: PDFKit.PDFDocument;
