@@ -17,7 +17,7 @@ type CreateDocumentResult = {
    CREATE DOCUMENT
 ----------------------------- */
 
-export function createDocument(): CreateDocumentResult {
+export function createPdfDocument(): CreateDocumentResult {
   const doc = new PDFDocument({
     size: "A4",
     margin: 10,

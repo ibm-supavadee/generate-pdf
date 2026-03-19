@@ -6,7 +6,7 @@ import {
   REGISTER_TYPE,
 } from "../../../constants/pdf.constants";
 import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
-import { drawCustomerInfoRows } from "../../utils/drawCustomerInfoRow";
+import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
 
 type Row = [string?, string?, string?, string?];
 

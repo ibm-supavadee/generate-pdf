@@ -2,19 +2,25 @@ import { PdfEAppData } from "../../../models/pdf-eapp-data.model";
 import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
 import { PDF_COLORS } from "../../../constants/pdf.constants";
+
 import { drawHeader } from "../../layout/drawHeader";
 import { drawMainContentPage } from "./drawMainContentPage";
-import { drawTermsPage } from "./drawTermsPage";
 import { drawSignatureCard } from "../sections/drawSignatureCard";
+import { drawTermsEAppPage } from "./drawTermsEAppPage";
 
-export function drawLanguagePage(
-  doc: PDFKit.PDFDocument,
-  data: PdfEAppData,
-  lang: "TH" | "EN",
-) {
+type Params = {
+  doc: PDFKit.PDFDocument;
+  data: PdfEAppData;
+  lang: "TH" | "EN";
+};
+
+export function drawMainEAppPage({ doc, data, lang }: Params) {
   const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
   const pdfData = lang === "EN" ? data.enData : data.thData;
 
+  /* -------------------------
+      PAGE CONFIG
+  ------------------------- */
   const pageWidth = doc.page.width;
   const pageHeight = doc.page.height;
 
@@ -25,6 +31,9 @@ export function drawLanguagePage(
 
   let y = margin;
 
+  /* -------------------------
+      HEADER
+  ------------------------- */
   const drawMainHeader = (startY: number): number => {
     doc
       .font("regular")
@@ -44,6 +53,9 @@ export function drawLanguagePage(
     });
   };
 
+  /* -------------------------
+      ENSURE SPACE (page break)
+  ------------------------- */
   const ensureSpace = (height: number): number => {
     if (y + height > pageHeight - margin) {
       doc.addPage();
@@ -52,8 +64,14 @@ export function drawLanguagePage(
     return y;
   };
 
+  /* -------------------------
+      START DRAW
+  ------------------------- */
   y = drawMainHeader(y);
 
+  /* -------------------------
+      MAIN CONTENT
+  ------------------------- */
   y = drawMainContentPage({
     doc,
     y,
@@ -68,6 +86,9 @@ export function drawLanguagePage(
     ensureSpace,
   });
 
+  /* -------------------------
+      SIGNATURE
+  ------------------------- */
   y = drawSignatureCard({
     doc,
     y,
@@ -80,7 +101,10 @@ export function drawLanguagePage(
     ensureSpace,
   });
 
-  drawTermsPage({
+  /* -------------------------
+      TERMS
+  ------------------------- */
+  drawTermsEAppPage({
     doc,
     margin,
     pageWidth,

@@ -1,13 +1,12 @@
 import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
-import { createDocument } from "./helpers/core/createDocument";
+import { createPdfDocument } from "./helpers/core/createPdfDocument";
 import { createLayoutContext } from "./helpers/core/layoutContext";
-import { drawTermsPage } from "./helpers/e-app/page/drawTermsPage";
-import { drawMainPage } from "./helpers/e-request/pages/drawMainPage";
+import { drawMainERequestPage } from "./helpers/e-request/pages/drawMainERequestPage";
 import { drawTermsErequestPage } from "./helpers/e-request/pages/drawTermsErequestPage";
 import { drawHeader } from "./helpers/layout/drawHeader";
 import { drawSectionHeader } from "./helpers/layout/drawSectionHeader";
-import { drawPageNumbers } from "./helpers/utils/drawPageNumber";
+import { drawPageNumbers } from "./helpers/shared/drawPageNumber";
 import { PdfERequestData } from "./models/pdf-erequest-data.model";
 
 /* -----------------------------
@@ -23,7 +22,7 @@ export async function generateStyledERequestPdf(
      CREATE DOCUMENT
   ------------------------- */
 
-  const { doc, getBase64 } = createDocument();
+  const { doc, getBase64 } = createPdfDocument();
 
   /* -------------------------
      PAGE CONFIG
@@ -74,7 +73,7 @@ export async function generateStyledERequestPdf(
 
   ctx.setY(drawMainHeader(margin));
 
-  drawMainPage({
+  drawMainERequestPage({
     doc,
     ctx,
     data,

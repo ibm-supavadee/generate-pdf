@@ -7,7 +7,7 @@ import {
 } from "../../../constants/pdf.constants";
 import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
-import { drawDivider } from "../../utils/drawDivider";
+import { drawDivider } from "../../shared/drawDivider";
 
 type Params = {
   doc: PDFKit.PDFDocument;

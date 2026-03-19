@@ -4,7 +4,7 @@ import { drawStatement } from "../sections/drawStatement";
 import { drawPackageDetail } from "../sections/drawPackageDetail";
 import { drawRemark } from "../../e-request/sections/drawRemark";
 import { drawTwoColumnSection } from "../../layout/drawTwoColumnSection";
-import { renderRemarkEApp } from "../utils/renderRemarkEApp";
+import { renderRemarkEApp } from "../sections/renderRemarkEApp";
 
 export function drawMainContentPage(params: any) {
   let {

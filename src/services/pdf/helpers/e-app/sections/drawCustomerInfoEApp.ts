@@ -7,7 +7,7 @@ import {
 } from "../../../constants/pdf.constants";
 import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
-import { drawCustomerInfoRows } from "../../utils/drawCustomerInfoRow";
+import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
 
 type Row = [string?, string?, string?, string?];
 

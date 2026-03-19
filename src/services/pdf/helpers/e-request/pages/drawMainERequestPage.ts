@@ -20,7 +20,7 @@ type Params = {
   drawMainHeader: (y: number) => number;
 };
 
-export function drawMainPage({
+export function drawMainERequestPage({
   doc,
   ctx,
   data,
