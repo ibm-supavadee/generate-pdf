@@ -48,12 +48,16 @@ export function drawCustomerInfoEApp({
 
   const customerInfo = pdfData.customerInfo;
 
-  const nameTitle =
-    customerInfo.registerType === REGISTER_TYPE.CORPORATE
-      ? label.CUSTOMER_INFO.CORPORATE_NAME
-      : customerInfo.registerType === REGISTER_TYPE.GOVERNMENT_AGENCY
-        ? label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME
-        : label.CUSTOMER_INFO.NAME;
+  const isCorporate = customerInfo.registerType === REGISTER_TYPE.CORPORATE;
+  const isGovernmentAgency =
+    customerInfo.registerType === REGISTER_TYPE.GOVERNMENT_AGENCY;
+  const isNew = customerType === CUSTOMER_TYPE.NEW_REGISTER;
+
+  const nameTitle = isCorporate
+    ? label.CUSTOMER_INFO.CORPORATE_NAME
+    : isGovernmentAgency
+      ? label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME
+      : label.CUSTOMER_INFO.NAME;
 
   const baseRow: Row = [
     nameTitle,
@@ -62,26 +66,34 @@ export function drawCustomerInfoEApp({
     customerInfo.mobileNo,
   ];
 
-  const rows: Row[] =
-    customerType === CUSTOMER_TYPE.NEW_REGISTER
-      ? [
-          baseRow,
-          [
-            label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO,
-            customerInfo.idCardNo,
-            label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
-            customerInfo.otherTelephoneNo,
-          ],
-        ]
-      : [
-          baseRow,
-          [
-            "",
-            "",
-            label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
-            customerInfo.otherTelephoneNo,
-          ],
-        ];
+  const buildSecondRow = (): Row => {
+    if (isNew) {
+      return [
+        label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO,
+        customerInfo.idCardNo,
+        label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
+        customerInfo.otherTelephoneNo,
+      ];
+    }
+
+    return [
+      isCorporate ? label.CUSTOMER_INFO.CONTACT_PERSON_NAME : "",
+      isCorporate ? customerInfo.repName : "",
+      label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
+      customerInfo.otherTelephoneNo,
+    ];
+  };
+
+  const rows: Row[] = [baseRow, buildSecondRow()];
+
+  if (isNew && isCorporate) {
+    rows.push([
+      label.CUSTOMER_INFO.CONTACT_PERSON_NAME,
+      customerInfo.repName,
+      "",
+      "",
+    ]);
+  }
 
   return drawCustomerInfoRows({
     doc,

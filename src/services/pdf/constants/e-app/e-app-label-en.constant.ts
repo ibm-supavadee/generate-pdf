@@ -13,6 +13,7 @@ export const E_APP_LABEL_EN = {
     NAME: "Firstname - Lastname​",
     CORPORATE_NAME: "Company Name",
     GOVERNMENT_AGENCY_NAME: "Government Agency Name",
+    CONTACT_PERSON_NAME: "Contact's person name",
     ADDRESS_EQUIPMENT_INSTALLATION: "Address for Equipment Installation​",
     MOBILE_NO: "Mobile No.",
     OTHER_TELEPHONE_NO: "Other Telephone No.",

@@ -14,6 +14,7 @@ export const E_APP_LABEL_TH = {
     NAME: "ชื่อ - นามสกุล​",
     CORPORATE_NAME: "ชื่อบริษัท",
     GOVERNMENT_AGENCY_NAME: "ชื่อหน่วยงาน",
+    CONTACT_PERSON_NAME: "ชื่อตัวแทนติดต่อ",
     ADDRESS_EQUIPMENT_INSTALLATION: "สถานที่ติดตั้งอุปกรณ์​",
     MOBILE_NO: "หมายเลขโทรศัพท์เคลื่อนที่",
     OTHER_TELEPHONE_NO: "โทรศัพท์ (อื่นๆ)",
