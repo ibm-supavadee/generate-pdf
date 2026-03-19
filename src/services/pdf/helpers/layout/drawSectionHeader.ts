@@ -1,11 +1,10 @@
 import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
-import { getDisplayDate } from "../shared/displayDate";
 
 type Options = {
   withDivider?: boolean;
   fullWidth?: boolean;
   width?: number;
-  isShowDate?: boolean;
+  date?: string;
 };
 
 type Params = {
@@ -57,15 +56,12 @@ export function drawSectionHeader({
   }
 
   /* DATE ON RIGHT */
-  if (options?.isShowDate) {
-    const date = new Date().toLocaleDateString();
-    const displayDate = getDisplayDate(date, "TH");
-
+  if (options?.date) {
     doc
       .fillColor(PDF_COLORS.GRAY)
       .font("regular")
       .fontSize(FONT_SIZE)
-      .text(displayDate, margin, y + 4, {
+      .text(options.date, margin, y + 4, {
         width: contentWidth - 10,
         align: "right",
       });

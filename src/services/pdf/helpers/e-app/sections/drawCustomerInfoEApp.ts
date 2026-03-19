@@ -38,7 +38,10 @@ export function drawCustomerInfoEApp({
     margin,
     contentWidth,
     title: label.DATA_OF_SUBSCRIBER_TITLE,
-    options: { withDivider: true, isShowDate: true },
+    options: {
+      withDivider: true,
+      date: pdfData.registerDate,
+    },
   });
 
   y += HEADER_SPACING;
