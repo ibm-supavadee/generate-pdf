@@ -34,6 +34,9 @@ export function drawCustomerInfoEApp({
   lang,
   ensureSpace,
 }: Params): number {
+  /* -------------------------
+      HEADER
+  ------------------------- */
   y = drawSectionHeader({
     doc,
     y,
@@ -46,55 +49,80 @@ export function drawCustomerInfoEApp({
 
   y += HEADER_SPACING;
 
-  const customerInfo = pdfData.customerInfo;
+  const { customerInfo } = pdfData;
 
-  const isCorporate = customerInfo.registerType === REGISTER_TYPE.CORPORATE;
-  const isGovernmentAgency =
-    customerInfo.registerType === REGISTER_TYPE.GOVERNMENT_AGENCY;
   const isNew = customerType === CUSTOMER_TYPE.NEW_REGISTER;
 
-  const nameTitle = isCorporate
-    ? label.CUSTOMER_INFO.CORPORATE_NAME
-    : isGovernmentAgency
-      ? label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME
-      : label.CUSTOMER_INFO.NAME;
+  /* -------------------------
+      HELPERS (map-based)
+  ------------------------- */
+  const nameTitleMap: Partial<Record<REGISTER_TYPE, string>> = {
+    [REGISTER_TYPE.CORPORATE]: label.CUSTOMER_INFO.CORPORATE_NAME,
+    [REGISTER_TYPE.GOVERNMENT_AGENCY]:
+      label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME,
+  };
 
-  const baseRow: Row = [
+  const idCardTitleMap: Partial<Record<REGISTER_TYPE, string>> = {
+    [REGISTER_TYPE.PASSPORT]: label.ID_CARD_TITLE.PASSPORT,
+    [REGISTER_TYPE.IMMIGRATION]: label.ID_CARD_TITLE.IMMIGRATION,
+    [REGISTER_TYPE.CORPORATE]: label.ID_CARD_TITLE.CORPORATE,
+    [REGISTER_TYPE.GOVERNMENT_AGENCY]: label.ID_CARD_TITLE.GOVERNMENT_AGENCY,
+  };
+
+  const nameTitle =
+    nameTitleMap[customerInfo.registerType as REGISTER_TYPE] ??
+    label.CUSTOMER_INFO.NAME;
+
+  const idCardTitle =
+    idCardTitleMap[customerInfo.registerType as REGISTER_TYPE] ??
+    label.ID_CARD_TITLE.ID_CARD;
+
+  const isCorporate = customerInfo.registerType === REGISTER_TYPE.CORPORATE;
+
+  /* -------------------------
+      ROW BUILDERS
+  ------------------------- */
+  const buildBaseRow = (): Row => [
     nameTitle,
     customerInfo.name,
     label.CUSTOMER_INFO.MOBILE_NO,
     customerInfo.mobileNo,
   ];
 
-  const buildSecondRow = (): Row => {
-    if (isNew) {
-      return [
-        label.CUSTOMER_INFO.ID_CARD_PASSPORT_NO,
-        customerInfo.idCardNo,
-        label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
-        customerInfo.otherTelephoneNo,
-      ];
-    }
+  const buildSecondRow = (): Row =>
+    isNew
+      ? [
+          idCardTitle,
+          customerInfo.idCardNo,
+          label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
+          customerInfo.otherTelephoneNo,
+        ]
+      : [
+          isCorporate ? label.CUSTOMER_INFO.CONTACT_PERSON_NAME : "",
+          isCorporate ? customerInfo.repName : "",
+          label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
+          customerInfo.otherTelephoneNo,
+        ];
 
-    return [
-      isCorporate ? label.CUSTOMER_INFO.CONTACT_PERSON_NAME : "",
-      isCorporate ? customerInfo.repName : "",
-      label.CUSTOMER_INFO.OTHER_TELEPHONE_NO,
-      customerInfo.otherTelephoneNo,
-    ];
-  };
+  const buildCorporateRow = (): Row => [
+    label.CUSTOMER_INFO.CONTACT_PERSON_NAME,
+    customerInfo.repName,
+    "",
+    "",
+  ];
 
-  const rows: Row[] = [baseRow, buildSecondRow()];
+  /* -------------------------
+      BUILD ROWS
+  ------------------------- */
+  const rows: Row[] = [buildBaseRow(), buildSecondRow()];
 
   if (isNew && isCorporate) {
-    rows.push([
-      label.CUSTOMER_INFO.CONTACT_PERSON_NAME,
-      customerInfo.repName,
-      "",
-      "",
-    ]);
+    rows.push(buildCorporateRow());
   }
 
+  /* -------------------------
+      RENDER
+  ------------------------- */
   return drawCustomerInfoRows({
     doc,
     y,
