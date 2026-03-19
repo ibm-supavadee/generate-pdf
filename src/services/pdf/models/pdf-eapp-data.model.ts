@@ -9,6 +9,7 @@ export class PdfEAppData {
   cardImage?: string = "";
   signatureImage?: string = "";
   isShowInstallationFeeRemark: boolean = false;
+  isShowInfoOnCardSection: boolean = false;
 }
 
 export class PdfData {
