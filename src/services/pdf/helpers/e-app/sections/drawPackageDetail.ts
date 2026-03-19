@@ -40,6 +40,7 @@ export function drawPackageDetail({
   const priceX = margin + detailWidth;
 
   const rowPadding = 2;
+  const lineGap = 2;
 
   const formatPrice = (price: number) =>
     price.toLocaleString("th-TH", {
@@ -106,30 +107,36 @@ export function drawPackageDetail({
       isBold?: boolean;
       description?: string;
       bullet?: boolean;
+      indentLevel?: number;
+      isHeader?: boolean;
     } = {},
   ) => {
-    const bullet = option.bullet ? "• " : "";
-    const displayText = `${bullet}${text}`;
+    const baseIndent = 15;
+    const indentLevel = option.indentLevel ?? 0;
+
+    const BULLET_GAP = 10;
+    const indent = baseIndent + indentLevel * 10;
+
+    const BULLET_X = detailX + indent;
+
+    const textX = option.isHeader ? BULLET_X : detailX + indent + BULLET_GAP;
+
+    const textWidth = option.isHeader
+      ? detailWidth - indent
+      : detailWidth - indent - BULLET_GAP;
 
     const fullText = option.description
-      ? `${displayText} ${option.description}`
-      : displayText;
+      ? `${text} ${option.description}`
+      : text;
 
-    const textTotalHeight = doc.heightOfString(fullText, {
-      width: detailWidth - 30,
-      lineGap: 2,
-    });
+    const estimatedHeight =
+      doc.heightOfString(fullText, {
+        width: textWidth,
+        lineGap,
+      }) +
+      rowPadding * 2;
 
-    const priceText = price !== undefined ? formatPriceText(price) : "";
-
-    const priceHeight = doc.heightOfString(priceText, {
-      width: priceWidth - 10,
-      lineGap: 2,
-    });
-
-    const rowHeight = Math.max(textTotalHeight, priceHeight) + rowPadding * 2;
-
-    if (y + rowHeight > pageHeight - margin) {
+    if (y + estimatedHeight > pageHeight - margin) {
       y += HEADER_SPACING;
       drawTableBorder(tableStartY, y);
 
@@ -155,40 +162,63 @@ export function drawPackageDetail({
 
     const rowStartY = y;
 
+    // bullet
+    if (option.bullet) {
+      doc
+        .font("regular")
+        .fontSize(FONT_SIZE)
+        .fillColor(PDF_COLORS.GRAY)
+        .text("•", BULLET_X, rowStartY + rowPadding);
+    }
+
+    // text
+    const textStartX = textX;
+    const textStartY = rowStartY + rowPadding;
+
+    // TITLE
     doc
       .font(option.isBold ? "bold" : "regular")
       .fontSize(FONT_SIZE)
       .fillColor(PDF_COLORS.GRAY)
-      .text(displayText, detailX + 20, rowStartY + rowPadding, {
-        width: detailWidth - 30,
-        lineGap: 2,
+      .text(text, textStartX, textStartY, {
+        width: textWidth,
+        lineGap,
         continued: !!option.description,
       });
 
+    // DESCRIPTION
     if (option.description) {
       doc
         .font("regular")
         .fontSize(FONT_SIZE)
         .fillColor(PDF_COLORS.GRAY)
         .text(` ${option.description}`, {
-          width: detailWidth - 30,
-          lineGap: 2,
+          width: textWidth,
+          lineGap,
         });
     }
+
+    const textEndY = doc.y;
+
+    let priceEndY = rowStartY;
 
     if (price !== undefined) {
       doc
         .font(option.isBold ? "bold" : "regular")
         .fontSize(FONT_SIZE)
         .fillColor(PDF_COLORS.GREEN)
-        .text(priceText, priceX, rowStartY + rowPadding, {
+        .text(formatPriceText(price), priceX, rowStartY + rowPadding, {
           width: priceWidth - 10,
           align: "right",
-          lineGap: 2,
+          lineGap,
         });
+
+      priceEndY = doc.y;
     }
 
-    y = doc.y + rowPadding;
+    const contentBottom = Math.max(textEndY, priceEndY);
+
+    y = contentBottom + rowPadding;
     doc.y = y;
   };
 
@@ -200,10 +230,11 @@ export function drawPackageDetail({
         ? label.MAIN_PACKAGE_FBB_LABEL
         : label.MAIN_PACKAGE_3BB_LABEL;
 
-    renderRow(mainPackageLabel, undefined, { isBold: true });
+    renderRow(mainPackageLabel, undefined, { isBold: true, isHeader: true });
 
     renderRow(pdfData.mainPackageSection.title ?? "-", undefined, {
-      bullet: true,
+      bullet: false,
+      isHeader: true,
     });
 
     pdfData.mainPackageSection.details.forEach((item: Detail) => {
@@ -211,6 +242,7 @@ export function drawPackageDetail({
     });
   }
 
+  /* ---------------- DIVIDER ---------------- */
   if (
     pdfData.mainPackageSection?.details?.length &&
     pdfData.onTopDetailSection?.length
@@ -220,7 +252,7 @@ export function drawPackageDetail({
       y,
       margin,
       contentWidth,
-      spaceBefore: 20,
+      spaceBefore: 10,
       spaceAfter: 6,
     });
   }
@@ -228,40 +260,19 @@ export function drawPackageDetail({
   /* ---------------- ON TOP PACKAGE ---------------- */
 
   if (pdfData.onTopDetailSection?.length) {
-    renderRow(label.ONTOP_PACKAGE_LABEL, undefined, { isBold: true });
-
-    /* ---- helper: calculate section height ---- */
-
-    const getSectionHeight = (section: Section) => {
-      let height = 0;
-
-      const titleText = section.description
-        ? `• ${section.title} ${section.description}`
-        : `• ${section.title}`;
-
-      height +=
-        doc.heightOfString(titleText, {
-          width: detailWidth - 30,
-          lineGap: 2,
-        }) +
-        rowPadding * 2;
-
-      section.details.forEach((item) => {
-        const textHeight = doc.heightOfString(item.text, {
-          width: detailWidth - 30,
-          lineGap: 2,
-        });
-
-        height += textHeight + rowPadding * 2;
-      });
-
-      return height;
-    };
+    renderRow(label.ONTOP_PACKAGE_LABEL, undefined, {
+      isBold: true,
+      isHeader: true,
+    });
 
     pdfData.onTopDetailSection.forEach((section: Section) => {
-      const sectionHeight = getSectionHeight(section);
+      const estimate =
+        doc.heightOfString(section.title, {
+          width: detailWidth - 30,
+          lineGap,
+        }) + 40;
 
-      if (y + sectionHeight > pageHeight - margin) {
+      if (y + estimate > pageHeight - margin) {
         y += HEADER_SPACING;
         drawTableBorder(tableStartY, y);
 
@@ -292,7 +303,9 @@ export function drawPackageDetail({
       });
 
       section.details.forEach((item: Detail) => {
-        renderRow(`   ${item.text}`, item.price, { bullet: false });
+        renderRow(item.text, item.price, {
+          indentLevel: 0,
+        });
       });
     });
   }
