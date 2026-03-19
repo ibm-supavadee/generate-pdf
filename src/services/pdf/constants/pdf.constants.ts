@@ -25,3 +25,8 @@ export enum REGISTER_TYPE {
   CORPORATE = "CORPORATE", // นิติบุคคล
   GOVERNMENT_AGENCY = "GOVERNMENT_AGENCY", // หน่วยงานราชการ
 }
+
+export enum PRODUCT_OWNER {
+  FBB = "FBB",
+  THREE_BB = "3BB",
+}

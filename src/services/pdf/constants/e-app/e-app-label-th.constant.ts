@@ -1,14 +1,18 @@
 export const E_APP_LABEL_TH = {
-  COMPANY_INFO:
+  COMPANY_AWN_INFO:
     'บริษัท แอดวานซ์ ไวร์เลส เน็ทเวอร์ค จำกัด "AWN" 414 ถนนพหลโยธิน แขวงสามเสนใน เขตพญาไท กรุงเทพมหานคร 10400​',
+  COMPANY_3BB_INFO:
+    'บริษัท ทริปเปิลที บรอดแบนด์ จำกัด (มหาชน) "3BB" เลขที่ 89 อาคารคอสโม ออฟฟิศ พาร์ค ถนนป๊อบปูล่า ตำบลบ้านใหม่ อำเภอปากเกร็ด จังหวัดนนทบุรี 11120​',
   EAPP_MAIN_TITLE: "คำขอใช้บริการโทรคมนาคมและบริการเสริม​",
   DATA_OF_SUBSCRIBER_TITLE: "ข้อมูลผู้สมัคร : บุคคลธรรมดา​",
   STATEMENT_TITLE: "ใบแจ้งค่าบริการ​",
   REQUEST_REGISTRATION_INTERNET_TITLE:
     "ขอแจ้งความประสงค์สมัครใช้บริการอินเทอร์เน็ต AIS Fibre3 ดังนี้",
   SIGNATURE_LABEL: "ลงชื่อผู้ใช้บริการ​",
-  MAIN_PACKAGE_LABEL:
+  MAIN_PACKAGE_FBB_LABEL:
     "แพ็กเกจหลัก บริการ AIS Fibre3 (Main package of AIS Fibre3 Service)",
+  MAIN_PACKAGE_3BB_LABEL:
+    "แพ็กเกจหลัก บริการ 3BB Fibre3 (Main package of 3BB Fibre3 Service)",
   ONTOP_PACKAGE_LABEL: `บริการเสริม/On-Top Service (** ราคาค่าบริการรายเดือนไม่รวม VAT/Monthly Fee is exclusive of VAT)`,
   CUSTOMER_INFO: {
     NAME: "ชื่อ - นามสกุล​",

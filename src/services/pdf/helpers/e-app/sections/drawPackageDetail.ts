@@ -4,6 +4,7 @@ import {
   FONT_SIZE,
   HEADER_SPACING,
   PDF_COLORS,
+  PRODUCT_OWNER,
 } from "../../../constants/pdf.constants";
 import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
@@ -15,6 +16,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   pageHeight: number;
+  productOwner: PRODUCT_OWNER;
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
   drawMainHeader: (margin: number) => number;
@@ -26,6 +28,7 @@ export function drawPackageDetail({
   margin,
   contentWidth,
   pageHeight,
+  productOwner,
   pdfData,
   label,
   drawMainHeader,
@@ -192,7 +195,12 @@ export function drawPackageDetail({
   /* ---------------- MAIN PACKAGE ---------------- */
 
   if (pdfData.mainPackageSection?.details?.length) {
-    renderRow(label.MAIN_PACKAGE_LABEL, undefined, { isBold: true });
+    const mainPackageLabel =
+      productOwner === PRODUCT_OWNER.FBB
+        ? label.MAIN_PACKAGE_FBB_LABEL
+        : label.MAIN_PACKAGE_3BB_LABEL;
+
+    renderRow(mainPackageLabel, undefined, { isBold: true });
 
     renderRow(pdfData.mainPackageSection.title ?? "-", undefined, {
       bullet: true,

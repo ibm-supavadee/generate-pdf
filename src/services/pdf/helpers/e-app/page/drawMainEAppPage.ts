@@ -35,12 +35,17 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
   /* -------------------------
       HEADER
   ------------------------- */
+  const companyInfo =
+    data.productOwner === "FBB"
+      ? label.COMPANY_AWN_INFO
+      : label.COMPANY_3BB_INFO;
+
   const drawMainHeader = (startY: number): number => {
     doc
       .font("regular")
       .fontSize(9)
       .fillColor(PDF_COLORS.GRAY)
-      .text(label.COMPANY_INFO, margin, startY, {
+      .text(companyInfo, margin, startY, {
         width: contentWidth,
         lineGap: 2,
       });

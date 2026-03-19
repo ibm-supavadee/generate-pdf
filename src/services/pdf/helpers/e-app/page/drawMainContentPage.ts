@@ -69,6 +69,7 @@ export function drawMainContentPage(params: any) {
     margin,
     contentWidth,
     pageHeight,
+    productOwner: data.productOwner,
     pdfData,
     label,
     drawMainHeader,
