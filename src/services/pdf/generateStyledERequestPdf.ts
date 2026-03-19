@@ -1,5 +1,5 @@
-import { E_REQUEST_LABEL_EN } from "./constants/e-request-label-en.constant";
-import { E_REQUEST_LABEL_TH } from "./constants/e-request-label-th.constant";
+import { E_REQUEST_LABEL_EN } from "./constants/e-request/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "./constants/e-request/e-request-label-th.constant";
 import { createPdfDocument } from "./helpers/core/createPdfDocument";
 import { createLayoutContext } from "./helpers/core/layoutContext";
 import { drawMainERequestPage } from "./helpers/e-request/pages/drawMainERequestPage";

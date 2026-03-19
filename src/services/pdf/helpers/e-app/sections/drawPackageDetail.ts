@@ -1,5 +1,5 @@
-import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
-import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
+import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
+import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 import {
   FONT_SIZE,
   HEADER_SPACING,

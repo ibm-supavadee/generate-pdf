@@ -1,12 +1,13 @@
 import { PdfEAppData } from "../../../models/pdf-eapp-data.model";
-import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
-import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
+
 import { PDF_COLORS } from "../../../constants/pdf.constants";
 
 import { drawHeader } from "../../layout/drawHeader";
 import { drawMainContentPage } from "./drawMainContentPage";
 import { drawSignatureCard } from "../sections/drawSignatureCard";
 import { drawTermsEAppPage } from "./drawTermsEAppPage";
+import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
+import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -82,6 +83,7 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
     data,
     pdfData,
     label,
+    lang,
     drawMainHeader,
     ensureSpace,
   });

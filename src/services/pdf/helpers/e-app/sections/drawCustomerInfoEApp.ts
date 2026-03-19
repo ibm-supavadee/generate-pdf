@@ -1,13 +1,13 @@
-import { E_APP_LABEL_EN } from "../../../constants/e-app-label-en.constant";
-import { E_APP_LABEL_TH } from "../../../constants/e-app-label-th.constant";
 import {
   CUSTOMER_TYPE,
   HEADER_SPACING,
   REGISTER_TYPE,
 } from "../../../constants/pdf.constants";
-import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
+import { PdfData } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
 import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
+import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
+import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 
 type Row = [string?, string?, string?, string?];
 
@@ -19,6 +19,7 @@ type Params = {
   customerType: CUSTOMER_TYPE;
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
+  lang: "TH" | "EN";
   ensureSpace: (height: number) => void;
 };
 
@@ -30,6 +31,7 @@ export function drawCustomerInfoEApp({
   customerType,
   pdfData,
   label,
+  lang,
   ensureSpace,
 }: Params): number {
   y = drawSectionHeader({
@@ -38,10 +40,8 @@ export function drawCustomerInfoEApp({
     margin,
     contentWidth,
     title: label.DATA_OF_SUBSCRIBER_TITLE,
-    options: {
-      withDivider: true,
-      date: pdfData.registerDate,
-    },
+    lang,
+    options: { withDivider: true, date: pdfData.registerDate },
   });
 
   y += HEADER_SPACING;

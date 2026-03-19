@@ -2,9 +2,9 @@ import { drawAddressInstall } from "../sections/drawAddressInstall";
 import { drawCustomerInfoEApp } from "../sections/drawCustomerInfoEApp";
 import { drawStatement } from "../sections/drawStatement";
 import { drawPackageDetail } from "../sections/drawPackageDetail";
-import { drawRemark } from "../../e-request/sections/drawRemark";
 import { drawTwoColumnSection } from "../../layout/drawTwoColumnSection";
 import { renderRemarkEApp } from "../sections/renderRemarkEApp";
+import { drawRemark } from "../../e-request/sections/drawRemark";
 
 export function drawMainContentPage(params: any) {
   let {
@@ -18,6 +18,7 @@ export function drawMainContentPage(params: any) {
     label,
     ensureSpace,
     drawMainHeader,
+    lang,
   } = params;
 
   y = drawCustomerInfoEApp({
@@ -29,6 +30,7 @@ export function drawMainContentPage(params: any) {
     pdfData,
     label,
     ensureSpace,
+    lang,
   });
 
   y = drawTwoColumnSection({

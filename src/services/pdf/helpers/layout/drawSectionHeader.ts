@@ -13,6 +13,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   title: string;
+  lang?: "TH" | "EN";
   options?: Options;
 };
 
@@ -22,6 +23,7 @@ export function drawSectionHeader({
   margin,
   contentWidth,
   title,
+  lang,
   options,
 }: Params): number {
   const { withDivider = false, fullWidth = false, width } = options || {};
@@ -61,10 +63,15 @@ export function drawSectionHeader({
       .fillColor(PDF_COLORS.GRAY)
       .font("regular")
       .fontSize(FONT_SIZE)
-      .text(options.date, margin, y + 4, {
-        width: contentWidth - 10,
-        align: "right",
-      });
+      .text(
+        lang === "TH" ? `วันที่ ${options.date}` : `${options.date}`,
+        margin,
+        y + 4,
+        {
+          width: contentWidth - 10,
+          align: "right",
+        },
+      );
   }
 
   /* DIVIDER */
