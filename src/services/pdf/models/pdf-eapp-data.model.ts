@@ -31,6 +31,14 @@ export class CustomerInfo {
   installAddress: string = "";
   billingChannel?: string = "";
   documentDeliveryAddress: string = "";
+
+  // Card Information
+  nameTh?: string = "";
+  nameEn?: string = "";
+  birthDate?: string = "";
+  address?: string = "";
+  dateOfIssue?: string = "";
+  dateOfExpiry?: string = "";
 }
 
 export class Section {
