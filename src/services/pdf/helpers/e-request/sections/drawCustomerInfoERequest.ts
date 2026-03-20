@@ -1,10 +1,7 @@
+import { CUSTOMER_TYPE, REGISTER_TYPE } from "../../../../../constants/enum";
 import { E_REQUEST_LABEL_EN } from "../../../constants/e-request/e-request-label-en.constant";
 import { E_REQUEST_LABEL_TH } from "../../../constants/e-request/e-request-label-th.constant";
-import {
-  CUSTOMER_TYPE,
-  HEADER_SPACING,
-  REGISTER_TYPE,
-} from "../../../constants/pdf.constants";
+import { HEADER_SPACING } from "../../../constants/pdf.constants";
 import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
 import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
 

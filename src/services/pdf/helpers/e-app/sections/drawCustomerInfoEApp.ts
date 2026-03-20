@@ -1,13 +1,11 @@
-import {
-  CUSTOMER_TYPE,
-  HEADER_SPACING,
-  REGISTER_TYPE,
-} from "../../../constants/pdf.constants";
+import { HEADER_SPACING } from "../../../constants/pdf.constants";
 import { PdfData } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
 import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
+import { getIdCardTitle, getNameTitle } from "../utils/getCustomerTitles";
+import { CUSTOMER_TYPE, EAPP_LABEL_TYPE, LANG, REGISTER_TYPE } from "../../../../../constants/enum";
 
 type Row = [string?, string?, string?, string?];
 
@@ -18,8 +16,8 @@ type Params = {
   contentWidth: number;
   customerType: CUSTOMER_TYPE;
   pdfData: PdfData;
-  label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
-  lang: "TH" | "EN";
+  label: EAPP_LABEL_TYPE;
+  lang: LANG;
   ensureSpace: (height: number) => void;
 };
 
@@ -53,29 +51,15 @@ export function drawCustomerInfoEApp({
 
   const isNew = customerType === CUSTOMER_TYPE.NEW_REGISTER;
 
-  /* -------------------------
-      HELPERS (map-based)
-  ------------------------- */
-  const nameTitleMap: Partial<Record<REGISTER_TYPE, string>> = {
-    [REGISTER_TYPE.CORPORATE]: label.CUSTOMER_INFO.CORPORATE_NAME,
-    [REGISTER_TYPE.GOVERNMENT_AGENCY]:
-      label.CUSTOMER_INFO.GOVERNMENT_AGENCY_NAME,
-  };
+  const nameTitle = getNameTitle(
+    customerInfo.registerType as REGISTER_TYPE,
+    label,
+  );
 
-  const idCardTitleMap: Partial<Record<REGISTER_TYPE, string>> = {
-    [REGISTER_TYPE.PASSPORT]: label.ID_CARD_TITLE.PASSPORT,
-    [REGISTER_TYPE.IMMIGRATION]: label.ID_CARD_TITLE.IMMIGRATION,
-    [REGISTER_TYPE.CORPORATE]: label.ID_CARD_TITLE.CORPORATE,
-    [REGISTER_TYPE.GOVERNMENT_AGENCY]: label.ID_CARD_TITLE.GOVERNMENT_AGENCY,
-  };
-
-  const nameTitle =
-    nameTitleMap[customerInfo.registerType as REGISTER_TYPE] ??
-    label.CUSTOMER_INFO.NAME;
-
-  const idCardTitle =
-    idCardTitleMap[customerInfo.registerType as REGISTER_TYPE] ??
-    label.ID_CARD_TITLE.ID_CARD;
+  const idCardTitle = getIdCardTitle(
+    customerInfo.registerType as REGISTER_TYPE,
+    label,
+  );
 
   const isCorporate = customerInfo.registerType === REGISTER_TYPE.CORPORATE;
 

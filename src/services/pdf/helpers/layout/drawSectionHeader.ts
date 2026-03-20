@@ -1,3 +1,4 @@
+import { LANG } from "../../../../constants/enum";
 import { FONT_SIZE, PDF_COLORS } from "../../constants/pdf.constants";
 
 type Options = {
@@ -13,7 +14,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   title: string;
-  lang?: "TH" | "EN";
+  lang?: LANG;
   options?: Options;
 };
 
@@ -64,7 +65,7 @@ export function drawSectionHeader({
       .font("regular")
       .fontSize(FONT_SIZE)
       .text(
-        lang === "TH" ? `วันที่ ${options.date}` : `${options.date}`,
+        lang === LANG.TH ? `วันที่ ${options.date}` : `${options.date}`,
         margin,
         y + 4,
         {

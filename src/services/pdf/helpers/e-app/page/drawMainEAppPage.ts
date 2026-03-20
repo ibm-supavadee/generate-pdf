@@ -8,16 +8,17 @@ import { drawSignatureCard } from "../sections/drawSignatureCard";
 import { drawTermsEAppPage } from "./drawTermsEAppPage";
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
+import { LANG } from "../../../../../constants/enum";
 
 type Params = {
   doc: PDFKit.PDFDocument;
   data: PdfEAppData;
-  lang: "TH" | "EN";
+  lang: LANG;
 };
 
 export function drawMainEAppPage({ doc, data, lang }: Params) {
-  const label = lang === "EN" ? E_APP_LABEL_EN : E_APP_LABEL_TH;
-  const pdfData = lang === "EN" ? data.enData : data.thData;
+  const label = lang === LANG.EN ? E_APP_LABEL_EN : E_APP_LABEL_TH;
+  const pdfData = lang === LANG.EN ? data.enData : data.thData;
 
   /* -------------------------
       PAGE CONFIG
@@ -101,10 +102,10 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
     y,
     margin,
     contentWidth,
-    pdfData,
+    height: CARD_SIGN_SECTION_HEIGHT,
     label,
     data,
-    height: CARD_SIGN_SECTION_HEIGHT,
+    lang,
     ensureSpace,
   });
 

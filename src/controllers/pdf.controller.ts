@@ -3,7 +3,6 @@ import { PdfService } from "../services/pdf/pdf.service";
 import { PdfERequestData } from "../services/pdf/models/pdf-erequest-data.model";
 import { termAndConERequestExistingMock } from "../mocks/e-request/termAndConERequestExisting.mock";
 import { termAndConERequestNewRegisterMock } from "../mocks/e-request/termAndConERequestNewRegister.mock";
-import { CUSTOMER_TYPE } from "../services/pdf/constants/pdf.constants";
 import { termAndConERequestExistingENMock } from "../mocks/e-request/termAndConERequestExistingEN.mock";
 import { termAndConERequestNewRegisterENMock } from "../mocks/e-request/termAndConERequestNewRegisterEN.mock";
 import { PdfEAppData } from "../services/pdf/models/pdf-eapp-data.model";
@@ -14,6 +13,7 @@ import { termAndConEAppExistingENMock } from "../mocks/e-app/termAndConEAppExist
 import { photoMock } from "../mocks/e-app/photoMock.mock";
 import { remarkEAppTH } from "../mocks/e-app/remarkEAppTH";
 import { remarkEAppEN } from "../mocks/e-app/remarkEAppEN";
+import { CUSTOMER_TYPE } from "../constants/enum";
 
 export const createERequestPdf = async (req: Request, res: Response) => {
   try {

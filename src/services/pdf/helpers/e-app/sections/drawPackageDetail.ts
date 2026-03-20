@@ -1,10 +1,10 @@
+import { PRODUCT_OWNER } from "../../../../../constants/enum";
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 import {
   FONT_SIZE,
   HEADER_SPACING,
   PDF_COLORS,
-  PRODUCT_OWNER,
 } from "../../../constants/pdf.constants";
 import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";

@@ -3,8 +3,7 @@ import { PdfEAppData } from "./models/pdf-eapp-data.model";
 import { drawPageNumbers } from "./helpers/shared/drawPageNumber";
 import { drawMainEAppPage } from "./helpers/e-app/page/drawMainEAppPage";
 import { createPdfDocument } from "./helpers/core/createPdfDocument";
-
-type Lang = "TH" | "EN";
+import { LANG } from "../../constants/enum";
 
 export async function generateStyledEAppPdf(
   data: PdfEAppData,
@@ -21,7 +20,7 @@ export async function generateStyledEAppPdf(
         resolve(`data:application/pdf;base64,${pdf.toString("base64")}`);
       });
 
-      const langs: Lang[] = ["TH", "EN"];
+      const langs: LANG[] = [LANG.TH, LANG.EN];
 
       langs.forEach((lang, langIndex) => {
         /* =========================

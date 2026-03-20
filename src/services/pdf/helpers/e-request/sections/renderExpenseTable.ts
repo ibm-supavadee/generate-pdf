@@ -1,11 +1,8 @@
 import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
-import {
-  CUSTOMER_TYPE,
-  HEADER_SPACING,
-  PDF_COLORS,
-} from "../../../constants/pdf.constants";
+import { HEADER_SPACING, PDF_COLORS } from "../../../constants/pdf.constants";
 import { E_REQUEST_LABEL_TH } from "../../../constants/e-request/e-request-label-th.constant";
 import { E_REQUEST_LABEL_EN } from "../../../constants/e-request/e-request-label-en.constant";
+import { CUSTOMER_TYPE } from "../../../../../constants/enum";
 
 type ExpenseRow = {
   text: string;

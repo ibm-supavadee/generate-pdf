@@ -1,5 +1,5 @@
-import { CUSTOMER_TYPE } from "../../../constants/pdf.constants";
-
+import { CUSTOMER_TYPE } from "../../../../../constants/enum";
+import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
 import { renderTcEAppExisting } from "../sections/renderTcEAppExisting";
 import { renderTcEAppNew } from "../sections/renderTcEAppNew";
 
@@ -8,8 +8,8 @@ type Params = {
   margin: number;
   pageWidth: number;
   pageHeight: number;
-  data: any;
-  pdfData: any;
+  data: PdfEAppData;
+  pdfData: PdfData;
   label: any;
   drawMainHeader: (y: number) => number;
 };

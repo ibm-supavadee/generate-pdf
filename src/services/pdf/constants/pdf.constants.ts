@@ -7,26 +7,9 @@ export const PDF_COLORS = {
   LINK: "#0000EE",
 };
 
-export enum CUSTOMER_TYPE {
-  EXISTING = "EXISTING",
-  NEW_REGISTER = "NEW_REGISTER",
-}
-
 export const FONT_SIZE = 11;
 export const HEADER_SPACING = 10;
 export const SECTION_GAP_SMALL = 2;
 export const SECTION_GAP = 12;
 export const SECTION_GAP_LARGE = 20;
 
-export enum REGISTER_TYPE {
-  ID_CARD = "ID_CARD", // บัตรประชาชน
-  PASSPORT = "PASSPORT", // หนังสือเดินทาง
-  IMMIGRATION = "IMMIGRATION", // บัตรประจำตัวคนซึ่งไม่มีสัญชาติไทย
-  CORPORATE = "CORPORATE", // นิติบุคคล
-  GOVERNMENT_AGENCY = "GOVERNMENT_AGENCY", // หน่วยงานราชการ
-}
-
-export enum PRODUCT_OWNER {
-  FBB = "FBB",
-  THREE_BB = "3BB",
-}

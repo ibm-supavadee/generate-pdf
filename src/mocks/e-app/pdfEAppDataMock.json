@@ -11,7 +11,13 @@
       "otherTelephoneNo": "0000000000",
       "installAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
       "billingChannel": "แจ้งยอดผ่าน SMS + ดูบิลผ่าน My AIS",
-      "documentDeliveryAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310"
+      "documentDeliveryAddress": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310",
+      "nameTh": "ทดสอบ นิวคนนึง",
+      "nameEn": "Test New Customer",
+      "dob": "01/01/1990",
+      "issueDate": "01/01/2020",
+      "expiryDate": "01/01/2030",
+      "address": "เลขที่ 240/4 ถ.กรองทอง 4 แขวงวังทองหลาง เขตวัฒนา กรุงเทพมหานคร 10310"
     },
     "mainPackageSection": {
       "title": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
@@ -139,9 +145,15 @@
       "otherTelephoneNo": "0000000000",
       "installAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
       "billingChannel": "Bill notification via SMS + view bill via My AIS",
-      "documentDeliveryAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310"
+      "documentDeliveryAddress": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310",
+      "nameTh": "ทดสอบ นิวคนนึง",
+      "nameEn": "Test New Customer",
+      "dob": "01/01/1990",
+      "issueDate": "01/01/2020",
+      "expiryDate": "01/01/2030",
+      "address": "240/4 Krongthong 4 Rd., Wang Thonglang, Wang Thonglang, Bangkok 10310"
     },
-     "mainPackageSection": {
+    "mainPackageSection": {
       "title": "BROADBAND Plus II Package 300/300 Mbps 459 THB 24 months",
       "details": [
         {
@@ -259,5 +271,6 @@
   },
   "cardImage": "",
   "signatureImage": "",
-  "isShowInstallationFeeRemark": true
+  "isShowInstallationFeeRemark": true,
+  "isShowInfoOnCardSection": true
 }

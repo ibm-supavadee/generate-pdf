@@ -1,5 +1,4 @@
-import { PRODUCT_OWNER } from "../../../constants/enum";
-import { CUSTOMER_TYPE } from "../constants/pdf.constants";
+import { CUSTOMER_TYPE, PRODUCT_OWNER } from "../../../constants/enum";
 
 export class PdfEAppData {
   customerType: CUSTOMER_TYPE = CUSTOMER_TYPE.NEW_REGISTER;
@@ -18,7 +17,7 @@ export class PdfData {
   onTopDetailSection?: Section[] = [];
   registerDate: string = ""; //"13 มี.ค. 2569" or "13 March 2026"
   remark: string = "";
-  termsAndConditions: string ="";
+  termsAndConditions: string = "";
 }
 
 export class CustomerInfo {
@@ -31,6 +30,14 @@ export class CustomerInfo {
   installAddress: string = "";
   billingChannel?: string = "";
   documentDeliveryAddress: string = "";
+
+  //
+  nameTh?: string = "";
+  nameEn?: string = "";
+  dob?: string = "";
+  address?: string = "";
+  issueDate?: string = "";
+  expiryDate?: string = "";
 }
 
 export class Section {
