@@ -273,42 +273,56 @@ export function renderExpenseTable({
      RENDER SECTIONS
   ----------------------------- */
 
-  renderSection(
-    label.ENTRY_SECTION_TITLE,
-    mapPriceRows(data.entrySection, { showSubText: true }),
-  );
+  if (data.entrySection?.length) {
+    renderSection(
+      label.ENTRY_SECTION_TITLE,
+      mapPriceRows(data.entrySection, { showSubText: true }),
+    );
+  }
 
-  if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+  if (
+    data.entrySection?.length &&
+    data.customerType === CUSTOMER_TYPE.NEW_REGISTER
+  ) {
     if (data.wireSection?.length) {
       renderSection(label.WIRING_SECTION_TITLE, mapTextRows(data.wireSection));
     }
   }
 
-  renderSection(
-    label.INSTALLATION_SECTION_TITLE,
-    mapInstallationRows(data.installationSection, data.equipmentSection ?? []),
-  );
+  if (data.installationSection?.length || data.equipmentSection?.length) {
+    renderSection(
+      label.INSTALLATION_SECTION_TITLE,
+      mapInstallationRows(
+        data.installationSection,
+        data.equipmentSection ?? [],
+      ),
+    );
+  }
 
-  renderSection(
-    label.MONTHLY_SECTION_TITLE,
-    mapPriceRows(data.monthlySection, {
-      showSubText: true,
-      totalLabel: label.MONTHLY_SUMMARY_OF_CHARGES,
-    }),
-  );
+  if (data.monthlySection?.length) {
+    renderSection(
+      label.MONTHLY_SECTION_TITLE,
+      mapPriceRows(data.monthlySection, {
+        showSubText: true,
+        totalLabel: label.MONTHLY_SUMMARY_OF_CHARGES,
+      }),
+    );
+  }
 
-  renderSection(
-    label.AVERAGE_SECTION_TITLE.replace(
-      "{{n}}",
-      data.averageSection.days.toString(),
-    ),
-    mapPriceRows(data.averageSection.details, {
-      showSubText: true,
-      totalLabel: label.ESTIMATE_TOTAL_CHARGE,
-      isAverage: true,
-      monthlyTotal,
-    }),
-  );
+  if (data.averageSection?.details?.length) {
+    renderSection(
+      label.AVERAGE_SECTION_TITLE.replace(
+        "{{n}}",
+        data.averageSection.days.toString(),
+      ),
+      mapPriceRows(data.averageSection.details, {
+        showSubText: true,
+        totalLabel: label.ESTIMATE_TOTAL_CHARGE,
+        isAverage: true,
+        monthlyTotal,
+      }),
+    );
+  }
 
   return y;
 }
