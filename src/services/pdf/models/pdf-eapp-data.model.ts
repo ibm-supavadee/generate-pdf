@@ -31,13 +31,13 @@ export class CustomerInfo {
   billingChannel?: string = "";
   documentDeliveryAddress: string = "";
 
-  //
+  // Card Information
   nameTh?: string = "";
   nameEn?: string = "";
-  dob?: string = "";
+  birthDate?: string = "";
   address?: string = "";
-  issueDate?: string = "";
-  expiryDate?: string = "";
+  dateOfIssue?: string = "";
+  dateOfExpiry?: string = "";
 }
 
 export class Section {

@@ -1,8 +1,7 @@
-import { PRODUCT_OWNER } from "../../../../../constants/enum";
-import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
-import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
+import { EAPP_LABEL_TYPE, PRODUCT_OWNER } from "../../../../../constants/enum";
 import {
   FONT_SIZE,
+  FOOTER_HEIGHT,
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
@@ -18,7 +17,7 @@ type Params = {
   pageHeight: number;
   productOwner: PRODUCT_OWNER;
   pdfData: PdfData;
-  label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
+  label: EAPP_LABEL_TYPE;
   drawMainHeader: (margin: number) => number;
 };
 
@@ -136,7 +135,7 @@ export function drawPackageDetail({
       }) +
       rowPadding * 2;
 
-    if (y + estimatedHeight > pageHeight - margin) {
+    if (y + estimatedHeight > pageHeight - margin - FOOTER_HEIGHT) {
       y += HEADER_SPACING;
       drawTableBorder(tableStartY, y);
 
@@ -272,7 +271,7 @@ export function drawPackageDetail({
           lineGap,
         }) + 40;
 
-      if (y + estimate > pageHeight - margin) {
+      if (y + estimate > pageHeight - margin - FOOTER_HEIGHT) {
         y += HEADER_SPACING;
         drawTableBorder(tableStartY, y);
 

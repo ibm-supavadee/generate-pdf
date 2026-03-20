@@ -61,8 +61,13 @@ export const createEAppPdf = async (req: Request, res: Response) => {
     data.enData.remark = remarkEAppEN;
 
     // TEMP for Base64 image in PDF
+    if (data.isShowInfoOnCardSection) {
+      data.cardImage = photoMock.person;
+    } else {
+      data.cardImage = photoMock.idCardDocument;
+    }
+
     data.signatureImage = photoMock.signaturePhoto;
-    data.cardImage = photoMock.idCardDocument;
 
     // TEMP for T&C
     const textTermAndConditionsTH = [

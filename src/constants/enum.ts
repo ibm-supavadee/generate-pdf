@@ -1,5 +1,7 @@
 import { E_APP_LABEL_EN } from "../services/pdf/constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../services/pdf/constants/e-app/e-app-label-th.constant";
+import { E_REQUEST_LABEL_EN } from "../services/pdf/constants/e-request/e-request-label-en.constant";
+import { E_REQUEST_LABEL_TH } from "../services/pdf/constants/e-request/e-request-label-th.constant";
 
 export enum LANG {
   TH = "TH",
@@ -29,5 +31,9 @@ export enum REGISTER_TYPE {
   CORPORATE = "CORPORATE", // นิติบุคคล
   GOVERNMENT_AGENCY = "GOVERNMENT_AGENCY", // หน่วยงานราชการ
 }
+
+export type EREQUEST_LABEL_TYPE =
+  | typeof E_REQUEST_LABEL_EN
+  | typeof E_REQUEST_LABEL_TH;
 
 export type EAPP_LABEL_TYPE = typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;

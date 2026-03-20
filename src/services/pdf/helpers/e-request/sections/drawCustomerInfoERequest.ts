@@ -1,6 +1,8 @@
-import { CUSTOMER_TYPE, REGISTER_TYPE } from "../../../../../constants/enum";
-import { E_REQUEST_LABEL_EN } from "../../../constants/e-request/e-request-label-en.constant";
-import { E_REQUEST_LABEL_TH } from "../../../constants/e-request/e-request-label-th.constant";
+import {
+  CUSTOMER_TYPE,
+  EREQUEST_LABEL_TYPE,
+  REGISTER_TYPE,
+} from "../../../../../constants/enum";
 import { HEADER_SPACING } from "../../../constants/pdf.constants";
 import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
 import { drawCustomerInfoRows } from "../../shared/drawCustomerInfoRow";
@@ -13,7 +15,7 @@ type Params = {
   margin: number;
   contentWidth: number;
   data: PdfERequestData;
-  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
+  label: EREQUEST_LABEL_TYPE;
   ensureSpace: (height: number) => void;
 };
 

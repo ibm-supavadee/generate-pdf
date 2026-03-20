@@ -1,8 +1,9 @@
 import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
 import { HEADER_SPACING, PDF_COLORS } from "../../../constants/pdf.constants";
-import { E_REQUEST_LABEL_TH } from "../../../constants/e-request/e-request-label-th.constant";
-import { E_REQUEST_LABEL_EN } from "../../../constants/e-request/e-request-label-en.constant";
-import { CUSTOMER_TYPE } from "../../../../../constants/enum";
+import {
+  CUSTOMER_TYPE,
+  EREQUEST_LABEL_TYPE,
+} from "../../../../../constants/enum";
 
 type ExpenseRow = {
   text: string;
@@ -18,7 +19,7 @@ type Params = {
   contentWidth: number;
   pageHeight: number;
   data: PdfERequestData;
-  label: typeof E_REQUEST_LABEL_EN | typeof E_REQUEST_LABEL_TH;
+  label: EREQUEST_LABEL_TYPE;
   drawPageHeader: () => number;
 };
 

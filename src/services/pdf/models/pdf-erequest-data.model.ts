@@ -1,5 +1,4 @@
-import { LANG, PRODUCT_OWNER } from "../../../constants/enum";
-import { CUSTOMER_TYPE } from "../constants/pdf.constants";
+import { CUSTOMER_TYPE, LANG, PRODUCT_OWNER } from "../../../constants/enum";
 
 export class PdfERequestData {
   customerType: CUSTOMER_TYPE = CUSTOMER_TYPE.NEW_REGISTER;

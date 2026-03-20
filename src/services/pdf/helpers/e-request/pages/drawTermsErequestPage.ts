@@ -1,4 +1,4 @@
-import { CUSTOMER_TYPE } from "../../../constants/pdf.constants";
+import { CUSTOMER_TYPE } from "../../../../../constants/enum";
 import { renderTcExisting } from "../sections/renderTcExisting";
 import { renderTcNew } from "../sections/renderTcNew";
 
