@@ -1,3 +1,5 @@
+import { SECTION_GAP_LARGE } from "../../constants/pdf.constants";
+
 type Params = {
   doc: PDFKit.PDFDocument;
   y: number;
@@ -20,7 +22,7 @@ export function drawTwoColumnSection({
   contentWidth,
   leftRatio,
   rightRatio,
-  gap = 20,
+  gap = SECTION_GAP_LARGE,
   height,
   drawLeft,
   drawRight,

@@ -18,7 +18,8 @@ export function getNameTitle(
   };
 
   return (
-    (registerType && nameTitleMap[registerType]) || label.CUSTOMER_INFO.NAME
+    (registerType && nameTitleMap[registerType]) ||
+    label.CUSTOMER_INFO.FULL_NAME
   );
 }
 

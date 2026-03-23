@@ -24,7 +24,8 @@ export const E_APP_LABEL_TH = {
 
   /* ===================== CUSTOMER ===================== */
   CUSTOMER_INFO: {
-    NAME: "ชื่อ - นามสกุล​",
+    FULL_NAME: "ชื่อ - นามสกุล​",
+    NAME: "Name",
     CORPORATE_NAME: "ชื่อบริษัท",
     GOVERNMENT_AGENCY_NAME: "ชื่อหน่วยงาน",
     CONTACT_PERSON_NAME: "ชื่อตัวแทนติดต่อ",
@@ -33,6 +34,10 @@ export const E_APP_LABEL_TH = {
     OTHER_TELEPHONE_NO: "โทรศัพท์ (อื่นๆ)",
     BILLING_CHANNEL: "ช่องทางการรับใบแจ้งค่าใช้บริการ​",
     DOCUMENT_DELIVERY_ADDRESS: "ที่อยู่จัดส่งเอกสาร​",
+    BIRTH_DATE: "วันเกิด",
+    ADDRESS: "ที่อยู่",
+    DATE_OF_ISSUE: "วันออกบัตร",
+    DATE_OF_EXPIRY: "วันหมดอายุ",
   },
 
   /* ===================== IDENTIFICATION ===================== */

@@ -1,7 +1,10 @@
 import { drawCardImageBox } from "./drawCardImageBox";
 import { drawTwoColumnSection } from "../../layout/drawTwoColumnSection";
 import { drawSignature } from "./drawSignature";
-import { HEADER_SPACING } from "../../../constants/pdf.constants";
+import {
+  CARD_SIGN_SECTION_HEIGHT,
+  HEADER_SPACING,
+} from "../../../constants/pdf.constants";
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 import { PdfEAppData } from "../../../models/pdf-eapp-data.model";
@@ -12,7 +15,6 @@ type Params = {
   y: number;
   margin: number;
   contentWidth: number;
-  height: number;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
   data: PdfEAppData;
   lang: LANG;
@@ -24,13 +26,12 @@ export function drawSignatureCard({
   y,
   margin,
   contentWidth,
-  height,
   label,
   data,
   lang,
   ensureSpace,
 }: Params) {
-  y = ensureSpace(height);
+  y = ensureSpace(CARD_SIGN_SECTION_HEIGHT);
   y += HEADER_SPACING;
 
   let registerDate = "";
@@ -45,9 +46,10 @@ export function drawSignatureCard({
     y,
     margin,
     contentWidth,
-    leftRatio: 0.6,
-    rightRatio: 0.4,
-    height,
+    leftRatio: 0.65,
+    rightRatio: 0.35,
+    height: CARD_SIGN_SECTION_HEIGHT,
+    gap: 0,
 
     drawLeft: (x, y, width) =>
       drawCardImageBox({
@@ -55,7 +57,7 @@ export function drawSignatureCard({
         y,
         margin: x,
         contentWidth: width,
-        height,
+        height: CARD_SIGN_SECTION_HEIGHT,
         label,
         data,
         lang,
@@ -67,7 +69,7 @@ export function drawSignatureCard({
         y,
         margin: x,
         contentWidth: width,
-        height,
+        height: CARD_SIGN_SECTION_HEIGHT,
         title: label.SIGNATURE_LABEL,
         date: registerDate,
         signatureBase64: data.signatureImage,

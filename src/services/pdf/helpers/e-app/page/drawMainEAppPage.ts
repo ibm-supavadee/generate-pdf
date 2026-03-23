@@ -1,6 +1,9 @@
 import { PdfEAppData } from "../../../models/pdf-eapp-data.model";
 
-import { PDF_COLORS } from "../../../constants/pdf.constants";
+import {
+  CARD_SIGN_SECTION_HEIGHT,
+  PDF_COLORS,
+} from "../../../constants/pdf.constants";
 
 import { drawHeader } from "../../layout/drawHeader";
 import { drawMainContentPage } from "./drawMainContentPage";
@@ -28,8 +31,6 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
 
   const margin = 20;
   const contentWidth = pageWidth - margin * 2;
-
-  const CARD_SIGN_SECTION_HEIGHT = 180;
 
   let y = margin;
 
@@ -102,7 +103,6 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
     y,
     margin,
     contentWidth,
-    height: CARD_SIGN_SECTION_HEIGHT,
     label,
     data,
     lang,

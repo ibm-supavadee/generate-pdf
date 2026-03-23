@@ -20,7 +20,8 @@ export const E_APP_LABEL_EN = {
 
   /* ===================== CUSTOMER ===================== */
   CUSTOMER_INFO: {
-    NAME: "Firstname - Lastname​",
+    FULL_NAME: "Firstname - Lastname​",
+    NAME: "Name",
     CORPORATE_NAME: "Company Name",
     GOVERNMENT_AGENCY_NAME: "Government Agency Name",
     CONTACT_PERSON_NAME: "Contact's person name",
@@ -29,6 +30,10 @@ export const E_APP_LABEL_EN = {
     OTHER_TELEPHONE_NO: "Other Telephone No.",
     BILLING_CHANNEL: "Billing Channel​",
     DOCUMENT_DELIVERY_ADDRESS: "Document Delivery Address​",
+    BIRTH_DATE: "Date of Birth",
+    ADDRESS: "Address",
+    DATE_OF_ISSUE: "Date of Issue",
+    DATE_OF_EXPIRY: "Date of Expiry",
   },
 
   /* ===================== IDENTIFICATION ===================== */

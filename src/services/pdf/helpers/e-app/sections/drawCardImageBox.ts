@@ -32,6 +32,7 @@ export function drawCardImageBox({
 
   const imageBase64 = data.cardImage;
   const isShowInfoOnCardSection = data.isShowInfoOnCardSection;
+
   let customerInfo;
   if (lang === LANG.TH) {
     customerInfo = data.thData.customerInfo;
@@ -45,6 +46,15 @@ export function drawCardImageBox({
   );
 
   const title = `${idCardTitle} ${customerInfo.idCardNo || ""}`;
+
+  /* Format date on card section */
+  const formatDate = (date?: string) => {
+    if (!date) return "";
+    return lang === LANG.TH ? `วันที่ ${date}` : date;
+  };
+
+  const dateOfIssue = formatDate(customerInfo?.dateOfIssue);
+  const dateOfExpiry = formatDate(customerInfo?.dateOfExpiry);
 
   /* HEADER */
   y = drawSectionHeader({
@@ -73,9 +83,14 @@ export function drawCardImageBox({
       const buffer = getImageBuffer(imageBase64);
 
       const padding = 10;
+      const boxX = margin;
+      const boxY = y;
+
+      const contentTopPadding = 10;
+      const contentBottomPadding = 10;
 
       const maxW = contentWidth - padding * 2;
-      const maxH = boxHeight - padding * 2;
+      const maxH = boxHeight - contentTopPadding - contentBottomPadding;
 
       const img = (doc as any).openImage(buffer);
 
@@ -84,8 +99,9 @@ export function drawCardImageBox({
       const finalW = img.width * scale;
       const finalH = img.height * scale;
 
-      const imgX = margin + (contentWidth - finalW) / 2;
-      const imgY = y + (boxHeight - finalH) / 2;
+      const imgX = boxX + (contentWidth - finalW) / 2;
+
+      const imgY = boxY + contentTopPadding + (maxH - finalH) / 2;
 
       doc.image(buffer, imgX, imgY, {
         width: finalW,
@@ -97,21 +113,70 @@ export function drawCardImageBox({
   }
 
   /* =========================
-      IMAGE & PROFILE INFO
-     ========================= */
+    IMAGE & CUSTOMER INFO
+   ========================= */
   if (isShowInfoOnCardSection) {
     const padding = 15;
 
     const leftWidth = 100;
-    const imageHeight = 150;
+    const imageHeight = 120;
 
     const leftX = margin + padding;
-    const leftY = y + padding;
 
     const rightX = leftX + leftWidth + 20;
-    let rightY = leftY;
 
-    /* IMAGE LEFT */
+    const labelColor = PDF_COLORS.GRAY;
+    const valueColor = PDF_COLORS.GREEN;
+
+    const lineHeight = 16;
+    const lineGap = 1;
+
+    /* -------------------------
+     1. CALCULATE TOTAL HEIGHT
+     ------------------------- */
+    let totalTextHeight = 0;
+
+    const countRow = (value?: string) => {
+      if (value) totalTextHeight += lineHeight + lineGap;
+    };
+
+    countRow(customerInfo?.nameTh);
+    countRow(customerInfo?.nameEn);
+    countRow(customerInfo?.birthDate);
+
+    const textWidth = contentWidth - rightX - 10;
+
+    if (customerInfo?.address) {
+      totalTextHeight += lineHeight;
+
+      const addressHeight = doc.heightOfString(customerInfo.address, {
+        width: textWidth,
+      });
+
+      totalTextHeight += addressHeight + lineGap;
+    }
+
+    if (customerInfo?.dateOfIssue) {
+      totalTextHeight += lineHeight + lineGap;
+    }
+
+    if (customerInfo?.dateOfExpiry) {
+      totalTextHeight += lineHeight + lineGap;
+    }
+
+    const contentHeight = Math.max(imageHeight, totalTextHeight);
+
+    /* -------------------------
+     2. CENTER VERTICALLY
+     ------------------------- */
+    const startContentY = y + (boxHeight - contentHeight) / 2;
+
+    const leftY = startContentY;
+    let rightY = startContentY;
+
+    /* -------------------------
+     3. IMAGE LEFT
+     ------------------------- */
     if (imageBase64) {
       const buffer = getImageBuffer(imageBase64);
 
@@ -122,76 +187,88 @@ export function drawCardImageBox({
       });
     }
 
-    /* TEXT RIGHT */
-    const labelColor = PDF_COLORS.GRAY;
-    const valueColor = PDF_COLORS.GREEN;
-
-    const lineGap = 6;
-
-    const drawRow = (label: string, value?: string, isBoldValue = false) => {
+    /* -------------------------
+     4. TEXT RIGHT
+     ------------------------- */
+    const drawRow = (label: string, value?: string) => {
       if (!value) return;
 
-      // label
       doc
         .fillColor(labelColor)
         .font("regular")
         .fontSize(FONT_SIZE)
         .text(label, rightX, rightY);
 
-      // value
       doc
         .fillColor(valueColor)
-        .font(isBoldValue ? "bold" : "regular")
+        .font("regular")
         .fontSize(FONT_SIZE)
-        .text(value, rightX + 120, rightY);
+        .text(value, rightX + 80, rightY);
 
-      rightY += 16 + lineGap;
+      rightY += lineHeight + lineGap;
     };
 
-    drawRow("ชื่อ-นามสกุล", customerInfo?.nameTh, true);
-    drawRow("Name", customerInfo?.nameEn);
-    drawRow("วันเกิด", customerInfo?.dob);
+    drawRow(label.CUSTOMER_INFO.FULL_NAME, customerInfo?.nameTh);
+    drawRow(label.CUSTOMER_INFO.NAME, customerInfo?.nameEn);
+    drawRow(label.CUSTOMER_INFO.BIRTH_DATE, customerInfo?.birthDate);
 
-    // address multiline
+    /* address */
     if (customerInfo?.address) {
+      rightY += 10;
       doc
         .fillColor(labelColor)
         .font("regular")
-        .fontSize(10)
-        .text("ที่อยู่", rightX, rightY);
+        .fontSize(FONT_SIZE)
+        .text(label.CUSTOMER_INFO.ADDRESS, rightX, rightY);
+
+      rightY += lineHeight;
 
       doc
         .fillColor(valueColor)
         .font("regular")
-        .fontSize(11)
-        .text(customerInfo.address, rightX + 120, rightY, {
-          width: contentWidth - rightX - 140,
+        .fontSize(FONT_SIZE)
+        .text(customerInfo.address, rightX, rightY, {
+          width: contentWidth - rightX,
         });
 
-      rightY += 40;
+      rightY = doc.y + 10;
     }
 
-    // footer dates
-    if (customerInfo?.issueDate) {
+    /* -------------------------
+     5. DATE
+     ------------------------- */
+    /* DATE OF ISSUE */
+    if (customerInfo?.dateOfIssue) {
       doc
         .fillColor(labelColor)
-        .fontSize(10)
-        .text(
-          `วันออกบัตร ${customerInfo.issueDate}`,
-          rightX,
-          y + boxHeight - 40,
-        );
+        .font("regular")
+        .fontSize(FONT_SIZE)
+        .text(label.CUSTOMER_INFO.DATE_OF_ISSUE, rightX, rightY);
+
+      doc
+        .fillColor(valueColor)
+        .font("regular")
+        .fontSize(FONT_SIZE)
+        .text(dateOfIssue, rightX + 80, rightY);
+
+      rightY += lineHeight + lineGap;
     }
 
-    if (customerInfo?.expiryDate) {
+    /* DATE OF EXPIRY */
+    if (customerInfo?.dateOfExpiry) {
       doc
         .fillColor(labelColor)
-        .fontSize(10)
-        .text(
-          `วันหมดอายุ ${customerInfo.expiryDate}`,
-          rightX,
-          y + boxHeight - 25,
-        );
+        .font("regular")
+        .fontSize(FONT_SIZE)
+        .text(label.CUSTOMER_INFO.DATE_OF_EXPIRY, rightX, rightY);
+
+      doc
+        .fillColor(valueColor)
+        .font("regular")
+        .fontSize(FONT_SIZE)
+        .text(dateOfExpiry, rightX + 80, rightY);
+
+      rightY += lineHeight + lineGap;
     }
 
     return startY + height;
