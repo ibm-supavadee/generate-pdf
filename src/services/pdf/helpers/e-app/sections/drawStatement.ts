@@ -1,7 +1,7 @@
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
 import { PDF_COLORS } from "../../../constants/pdf.constants";
-import { PdfData, PdfEAppData } from "../../../models/pdf-eapp-data.model";
+import { PdfData } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
 
 type Params = {
@@ -13,7 +13,7 @@ type Params = {
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
   skipBox?: boolean;
-  fixedEndY?: number; // เปลี่ยนจาก fixedHeight
+  fixedEndY?: number;
 };
 
 export function drawStatement({
@@ -25,8 +25,8 @@ export function drawStatement({
   pdfData,
   label,
   skipBox,
-  fixedEndY, // เปลี่ยนจาก fixedHeight
-}: Params): number {
+  fixedEndY,
+}: Params): { endY: number; contentStartY: number } {
   y = drawSectionHeader({
     doc,
     y,
@@ -36,7 +36,7 @@ export function drawStatement({
     options: { withDivider: true },
   });
 
-  const startY = y; // ✅ หลัง header
+  const startY = y;
 
   const labelWidth = 110;
   const contentX = margin + labelWidth + 10;
@@ -81,8 +81,8 @@ export function drawStatement({
   );
 
   const naturalEndY = y;
-  const endY = fixedEndY ?? naturalEndY; // ✅ ใช้ fixedEndY ถ้ามี
-  const boxHeight = endY - startY; // ✅ นับจาก startY หลัง header
+  const endY = fixedEndY ?? naturalEndY;
+  const boxHeight = endY - startY;
 
   if (!skipBox) {
     doc
@@ -92,5 +92,5 @@ export function drawStatement({
       .stroke();
   }
 
-  return endY + 4;
+  return { endY: endY + 4, contentStartY: startY };
 }

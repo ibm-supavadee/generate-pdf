@@ -11,7 +11,7 @@ type Params = {
   contentWidth: number;
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
-  skipBox?: boolean; // เพิ่ม
+  skipBox?: boolean;
   fixedEndY?: number;
 };
 
@@ -24,7 +24,7 @@ export function drawAddressInstall({
   label,
   skipBox,
   fixedEndY,
-}: Params): number {
+}: Params): { endY: number; contentStartY: number } {
   /* -----------------------------
      HEADER
   ----------------------------- */
@@ -53,28 +53,13 @@ export function drawAddressInstall({
       width: contentWidth - padding * 2,
     });
 
-  // const contentHeight = doc.y - startY + padding;
-
   /* -----------------------------
      DRAW BOX
   ----------------------------- */
 
-  // doc
-  //   .rect(
-  //     margin + 0.5,
-  //     startY + 0.5,
-  //     contentWidth - 1,
-  //     contentHeight + padding / 2,
-  //   )
-  //   .lineWidth(1)
-  //   .strokeColor(PDF_COLORS.BORDER)
-  //   .stroke();
-
-  // return startY + contentHeight + padding;
-
   const naturalEndY = doc.y + padding;
   const endY = fixedEndY ?? naturalEndY;
-  const boxHeight = endY - startY; // ✅ นับจาก startY หลัง header
+  const boxHeight = endY - startY;
 
   if (!skipBox) {
     doc
@@ -84,5 +69,5 @@ export function drawAddressInstall({
       .stroke();
   }
 
-  return endY;
+  return { endY, contentStartY: startY };
 }

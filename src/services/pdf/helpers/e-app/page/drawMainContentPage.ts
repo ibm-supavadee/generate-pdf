@@ -34,36 +34,6 @@ export function drawMainContentPage(params: any) {
     lang,
   });
 
-  // y = drawTwoColumnSection({
-  //   doc,
-  //   y,
-  //   margin,
-  //   contentWidth,
-  //   leftRatio: 0.5,
-  //   rightRatio: 0.5,
-
-  //   drawLeft: (x, y, width) =>
-  //     drawAddressInstall({
-  //       doc,
-  //       y,
-  //       margin: x,
-  //       contentWidth: width,
-  //       pdfData,
-  //       label,
-  //     }),
-
-  //   drawRight: (x, y, width) =>
-  //     drawStatement({
-  //       doc,
-  //       y,
-  //       margin: x,
-  //       contentWidth: width,
-  //       customerType: data.customerType,
-  //       pdfData,
-  //       label,
-  //     }),
-  // });
-
   y = drawTwoColumnSection({
     doc,
     y,
@@ -95,38 +65,37 @@ export function drawMainContentPage(params: any) {
         skipBox: true,
       }),
 
-    afterDraw: (leftEndY, rightEndY, leftX, rightX, colWidth, startY) => {
-      const maxEndY = Math.max(leftEndY, rightEndY);
+    afterDraw: (left, right, leftX, rightX, colWidth) => {
+      const maxEndY = Math.max(left.endY, right.endY);
 
-      // Re-draw ด้วย fixedEndY ที่ sync กัน
-      drawAddressInstall({
-        doc,
-        y: startY,
-        margin: leftX,
-        contentWidth: colWidth,
-        pdfData,
-        label,
-        skipBox: false,
-        fixedEndY: maxEndY,
-      });
-      drawStatement({
-        doc,
-        y: startY,
-        margin: rightX,
-        contentWidth: colWidth,
-        customerType: data.customerType,
-        pdfData,
-        label,
-        skipBox: false,
-        fixedEndY: maxEndY,
-      });
+      doc
+        .rect(
+          leftX + 0.5,
+          left.contentStartY + 0.5,
+          colWidth - 1,
+          maxEndY - left.contentStartY,
+        )
+        .strokeColor(PDF_COLORS.BORDER)
+        .lineWidth(1)
+        .stroke();
 
-      return maxEndY;
+      doc
+        .rect(
+          rightX + 0.5,
+          right.contentStartY + 0.5,
+          colWidth - 1,
+          maxEndY - right.contentStartY,
+        )
+        .strokeColor(PDF_COLORS.BORDER)
+        .lineWidth(1)
+        .stroke();
+
+      return maxEndY + 4;
     },
   });
 
-  // y += SECTION_GAP;
-  
+  y += SECTION_GAP;
+
   y = drawPackageDetail({
     doc,
     y,
