@@ -1,3 +1,4 @@
+import { LANG } from "../../../../../constants/enum";
 import { PDF_COLORS } from "../../../constants/pdf.constants";
 
 type Params = {
@@ -9,6 +10,7 @@ type Params = {
   title: string;
   date: string;
   signatureBase64?: string;
+  lang: LANG;
 };
 
 export function drawSignature({
@@ -20,6 +22,7 @@ export function drawSignature({
   title,
   date,
   signatureBase64,
+  lang,
 }: Params): number {
   const startY = y;
   const centerX = margin + contentWidth / 2;
@@ -35,7 +38,7 @@ export function drawSignature({
       align: "center",
     });
 
-  const headerBottomY = doc.y; // ตำแหน่งจริงหลัง header
+  const headerBottomY = doc.y;
 
   /* ---------- FOOTER ---------- */
 
@@ -57,10 +60,11 @@ export function drawSignature({
     .font("bold")
     .fillColor(PDF_COLORS.GREEN)
     .fontSize(12)
-    .text(date, margin, lineY + 6, {
+    .text(lang === LANG.TH ? `วันที่ ${date}` : `${date}`, margin, lineY + 6, {
       width: contentWidth,
       align: "center",
     });
+
   /* ---------- SIGNATURE CENTER ---------- */
 
   if (signatureBase64) {

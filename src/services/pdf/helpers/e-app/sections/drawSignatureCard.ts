@@ -73,6 +73,7 @@ export function drawSignatureCard({
         title: label.SIGNATURE_LABEL,
         date: registerDate,
         signatureBase64: data.signatureImage,
+        lang,
       }),
   });
 }
