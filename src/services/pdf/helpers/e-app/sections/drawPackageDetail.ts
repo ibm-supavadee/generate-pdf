@@ -124,16 +124,25 @@ export function drawPackageDetail({
       ? detailWidth - indent
       : detailWidth - indent - BULLET_GAP;
 
-    const fullText = option.description
-      ? `${text} ${option.description}`
-      : text;
+    const rowStartY = y;
 
-    const estimatedHeight =
-      doc.heightOfString(fullText, {
-        width: textWidth,
-        lineGap,
-      }) +
-      rowPadding * 2;
+    /* ---------------- HEIGHT CALC ---------------- */
+
+    const titleHeight = doc.heightOfString(text, {
+      width: textWidth,
+      lineGap,
+    });
+
+    const descriptionHeight = option.description
+      ? doc.heightOfString(` ${option.description}`, {
+          width: textWidth,
+          lineGap,
+        })
+      : 0;
+
+    const estimatedHeight = titleHeight + descriptionHeight + rowPadding * 2;
+
+    /* ---------------- PAGE BREAK ---------------- */
 
     if (y + estimatedHeight > pageHeight - margin - FOOTER_HEIGHT) {
       y += HEADER_SPACING;
@@ -159,33 +168,43 @@ export function drawPackageDetail({
       tableStartY = y - HEADER_SPACING;
     }
 
-    const rowStartY = y;
+    /* ---------------- BULLET ---------------- */
 
-    // bullet
+    const getBulletByLevel = (level: number) => {
+      switch (level) {
+        case 0:
+          return "•";
+        case 1:
+          return "o";
+        default:
+          return "•";
+      }
+    };
+
     if (option.bullet) {
+      const bulletChar = getBulletByLevel(indentLevel);
+
       doc
         .font("regular")
         .fontSize(FONT_SIZE)
         .fillColor(PDF_COLORS.GRAY)
-        .text("•", BULLET_X, rowStartY + rowPadding);
+        .text(bulletChar, BULLET_X, rowStartY + rowPadding);
     }
 
-    // text
-    const textStartX = textX;
+    /* ---------------- TEXT ---------------- */
+
     const textStartY = rowStartY + rowPadding;
 
-    // TITLE
     doc
       .font(option.isBold ? "bold" : "regular")
       .fontSize(FONT_SIZE)
       .fillColor(PDF_COLORS.GRAY)
-      .text(text, textStartX, textStartY, {
+      .text(text, textX, textStartY, {
         width: textWidth,
         lineGap,
         continued: !!option.description,
       });
 
-    // DESCRIPTION
     if (option.description) {
       doc
         .font("regular")
@@ -198,6 +217,8 @@ export function drawPackageDetail({
     }
 
     const textEndY = doc.y;
+
+    /* ---------------- PRICE ---------------- */
 
     let priceEndY = rowStartY;
 
@@ -215,10 +236,27 @@ export function drawPackageDetail({
       priceEndY = doc.y;
     }
 
+    /* ---------------- FINAL Y ---------------- */
+
     const contentBottom = Math.max(textEndY, priceEndY);
 
     y = contentBottom + rowPadding;
     doc.y = y;
+  };
+
+  /* ---------------- RENDER DETAIL ---------------- */
+  
+  const renderDetail = (item: Detail, indentLevel = 0, showBullet = true) => {
+    renderRow(item.text, item.price, {
+      bullet: showBullet,
+      indentLevel,
+    });
+
+    if (item.list?.length) {
+      item.list.forEach((subItem) => {
+        renderDetail(subItem, indentLevel + 1, true);
+      });
+    }
   };
 
   /* ---------------- MAIN PACKAGE ---------------- */
@@ -229,7 +267,10 @@ export function drawPackageDetail({
         ? label.MAIN_PACKAGE_FBB_LABEL
         : label.MAIN_PACKAGE_3BB_LABEL;
 
-    renderRow(mainPackageLabel, undefined, { isBold: true, isHeader: true });
+    renderRow(mainPackageLabel, undefined, {
+      isBold: true,
+      isHeader: true,
+    });
 
     renderRow(pdfData.mainPackageSection.title ?? "-", undefined, {
       bullet: false,
@@ -237,7 +278,7 @@ export function drawPackageDetail({
     });
 
     pdfData.mainPackageSection.details.forEach((item: Detail) => {
-      renderRow(item.text, item.price, { bullet: true });
+      renderDetail(item);
     });
   }
 
@@ -302,9 +343,7 @@ export function drawPackageDetail({
       });
 
       section.details.forEach((item: Detail) => {
-        renderRow(item.text, item.price, {
-          indentLevel: 0,
-        });
+        renderDetail(item, 0, false);
       });
     });
   }

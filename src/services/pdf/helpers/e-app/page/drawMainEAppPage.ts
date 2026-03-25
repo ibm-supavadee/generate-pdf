@@ -11,7 +11,7 @@ import { drawSignatureCard } from "../sections/drawSignatureCard";
 import { drawTermsEAppPage } from "./drawTermsEAppPage";
 import { E_APP_LABEL_EN } from "../../../constants/e-app/e-app-label-en.constant";
 import { E_APP_LABEL_TH } from "../../../constants/e-app/e-app-label-th.constant";
-import { LANG } from "../../../../../constants/enum";
+import { CUSTOMER_TYPE, LANG } from "../../../../../constants/enum";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -98,16 +98,18 @@ export function drawMainEAppPage({ doc, data, lang }: Params) {
   /* -------------------------
       SIGNATURE
   ------------------------- */
-  y = drawSignatureCard({
-    doc,
-    y,
-    margin,
-    contentWidth,
-    label,
-    data,
-    lang,
-    ensureSpace,
-  });
+  if (data.customerType === CUSTOMER_TYPE.NEW_REGISTER) {
+    y = drawSignatureCard({
+      doc,
+      y,
+      margin,
+      contentWidth,
+      label,
+      data,
+      lang,
+      ensureSpace,
+    });
+  }
 
   /* -------------------------
       TERMS
