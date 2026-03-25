@@ -1,18 +1,20 @@
-import { SECTION_GAP_LARGE } from "../../constants/pdf.constants";
-
-type Params = {
+type TwoColumnParams = {
   doc: PDFKit.PDFDocument;
   y: number;
   margin: number;
   contentWidth: number;
-
   leftRatio: number;
   rightRatio: number;
-  gap?: number;
-  height?: number;
-
   drawLeft: (x: number, y: number, width: number) => number;
   drawRight: (x: number, y: number, width: number) => number;
+  afterDraw?: (
+    leftEndY: number,
+    rightEndY: number,
+    leftX: number,
+    rightX: number,
+    colWidth: number,
+    startY: number,
+  ) => number;
 };
 
 export function drawTwoColumnSection({
@@ -22,25 +24,22 @@ export function drawTwoColumnSection({
   contentWidth,
   leftRatio,
   rightRatio,
-  gap = SECTION_GAP_LARGE,
-  height,
   drawLeft,
   drawRight,
-}: Params): number {
+  afterDraw,
+}: TwoColumnParams): number {
+  const gap = 10;
   const leftWidth = contentWidth * leftRatio - gap / 2;
   const rightWidth = contentWidth * rightRatio - gap / 2;
-
-  const leftX = margin;
   const rightX = margin + leftWidth + gap;
-
   const startY = y;
 
-  const leftY = drawLeft(leftX, startY, leftWidth);
-  const rightY = drawRight(rightX, startY, rightWidth);
+  const leftEndY = drawLeft(margin, y, leftWidth);
+  const rightEndY = drawRight(rightX, y, rightWidth);
 
-  if (height) {
-    return startY + height;
+  if (afterDraw) {
+    return afterDraw(leftEndY, rightEndY, margin, rightX, leftWidth, startY);
   }
 
-  return Math.max(leftY, rightY);
+  return Math.max(leftEndY, rightEndY);
 }

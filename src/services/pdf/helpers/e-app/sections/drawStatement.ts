@@ -12,6 +12,8 @@ type Params = {
   customerType: string;
   pdfData: PdfData;
   label: typeof E_APP_LABEL_EN | typeof E_APP_LABEL_TH;
+  skipBox?: boolean;
+  fixedEndY?: number; // เปลี่ยนจาก fixedHeight
 };
 
 export function drawStatement({
@@ -22,11 +24,9 @@ export function drawStatement({
   customerType,
   pdfData,
   label,
+  skipBox,
+  fixedEndY, // เปลี่ยนจาก fixedHeight
 }: Params): number {
-  /* -----------------------------
-     HEADER
-  ----------------------------- */
-
   y = drawSectionHeader({
     doc,
     y,
@@ -36,46 +36,37 @@ export function drawStatement({
     options: { withDivider: true },
   });
 
-  const startY = y;
+  const startY = y; // ✅ หลัง header
 
   const labelWidth = 110;
   const contentX = margin + labelWidth + 10;
   const contentWidthPkg = contentWidth - labelWidth - 20;
-
   const rowPadding = 8;
 
   const drawRow = (title: string, value?: string) => {
     const rowStartY = y;
-
     const text = value || "-";
 
-    /* label */
     doc
       .font("bold")
       .fillColor(PDF_COLORS.GRAY)
       .text(title, margin + 10, y + rowPadding);
 
-    /* value */
     doc
       .font("regular")
       .fillColor(text === "-" ? PDF_COLORS.GRAY : PDF_COLORS.GREEN)
-      .text(text, contentX, y + rowPadding, {
-        width: contentWidthPkg,
-      });
+      .text(text, contentX, y + rowPadding, { width: contentWidthPkg });
 
     const rowHeight = doc.y - rowStartY + rowPadding;
-
     y = rowStartY + rowHeight;
   };
 
   if (customerType === "NEW_REGISTER") {
-    /* BILLING CHANNEL */
     drawRow(
       label.CUSTOMER_INFO.BILLING_CHANNEL,
       pdfData.customerInfo.billingChannel,
     );
 
-    /* divider */
     doc
       .moveTo(margin, y)
       .lineTo(margin + contentWidth, y)
@@ -84,18 +75,22 @@ export function drawStatement({
       .stroke();
   }
 
-  /* DOCUMENT DELIVERY ADDRESS */
   drawRow(
     label.CUSTOMER_INFO.DOCUMENT_DELIVERY_ADDRESS,
     pdfData.customerInfo.documentDeliveryAddress,
   );
 
-  /* box */
-  doc
-    .rect(margin + 0.5, startY + 0.5, contentWidth - 1, y - startY - 1)
-    .strokeColor(PDF_COLORS.BORDER)
-    .lineWidth(1)
-    .stroke();
+  const naturalEndY = y;
+  const endY = fixedEndY ?? naturalEndY; // ✅ ใช้ fixedEndY ถ้ามี
+  const boxHeight = endY - startY; // ✅ นับจาก startY หลัง header
 
-  return y + 4;
+  if (!skipBox) {
+    doc
+      .rect(margin + 0.5, startY + 0.5, contentWidth - 1, boxHeight)
+      .strokeColor(PDF_COLORS.BORDER)
+      .lineWidth(1)
+      .stroke();
+  }
+
+  return endY + 4;
 }
