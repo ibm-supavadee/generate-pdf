@@ -1,4 +1,5 @@
 type DrawResult = { endY: number; contentStartY: number };
+type DrawFn = (x: number, y: number, width: number) => number | DrawResult;
 
 type TwoColumnParams = {
   doc: PDFKit.PDFDocument;
@@ -7,8 +8,10 @@ type TwoColumnParams = {
   contentWidth: number;
   leftRatio: number;
   rightRatio: number;
-  drawLeft: (x: number, y: number, width: number) => DrawResult;
-  drawRight: (x: number, y: number, width: number) => DrawResult;
+  height?: number;
+  gap?: number;
+  drawLeft: DrawFn;
+  drawRight: DrawFn;
   afterDraw?: (
     left: DrawResult,
     right: DrawResult,
@@ -18,24 +21,32 @@ type TwoColumnParams = {
   ) => number;
 };
 
+const toDrawResult = (
+  result: number | DrawResult,
+  fallbackStartY: number,
+): DrawResult =>
+  typeof result === "number"
+    ? { endY: result, contentStartY: fallbackStartY }
+    : result;
+
 export function drawTwoColumnSection({
-  doc,
   y,
   margin,
   contentWidth,
   leftRatio,
   rightRatio,
+  height,
+  gap = 10,
   drawLeft,
   drawRight,
   afterDraw,
 }: TwoColumnParams): number {
-  const gap = 10;
   const leftWidth = contentWidth * leftRatio - gap / 2;
   const rightWidth = contentWidth * rightRatio - gap / 2;
   const rightX = margin + leftWidth + gap;
 
-  const left = drawLeft(margin, y, leftWidth);
-  const right = drawRight(rightX, y, rightWidth);
+  const left = toDrawResult(drawLeft(margin, y, leftWidth), y);
+  const right = toDrawResult(drawRight(rightX, y, rightWidth), y);
 
   if (afterDraw) {
     return afterDraw(left, right, margin, rightX, leftWidth);
