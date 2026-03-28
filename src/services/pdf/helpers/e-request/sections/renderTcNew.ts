@@ -3,6 +3,8 @@ import {
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
+import { htmlToText } from "html-to-text";
+import { toText } from "../../shared/htmlToText";
 
 export function renderTcNew(
   doc: PDFKit.PDFDocument,
@@ -23,7 +25,6 @@ export function renderTcNew(
   let y = options.startY;
 
   const contentWidth = pageWidth - margin * 2;
-
   const HALF_PAGE = (pageHeight - margin * 2) / 2;
 
   const ensureSpace = (height: number) => {
@@ -33,15 +34,11 @@ export function renderTcNew(
     }
   };
 
-  const clean = html
+  const blocks = html
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/\r/g, "")
-    .replace(/<br\s*\/?>/gi, "\n");
-
-  const blocks = clean
-    .replace(/<\/p>/gi, "\n")
-    .replace(/<\/tr>/gi, "\n")
-    .replace(/<\/td>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|li|tr|td)>/gi, "\n")
     .split("\n")
     .map((x) => x.trim())
     .filter(Boolean);
@@ -61,23 +58,17 @@ export function renderTcNew(
     for (const part of parts) {
       if (!part) continue;
 
-      if (part.match(/<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>/i)) {
-        const text = part
-          .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
-          .replace(/<[^>]+>/g, "");
+      const clean = toText(part);
 
-        if (text) segments.push({ text, bold: true });
+      if (part.match(/<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>/i)) {
+        if (clean) segments.push({ text: clean, bold: true });
       } else if (part.match(/<a[\s\S]*?<\/a>/i)) {
         const hrefMatch = part.match(/href="([^"]+)"/);
         const link = hrefMatch?.[1];
 
-        const text = part.replace(/<[^>]+>/g, "").trim();
-
-        if (text) segments.push({ text, bold: false, link });
+        if (clean) segments.push({ text: clean, bold: false, link });
       } else {
-        const text = part.replace(/<[^>]+>/g, "");
-
-        if (text) segments.push({ text, bold: false });
+        if (clean) segments.push({ text: clean, bold: false });
       }
     }
 
@@ -106,10 +97,8 @@ export function renderTcNew(
       spacing?: number;
     } = {},
   ) => {
-    const plainText = rawBlock
-      .replace(/<a[^>]*>([\s\S]*?)<\/a>/gi, "$1")
-      .replace(/<[^>]+>/g, "")
-      .trim();
+    const plainText = toText(rawBlock);
+    if (!plainText) return;
 
     const xPos = margin + hangingIndent + 2;
     const availableWidth = contentWidth - hangingIndent;
@@ -207,11 +196,11 @@ export function renderTcNew(
     const linkMatch = block.match(/href="([^"]+)"/);
     const link = linkMatch?.[1];
 
-    if (!block.replace(/<[^>]+>/g, "").trim()) continue;
+    const clean = toText(block);
+    if (!clean) continue;
 
     if (/<li/i.test(block)) {
       const indentLevel = listStack.length * 12;
-
       lastLiIndent = indentLevel;
 
       const liNoBullet =
@@ -238,16 +227,17 @@ export function renderTcNew(
       drawText(block, {
         hangingIndent: lastLiIndent,
       });
-
       continue;
     }
 
     /* HEADER */
     if (block.includes("conditions-header")) {
+      const textOnly = toText(block);
+
       if (
-        block.includes("ข้อตกลง") ||
-        block.includes("Terms and Conditions for") ||
-        block.includes("Terms for Collect,")
+        textOnly.includes("ข้อตกลง") ||
+        textOnly.includes("Terms and Conditions for") ||
+        textOnly.includes("Terms for Collect,")
       ) {
         const remainingHeight = pageHeight - margin - y;
 
@@ -269,7 +259,7 @@ export function renderTcNew(
       block.includes("conditions-section") ||
       block.includes("ขอบเขตการให้บริการ")
     ) {
-      const textOnly = block.replace(/<[^>]+>/g, "").trim();
+      const textOnly = toText(block);
 
       const isRemark = textOnly.includes("หมายเหตุ");
       const isScope = textOnly.includes("ขอบเขตการให้บริการ");

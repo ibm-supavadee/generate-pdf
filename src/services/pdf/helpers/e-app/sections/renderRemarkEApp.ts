@@ -3,6 +3,8 @@ import {
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
+import { htmlToText } from "html-to-text";
+import { toText } from "../../shared/htmlToText";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -40,28 +42,30 @@ export function renderRemarkEApp({
     }
   };
 
-  const parseSegments = (text: string): Segment[] => {
+  /* ---------- parse bold ---------- */
+
+  const parseSegments = (raw: string): Segment[] => {
     const segments: Segment[] = [];
 
-    const parts = text.split(/(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>)/gi);
+    const parts = raw.split(/(<(?:b|strong)>[\s\S]*?<\/(?:b|strong)>)/gi);
 
     for (const part of parts) {
       if (!part) continue;
 
-      if (/<(?:b|strong)>/.test(part)) {
-        const clean = part
-          .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
-          .replace(/<[^>]+>/g, "");
+      const clean = toText(part);
+      if (!clean) continue;
 
+      if (/<(?:b|strong)>/.test(part)) {
         segments.push({ text: clean, bold: true });
       } else {
-        const clean = part.replace(/<[^>]+>/g, "");
         segments.push({ text: clean, bold: false });
       }
     }
 
     return segments;
   };
+
+  /* ---------- keep structure, only normalize ---------- */
 
   const cleaned = html.replace(/\r/g, "").replace(/<br\s*\/?>/gi, "\n");
 
@@ -76,25 +80,27 @@ export function renderRemarkEApp({
     const nbspCount = (block.match(/&nbsp;/g) || []).length;
     const indent = nbspCount * 4;
 
-    const cleanedText = block.replace(/&nbsp;/g, "");
+    const cleanedBlock = block.replace(/&nbsp;/g, "");
 
-    /* detect list marker */
-    const markerMatch = cleanedText.match(/^([0-9]+\.|[a-zA-Z]\.)\s+/);
+    /* ---------- detect list marker ---------- */
+
+    const markerMatch = cleanedBlock.match(/^([0-9]+\.|[a-zA-Z]\.)\s+/);
 
     let marker = "";
-    let textPart = cleanedText;
+    let textPart = cleanedBlock;
     let textIndent = 0;
 
     if (markerMatch) {
       marker = markerMatch[1];
-      textPart = cleanedText.slice(markerMatch[0].length);
+      textPart = cleanedBlock.slice(markerMatch[0].length);
 
       textIndent = doc.widthOfString(marker + " ");
     }
 
     const segments = parseSegments(textPart);
 
-    const plain = textPart.replace(/<[^>]+>/g, "");
+    const plain = toText(textPart);
+    if (!plain) continue;
 
     const width = contentWidth - indent;
 
@@ -106,6 +112,8 @@ export function renderRemarkEApp({
 
     const x = margin + indent;
 
+    /* ---------- draw marker ---------- */
+
     if (marker) {
       doc
         .font("regular")
@@ -115,6 +123,8 @@ export function renderRemarkEApp({
     }
 
     const textX = x + textIndent;
+
+    /* ---------- draw text ---------- */
 
     segments.forEach((seg, i) => {
       const isLast = i === segments.length - 1;
