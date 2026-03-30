@@ -3,10 +3,9 @@ import {
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
-import { htmlToText } from "html-to-text";
 import { toText } from "../../shared/htmlToText";
 
-export function renderTcNew(
+export function renderTcERequestNew(
   doc: PDFKit.PDFDocument,
   html: string,
   options: {
@@ -66,7 +65,16 @@ export function renderTcNew(
         const hrefMatch = part.match(/href="([^"]+)"/);
         const link = hrefMatch?.[1];
 
-        if (clean) segments.push({ text: clean, bold: false, link });
+        if (clean) {
+          const prev = segments[segments.length - 1];
+
+          const shouldAddSpace =
+            prev && !prev.text.endsWith(" ") && !clean.startsWith(" ");
+
+          const text = shouldAddSpace ? " " + clean : clean;
+
+          segments.push({ text, bold: false, link });
+        }
       } else {
         if (clean) segments.push({ text: clean, bold: false });
       }

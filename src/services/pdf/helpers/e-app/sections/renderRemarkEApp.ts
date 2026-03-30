@@ -3,7 +3,6 @@ import {
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
-import { htmlToText } from "html-to-text";
 import { toText } from "../../shared/htmlToText";
 
 type Params = {

@@ -1,6 +1,6 @@
 import { CUSTOMER_TYPE } from "../../../../../constants/enum";
-import { renderTcExisting } from "../sections/renderTcExisting";
-import { renderTcNew } from "../sections/renderTcNew";
+import { renderTcERequestExisting } from "../sections/renderTcERequestExisting";
+import { renderTcERequestNew } from "../sections/renderTcERequestNew";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -40,7 +40,7 @@ export function drawTermsErequestPage({
   ------------------------- */
 
   if (data.customerType === CUSTOMER_TYPE.EXISTING) {
-    y = renderTcExisting({
+    y = renderTcERequestExisting({
       doc,
       html: termsHtml,
       y,
@@ -50,7 +50,7 @@ export function drawTermsErequestPage({
       drawHeader: drawTermsHeader,
     });
   } else {
-    renderTcNew(doc, termsHtml, {
+    renderTcERequestNew(doc, termsHtml, {
       margin,
       pageWidth,
       pageHeight,

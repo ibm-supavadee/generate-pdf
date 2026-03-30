@@ -1,8 +1,9 @@
-import { PRODUCT_OWNER } from "../../constants/enum";
 import {
   CUSTOMER_TYPE,
+  PRODUCT_OWNER,
   REGISTER_TYPE,
-} from "../../services/pdf/constants/pdf.constants";
+} from "../../constants/enum";
+
 import { PdfEAppData } from "../../services/pdf/models/pdf-eapp-data.model";
 
 export const pdfEAppDataMock: PdfEAppData = {
@@ -11,6 +12,7 @@ export const pdfEAppDataMock: PdfEAppData = {
   isShowInstallationFeeRemark: true,
   cardImage: "",
   signatureImage: "",
+  isShowInfoOnCardSection: true,
   thData: {
     registerDate: "13 มี.ค. 2569",
     customerInfo: {

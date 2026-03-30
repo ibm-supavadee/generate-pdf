@@ -3,6 +3,7 @@ import {
   HEADER_SPACING,
   PDF_COLORS,
 } from "../../../constants/pdf.constants";
+import { toText } from "../../shared/htmlToText";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -50,20 +51,26 @@ export function renderTcEAppExisting({
     for (const part of parts) {
       if (!part) continue;
 
-      if (/<(?:b|strong)>/.test(part)) {
-        const text = part
-          .replace(/<(?:b|strong)>|<\/(?:b|strong)>/gi, "")
-          .replace(/<[^>]+>/g, "");
+      const clean = toText(part);
+      if (!clean) continue;
 
-        segments.push({ text, bold: true });
+      if (/<(?:b|strong)>/.test(part)) {
+        segments.push({ text: clean, bold: true });
       } else if (/<a/.test(part)) {
         const link = part.match(/href="([^"]+)"/)?.[1];
-        const text = part.replace(/<[^>]+>/g, "");
 
-        segments.push({ text, bold: false, link });
+        if (clean) {
+          const prev = segments[segments.length - 1];
+
+          const text =
+            prev && !prev.text.endsWith(" ") && !clean.startsWith(" ")
+              ? " " + clean
+              : clean;
+
+          segments.push({ text, bold: false, link });
+        }
       } else {
-        const text = part.replace(/<[^>]+>/g, "");
-        segments.push({ text, bold: false });
+        segments.push({ text: clean, bold: false });
       }
     }
 
@@ -78,7 +85,8 @@ export function renderTcEAppExisting({
 
     const cleaned = rawBlock.replace(/&nbsp;/g, "");
 
-    const plainText = cleaned.replace(/<[^>]+>/g, "").trim();
+    const plainText = toText(cleaned);
+    if (!plainText) return;
 
     const height = doc.heightOfString(plainText, {
       width: contentWidth,
@@ -118,7 +126,8 @@ export function renderTcEAppExisting({
 
     y = doc.y + 6;
   };
-  /* ---------- clean html ---------- */
+
+  /* ---------- clean html  ---------- */
 
   const cleaned = html.replace(/\r/g, "").replace(/<br\s*\/?>/gi, "\n");
 
