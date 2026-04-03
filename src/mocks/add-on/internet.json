@@ -1,0 +1,28 @@
+[
+  {
+    "packageDisplay": "Speed BOOST Package up to 1000/500 Mbps 89 THB for 15 days",
+    "packageDisplayEng": "Speed BOOST Package up to 1000/500 Mbps 89 THB for 15 days",
+    "packageDisplayTha": "Speed BOOST Package up to 1000/500 Mbps 89 THB for 15 days",
+    "priceCharge": 89,
+    "discountValue": "",
+    "packageCount": 1,
+    "maxCapacity": 1,
+    "packageDesc": "<b>Speed boost</b> :  Package up to 1000/500 Mbps  for 15 days",
+    "packageCode": "P210104424",
+    "phxProductId": "O2101P210104424",
+    "sort": 2.1
+  },
+  {
+    "packageDisplay": "FBB Fixed IPV4 Package 1,000 THB",
+    "packageDisplayEng": "FBB Fixed IPV4 Package 1,000 THB",
+    "packageDisplayTha": "FBB Fixed IPV4 Package 1,000 THB",
+    "priceCharge": 1000,
+    "discountValue": "",
+    "packageCount": 1,
+    "maxCapacity": 1,
+    "packageDesc": "<b>Fixed Public IPV.4</b><br/>เหมาะสำหรับกลุ่ม Small Office/Home Office, SME หรือ ผู้ที่ต้องการมี IP Address เพื่อติดต่องานในเครือข่ายอินเทอร์เน็ต<br/>•สามารถทำ Virtual Private Network เพื่อเชื่อมเครือข่ายส่วนบุคคลระยะไกล (VPN Server)<br/>•สามารถจดโดเมน เพื่อตั้งเครื่อง Server เช่น Web Server, Mail Server หรือ Game Server ที่มี การใช้งานไม่มากนัก<br/>•สามารถติดตั้งอุปกรณ์ เพื่อติดต่อสื่อสารระหว่างสาขา ด้วยโทรศัพท์ผ่านอินเทอร์เน็ต (Voice Over IP)<br/>•สามารถทำการควบคุมเครื่อง Server จากระยะไกลได้ เช่น Remote Desktop, กล้อง CCTV Server<br/>โดยผู้ใช้บริการสามารถให้บริการบุคคลภายนอก ติดต่อหรือสืบค้นข้อมูลโดยง่าย ผ่านทางชื่อ Domain Name",
+    "packageCode": "P17099704",
+    "phxProductId": "O1709P17099704",
+    "sort": 2.4
+  }
+]

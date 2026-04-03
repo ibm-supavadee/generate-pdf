@@ -34,7 +34,6 @@ export function renderTcERequestNew(
   };
 
   const blocks = html
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/\r/g, "")
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/(p|div|li|tr|td)>/gi, "\n")

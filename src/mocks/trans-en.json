@@ -1,0 +1,35 @@
+{
+    "SUMMARY": {
+        "EAPP": {
+            "MAIN_PACKAGE": {
+                "BORROW_EQUIPMENT": "Borrow Equipment: {routerText}",
+                "BUNDLE_PLAYBOX": "Borrow Equipment: AIS PlayBox {playboxNumberForMainPack} box(es)",
+                "FTTX_ROUTER": "Borrow Equipment: FTTx standard router {routerNumber} set",
+                "MINIMUM_SERVICE_PERIOD": "Minimum Service Period {servicePeriod} Bill cycles",
+                "MONTHLY_FEE": "Monthly Fee {price} baht (Excl. VAT)",
+                "OTHER_SERVICE": "Other services in Package:"
+            },
+            "ON_TOP": {
+                "FIXED_LINE_COUNT": "Total {{count}} point",
+                "IP_CAMERA_COUNT": "Total {count} point",
+                "IP_CAMERA_DESCRIPTION": "Video movement recording and playback service on the cloud 7 days",
+                "MESH_COUNT": "Total {count} point. Borrow Mesh Wifi Router total: {count} set",
+                "MONTHLY_FEE_DISCOUNT_PER_POINT": "Monthly Fee Discount {price} baht/month/point",
+                "MONTHLY_FEE_FIXED_LINE": "Monthly Fee {price} baht/month (Monthly Fee is excludes voice call charges)",
+                "MONTHLY_FEE_PER_PACKAGE": "Monthly Fee {price} baht/package/month",
+                "MONTHLY_FEE_PER_POINT": "Monthly Fee {price} baht/month/point",
+                "PLAY_BOX_COUNT": "Total {count} point. Borrow AIS PlayBox total: {count} box",
+                "PLAYBOX_CONTENT_PACKAGE": "Content Package: PLAY PREMIER monthly {price} baht contract 12 months Watch Premier League via AIS PLAY & MONOMAX",
+                "SERVICE_PERIOD": "Service period: {servicePeriod} Bill cycles",
+                "SOUND_BAR_COUNT": "Total {count} package. Received Soundbar speaker 1 soundbar speaker/package",
+                "TITLE": {
+                    "FIXED_LINE": "Fixed Line Service:",
+                    "IP_CAMERA": "Cloud IP Camera:",
+                    "MESH": "MESH WIFI:",
+                    "PLAYBOX": "AIS Playbox:",
+                    "SOUNDBAR": "SMART SOUNDBAR:"
+                }
+            }
+        }
+    }
+}

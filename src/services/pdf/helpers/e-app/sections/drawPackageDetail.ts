@@ -8,6 +8,7 @@ import {
 import { Detail, PdfData, Section } from "../../../models/pdf-eapp-data.model";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
 import { drawDivider } from "../../shared/drawDivider";
+import { formatPrice } from "../utils/formatPrice";
 
 type Params = {
   doc: PDFKit.PDFDocument;
@@ -41,14 +42,8 @@ export function drawPackageDetail({
   const rowPadding = 2;
   const lineGap = 2;
 
-  const formatPrice = (price: number) =>
-    price.toLocaleString("th-TH", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
-  const formatPriceText = (value: number) =>
-    `${formatPrice(value)} ${label.THB}`;
+  const formatPriceText = (value: number, isDiscount?: boolean) =>
+    `${isDiscount ? "-" : ""}${formatPrice(Math.abs(value))} ${label.THB}`;
 
   /* ---------------- HEADER ---------------- */
 
@@ -103,6 +98,7 @@ export function drawPackageDetail({
     text: string,
     price?: number,
     option: {
+      isDiscount?: boolean;
       isBold?: boolean;
       description?: string;
       bullet?: boolean;
@@ -222,16 +218,21 @@ export function drawPackageDetail({
 
     let priceEndY = rowStartY;
 
-    if (price !== undefined) {
+    if (price !== undefined && price !== null) {
       doc
         .font(option.isBold ? "bold" : "regular")
         .fontSize(FONT_SIZE)
         .fillColor(PDF_COLORS.GREEN)
-        .text(formatPriceText(price), priceX, rowStartY + rowPadding, {
-          width: priceWidth - 10,
-          align: "right",
-          lineGap,
-        });
+        .text(
+          formatPriceText(price, option.isDiscount),
+          priceX,
+          rowStartY + rowPadding,
+          {
+            width: priceWidth - 10,
+            align: "right",
+            lineGap,
+          },
+        );
 
       priceEndY = doc.y;
     }
@@ -245,9 +246,10 @@ export function drawPackageDetail({
   };
 
   /* ---------------- RENDER DETAIL ---------------- */
-  
+
   const renderDetail = (item: Detail, indentLevel = 0, showBullet = true) => {
     renderRow(item.text, item.price, {
+      isDiscount: item.isDiscount,
       bullet: showBullet,
       indentLevel,
     });

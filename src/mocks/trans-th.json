@@ -1,0 +1,35 @@
+{
+    "SUMMARY": {
+        "EAPP": {
+            "MAIN_PACKAGE": {
+                "BORROW_EQUIPMENT": "รับสิทธิ์",
+                "BUNDLE_PLAYBOX": "รับสิทธิ์ยืมใช้อุปกรณ์ AIS PlayBox {playboxNumberForMainPack} กล่อง (box)",
+                "FTTX_ROUTER": "รับสิทธิ์ยืมใช้ FTTx Router มาตรฐาน (FTTx standard router) จำนวน {routerNumber} ชุด (set)",
+                "MINIMUM_SERVICE_PERIOD": "ระยะเวลาการให้บริการขั้นต่ำ (Minimum Service Period) {servicePeriod} รอบบิล ({servicePeriod} Bill cycles)",
+                "MONTHLY_FEE": "ค่าบริการรายเดือน (Monthly Fee) {price} บาท (baht) (ไม่รวม VAT/Excl. VAT)",
+                "OTHER_SERVICE": "บริการอื่นๆ ใ`น Package (other service in Package)"
+            },
+            "ON_TOP": {
+                "FIXED_LINE_COUNT": "จำนวน (total) {count} จุด (point)",
+                "IP_CAMERA_COUNT": "จำนวน (total) {count} จุด (point)",
+                "IP_CAMERA_DESCRIPTION": "บริการเก็บภาพย้อนหลังจากกล้องบนคลาวด์ (video movement recording and playback service on the cloud) 7 วัน/days",
+                "MESH_COUNT": "จำนวน (total) {count} จุด (point) รับสิทธิ์ยืมใช้ Mesh Wifi Router (Borrow Mesh Wifi Router) จำนวน (total) {count} ชุด (set)",
+                "MONTHLY_FEE_DISCOUNT_PER_POINT": "ส่วนลดค่าบริการรายเดือน (Monthly Fee Discount) {price} บาท/เดือน/จุด/ (baht/month/point)",
+                "MONTHLY_FEE_FIXED_LINE": "ค่าบริการรายเดือน (Monthly Fee) {price} บาท/เดือน (baht/month) (ค่าบริการยังไม่รวมค่าโทรศัพท์/Monthly Fee is excludes voice call charges)",
+                "MONTHLY_FEE_PER_PACKAGE": "ค่าบริการรายเดือน (Monthly Fee) {price} บาท/แพ็กเกจ/เดือน (baht/package/month)",
+                "MONTHLY_FEE_PER_POINT": "ค่าบริการรายเดือน (Monthly Fee) {price} บาท/เดือน/จุด/ (baht/month/point)",
+                "PLAY_BOX_COUNT": "จำนวน (total) {count} จุด (point) รับสิทธิ์ยืมใช้ AIS PlayBox (Borrow AIS PlayBox) จำนวน (total) {count} กล่อง (box)",
+                "PLAYBOX_CONTENT_PACKAGE": "Content Package: PLAY PREMIER รายเดือน {price} บาท สัญญา 12 เดือน ดูบอลพรีเมียร์ลีกผ่าน AIS PLAY & MONOMAX",
+                "SERVICE_PERIOD": "ระยะเวลาใช้บริการ (Service period): {servicePeriod} รอบบิล ({servicePeriod} Bill cycles)",
+                "SOUND_BAR_COUNT": "จำนวน (total) {count} แพ็กเกจ (package) รับลำโพง Soundbar (received Soundbar speaker) 1 อุปกรณ์/แพ็กเกจ (Soundbar speaker/package)",
+                "TITLE": {
+                    "FIXED_LINE": "Fixed Line Service:",
+                    "IP_CAMERA": "Cloud IP Camera:",
+                    "MESH": "MESH WIFI:",
+                    "PLAYBOX": "AIS Playbox:",
+                    "SOUNDBAR": "SMART SOUNDBAR:"
+                }
+            }
+        }
+    }
+}

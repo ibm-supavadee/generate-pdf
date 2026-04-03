@@ -49,8 +49,8 @@ export const E_APP_LABEL_EN = {
   SIGNATURE_LABEL: "Subscriber’s Signature​",
 
   /* ===================== LEGAL ===================== */
-  REMARKS: `​*If the service is terminated, the Subscriber shall return borrowed equipment to AWN within the period and at the location specified by AWN. Failure to return the equipment shall render the Subscriber liable for compensation equivalent to the value of the equipment, subject  to the Terms and Conditions of Service.
-*If the Subscriber terminates the service prior to the expiry of the service period, the Subscriber agrees to pay the installation fee, proportionately reduced to reflect the period of service already used; provided, however, that this shall not apply where the termination results from the service not being provided in accordance with the advertised terms or stated service standards, or from any fault of AWN, in accordance with the Terms and Conditions of Service.​`,
+  REMARKS: `​*If the service is terminated, the Subscriber shall return borrowed equipment to {{companyName}} within the period and at the location specified by {{companyName}}. Failure to return the equipment shall render the Subscriber liable for compensation equivalent to the value of the equipment, subject  to the Terms and Conditions of Service.
+*If the Subscriber terminates the service prior to the expiry of the service period, the Subscriber agrees to pay the installation fee, proportionately reduced to reflect the period of service already used; provided, however, that this shall not apply where the termination results from the service not being provided in accordance with the advertised terms or stated service standards, or from any fault of {{companyName}}, in accordance with the Terms and Conditions of Service.​`,
 
   CONSENT: `ข้าพเจ้าขอรับรองว่าลายมือชื่อ หรือลายมือชื่ออิเล็กทรอนิกส์ที่ลงนามและ/หรือยืนยันตัวตนข้าพเจ้าในแบบคำขอนี้ และในเอกสารแนบแบบคำขอฉบับนี้ (ถ้ามี) เป็นลายมือชื่อที่แท้จริงของข้าพเจ้า 
 I hereby certify that the signature(s) or electronic signature executed and/or used to authenticate my identity in this Application Form, any attachments thereto (if any), are genuine signatures.`,

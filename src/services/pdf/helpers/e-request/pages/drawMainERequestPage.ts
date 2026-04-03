@@ -2,6 +2,7 @@
    MAIN PAGE
 ----------------------------- */
 
+import { PdfERequestData } from "../../../models/pdf-erequest-data.model";
 import { LayoutContext } from "../../core/layoutContext";
 import { drawSectionHeader } from "../../layout/drawSectionHeader";
 import { drawCustomerInfoERequest } from "../sections/drawCustomerInfoERequest";
@@ -12,7 +13,7 @@ import { renderExpenseTable } from "../sections/renderExpenseTable";
 type Params = {
   doc: PDFKit.PDFDocument;
   ctx: LayoutContext;
-  data: any;
+  data: PdfERequestData;
   label: any;
   margin: number;
   contentWidth: number;
@@ -141,12 +142,19 @@ export function drawMainERequestPage({
      REMARK
   ------------------------- */
 
+  let remark = "";
+  if (data.productOwner === "FBB") {
+    remark = label.REMARK_FBB.replaceAll("{company}", "AWN");
+  } else if (data.productOwner === "3BB") {
+    remark = label.REMARK_3BB.replaceAll("{company}", "AWN");
+  }
+
   y = drawRemark({
     doc,
     y,
     margin,
     contentWidth,
-    label: label.REMARKS,
+    label: remark,
     ensureSpace: ctx.ensureSpace,
   });
 

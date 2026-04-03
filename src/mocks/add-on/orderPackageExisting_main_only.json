@@ -1,0 +1,70 @@
+{
+    "addBundle": {
+        "install": {
+            "totalPrice": 0,
+            "list": [
+                {
+                    "playboxNumber": 1,
+                    "detail": [
+                        {
+                            "text": "ค่าติดตั้งและบริหารจัดการอุปกรณ์ AIS PLAYBOX",
+                            "textEn": "AIS PLAYBOX installation and equipment management fee",
+                            "textTh": "ค่าติดตั้งและบริหารจัดการอุปกรณ์ AIS PLAYBOX",
+                            "price": "3096.00",
+                            "durationByMonth": null,
+                            "isDiscount": false
+                        },
+                        {
+                            "text": "ส่วนลดค่าติดตั้งและบริหารจัดการอุปกรณ์ AIS PLAYBOX นาน 12 เดือน",
+                            "textEn": "AIS PLAYBOX installation and equipment management fee (discount) for 12 month",
+                            "textTh": "ส่วนลดค่าติดตั้งและบริหารจัดการอุปกรณ์ AIS PLAYBOX นาน 12 เดือน",
+                            "price": "3096.00",
+                            "durationByMonth": null,
+                            "isDiscount": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "extension": {
+            "totalPrice": 0,
+            "list": [
+                {
+                    "playboxNumber": 1,
+                    "detail": [
+                        {
+                            "text": "ฟรี! แพ็กเกจรายเดือน AIS PLAYBOX กล่องที่ 1 นาน 12 รอบบิล",
+                            "textEn": null,
+                            "textTh": null,
+                            "price": 0,
+                            "packageCode": "P211009228",
+                            "phxProductId": "O2110P211009228",
+                            "isHasBundle": null,
+                            "packageType": "11",
+                            "sort": null
+                        },
+                        {
+                            "text": "ฟรี! แพ็กเกจ PLAY FAMILY นาน 12 รอบบิล (พร้อม VIU นาน 12 เดือน ขึ้นอยู่กับเงื่อนไขแพ็กเกจหลัก)",
+                            "textEn": null,
+                            "textTh": null,
+                            "price": 0,
+                            "packageCode": "P211109673",
+                            "phxProductId": "O2111P211109673",
+                            "isHasBundle": null,
+                            "packageType": "8",
+                            "sort": null
+                        }
+                    ]
+                }
+            ]
+        },
+        "average": [
+            {
+                "playboxNumber": 1,
+                "totalPrice": 0,
+                "pricePerDay": 0
+            }
+        ],
+        "sort": 1
+    }
+}

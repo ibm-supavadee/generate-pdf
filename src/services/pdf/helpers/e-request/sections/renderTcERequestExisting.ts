@@ -177,10 +177,8 @@ export function renderTcERequestExisting({
   /* ---------- clean html ---------- */
 
   const cleaned = html
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/\r/g, "")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/li>/gi, "\n")
+    .replace(/<br\s*\/?>|<\/li>/gi, "\n")
     .replace(/<\/ol>/gi, "\n</ol>\n")
     .replace(/<\/ul>/gi, "\n</ul>\n");
 
